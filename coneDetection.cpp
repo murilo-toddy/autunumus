@@ -1,35 +1,35 @@
 #include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 #include <iostream>
 
 #include "imageProcessing.h"
 #include "contourHandler.h"
-
-#define SAMPLES 13
+#include "fileHandler.h"
 
 using namespace std;
 using namespace cv;
 
+#define STEP_BY_STEP false
 
 int main() {
-    for (int i = 0; i < SAMPLES; i++) {
-        string imagePath = "../source/4.jpg";
+    for (int s = 0; s < SAMPLES; s++) {
+        string sample = to_string(s + 1);
+        string imagePath = "../source/" + sample + ".jpg";
+        configureFolder(sample);
+
         Mat image = imread(imagePath);
-        Mat canny = getImageCanny(image, false);
+        Mat canny = getImageCanny(image, STEP_BY_STEP);
+        vector<vector<Point>> contours = searchContours(canny, STEP_BY_STEP);
 
-        vector<vector<Point>> contours = searchContours(canny, false);
-
-        imshow("Original Image", image);
-        imshow("Canny Image", canny);
+        saveOrShowImage(sample + "/original", image);
+        saveOrShowImage(sample + "/canny", canny);
 
         Mat imageWithConeHighlight = image.clone();
         for (int i = 0; i < contours.size(); i++) {
             drawContours(imageWithConeHighlight, contours, i, Scalar(0, 255, 255), 2);
         }
 
-        imshow("Cones Highlighted", imageWithConeHighlight);
+        saveOrShowImage(sample + "/final", imageWithConeHighlight);
         cout << contours.size() << " cone(s) found" << endl;
-        waitKey(0);
     }
     return 0;
 }
