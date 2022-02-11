@@ -1,4 +1,5 @@
 #include "contourHandler.h"
+#include "fileHandler.h"
 
 /**
  * @brief Finds contours for cones in an image
@@ -61,7 +62,7 @@ vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStep
  * @param contour
  * @return Boolean representing contour orientation
  */
-bool convexContourPointingUp(vector<Point> contour) {
+bool convexContourPointingUp(const vector<Point>& contour) {
     Rect boundingRectangle = boundingRect(contour);
     double aspectRatio = boundingRectangle.width / boundingRectangle.height;
 
@@ -81,7 +82,7 @@ bool convexContourPointingUp(vector<Point> contour) {
 
     Mat defaultContours(960, 1280, CV_8UC3, {0, 0, 0});
     sort(pointsBelowCenter.begin(), pointsBelowCenter.end(),
-    [](Point p1, Point p2) {
+        [](Point p1, Point p2) {
             return (p1.x < p2.x);
     });
     int leftmostPointBelowCenterX = pointsBelowCenter.front().x;

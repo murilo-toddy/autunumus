@@ -12,6 +12,6 @@ using namespace cv;
 #define AREA_TRESHHOLD 300
 
 vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStepByStep);
-bool convexContourPointingUp(vector<Point> contour);
+bool convexContourPointingUp(const vector<Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H
