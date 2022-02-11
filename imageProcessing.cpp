@@ -10,8 +10,7 @@ Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep
     Mat hsv;
     cvtColor(image, hsv, COLOR_BGR2HSV);
 
-    // HSV Limit - (hmin, smin, vmin), (hmax, smax, vmax)
-    // Lower and of HSV spectrum
+    // Lower end of HSV spectrum
     Mat lowerMask;
     vector<Scalar> hsvLowerSpectrum = {HSV_LOW_BOTTOM, HSV_LOW_TOP};
     inRange(hsv, hsvLowerSpectrum[0], hsvLowerSpectrum[1], lowerMask);
@@ -28,13 +27,14 @@ Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep
     // Function to operate in an image
     Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
 
-    Mat dilatedImage, erodedImage, blurredImage;
-    // Increases then decreases image thickness for better edge recognition
-    GaussianBlur(mask, blurredImage, Size(3, 3), 3, 0);
+    //Matrices to store transformations
+    Mat blurredImage, cannyImage, dilatedImage, erodedImage;
 
-    Mat cannyImage;
+    // Blurs image and performs canny edges detection
+    GaussianBlur(mask, blurredImage, Size(3, 3), 3, 0);
     Canny(blurredImage, cannyImage, CANNY_LOW, CANNY_HIGH);
 
+    // Increases then decreases image thickness for better edge recognition
     dilate(cannyImage, dilatedImage, kernel);
     erode(dilatedImage, erodedImage, kernel);
 
@@ -44,9 +44,9 @@ Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep
         saveOrShowImage(sample + "/03hsv_high", upperMask);
         saveOrShowImage(sample + "/04mask", mask);
         saveOrShowImage(sample + "/05blurred", blurredImage);
-        saveOrShowImage(sample + "/06dilated", dilatedImage);
-        saveOrShowImage(sample + "/07eroded", erodedImage);
+        saveOrShowImage(sample + "/06canny", cannyImage);
+        saveOrShowImage(sample + "/07dilated", dilatedImage);
+        saveOrShowImage(sample + "/08eroded", erodedImage);
     }
-
     return cannyImage;
 }
