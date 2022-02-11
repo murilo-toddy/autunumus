@@ -4,5 +4,5 @@ find_package( OpenCV REQUIRED )
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(ConeDetection coneDetection.cpp)
+add_executable(ConeDetection coneDetection.cpp contourHandler.cpp contourHandler.h imageProcessing.cpp imageProcessing.h)
 target_link_libraries(ConeDetection ${OpenCV_LIBS})
