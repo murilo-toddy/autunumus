@@ -10,14 +10,14 @@ using namespace cv;
 
 
 int main() {
-    string imagePath = "../images/3.jpg";
+    string imagePath = "../images/4.jpg";
     Mat image = imread(imagePath);
     Mat canny = getImageCanny(image, false);
 
     vector<vector<Point>> contours = searchContours(canny, false);
 
     imshow("Original Image", image);
-//    imshow("Canny Image", canny);
+    imshow("Canny Image", canny);
 
     Mat imageWithConeHighlight = image.clone();
     for (int i = 0; i < contours.size(); i++) {
@@ -25,7 +25,7 @@ int main() {
     }
 
     imshow("Cones Highlighted", imageWithConeHighlight);
-    cout << contours.size() << " cones found" << endl;
+    cout << contours.size() << " cone(s) found" << endl;
     waitKey(0);
     return 0;
 }
