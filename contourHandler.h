@@ -12,7 +12,10 @@ using namespace std;
 using namespace cv;
 
 // Minimum area that object must have to be considered cone
-#define AREA_THRESHOLD 200
+#define AREA_THRESHOLD 100
+
+// Maximum amount of points that simplified shape can have
+#define POINTS_THRESHOLD 8
 
 vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const bool& showStepByStep);
 bool convexContourPointingUp(const vector<Point>& contour);

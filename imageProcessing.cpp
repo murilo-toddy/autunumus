@@ -25,7 +25,7 @@ Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep
     addWeighted(lowerMask, 1, upperMask, 1, 0, mask);
 
     // Function to operate in an image
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
+    Mat kernel = getStructuringElement(MORPH_RECT, Size(2, 2));
 
     //Matrices to store transformations
     Mat blurredImage, cannyImage, dilatedImage, erodedImage;
@@ -48,5 +48,5 @@ Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep
         saveOrShowImage(sample + "/07dilated", dilatedImage);
         saveOrShowImage(sample + "/08eroded", erodedImage);
     }
-    return cannyImage;
+    return erodedImage;
 }

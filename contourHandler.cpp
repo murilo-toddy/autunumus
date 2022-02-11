@@ -31,11 +31,12 @@ vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const
         double area = contourArea(contours[i]);
         if (area < AREA_THRESHOLD) { continue; }
 
-        // Approximates contour by a simpler polygon
+        // Approximates contour by a simpler polygon and verifies number of vertices
         double perimeter = arcLength(contours[i], true);
         approxPolyDP(contours[i], listOfContours[i], 0.02 * perimeter, true);
+        if (listOfContours[i].size() > POINTS_THRESHOLD || listOfContours[i].size() < 3) { continue; }
 
-        // Force contours to be convex
+        // Forces contours to be convex
         convexHull(listOfContours[i], convexContours[i]);
 
         // Draws all contours on matrices

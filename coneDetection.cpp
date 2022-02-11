@@ -16,6 +16,8 @@ int main() {
         string imagePath = "../source/" + sample + ".jpg";
         configureFolder(sample);
 
+        cout << "Processing sample " << sample << endl;
+
         Mat image = imread(imagePath);
         Mat canny = getBorderedImage(sample, image, STEP_BY_STEP);
         vector<vector<Point>> contours = searchContours(sample, canny, STEP_BY_STEP);
