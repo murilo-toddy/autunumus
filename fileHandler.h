@@ -7,19 +7,10 @@
 #define SAMPLES 13
 #define SAVE_IMAGES true
 
-void configureFolder(const string& folderName) {
-    if(SAVE_IMAGES) {
-        system(("rm -r ../destination/" + folderName).c_str());
-        system(("mkdir ../destination/" + folderName).c_str());
-    }
-}
+using namespace std;
+using namespace cv;
 
-void saveOrShowImage(const string& name, const Mat& image) {
-    if (SAVE_IMAGES) {
-        imwrite("../destination/" + name + ".jpg", image);
-    } else {
-        imshow("Original Image", image);
-    }
-}
+void configureFolder(const string& folderName);
+void saveOrShowImage(const string& name, const Mat& image);
 
 #endif //CONEDETECTION_FILEHANDLER_H
