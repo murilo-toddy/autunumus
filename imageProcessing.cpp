@@ -6,7 +6,7 @@
  * @param showStepByStep Show all intermediate steps
  * @return Image with canny edges
  */
-Mat getImageCanny(const Mat& image, const bool& showStepByStep) {
+Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep) {
     Mat hsv;
     cvtColor(image, hsv, COLOR_BGR2HSV);
 
@@ -30,22 +30,22 @@ Mat getImageCanny(const Mat& image, const bool& showStepByStep) {
 
     Mat dilatedImage, erodedImage, blurredImage;
     // Increases then decreases image thickness for better edge recognition
-    dilate(mask, dilatedImage, kernel);
-    erode(dilatedImage, erodedImage, kernel);
-    GaussianBlur(erodedImage, blurredImage, Size(3, 3), 3, 0);
+    GaussianBlur(mask, blurredImage, Size(3, 3), 3, 0);
 
     Mat cannyImage;
     Canny(blurredImage, cannyImage, CANNY_LOW, CANNY_HIGH);
 
+    dilate(cannyImage, dilatedImage, kernel);
+    erode(dilatedImage, erodedImage, kernel);
+
     if (showStepByStep) {
-        imshow("HSV", hsv);
-        imshow("HSV Low", lowerMask);
-        imshow("HSV High", upperMask);
-        imshow("Mask", mask);
-        imshow("Dilated", dilatedImage);
-        imshow("Eroded", erodedImage);
-        imshow("Blurred", blurredImage);
-        imshow("Canny", cannyImage);
+        saveOrShowImage(sample + "/01hsv", hsv);
+        saveOrShowImage(sample + "/02hsv_low", lowerMask);
+        saveOrShowImage(sample + "/03hsv_high", upperMask);
+        saveOrShowImage(sample + "/04mask", mask);
+        saveOrShowImage(sample + "/05blurred", blurredImage);
+        saveOrShowImage(sample + "/06dilated", dilatedImage);
+        saveOrShowImage(sample + "/07eroded", erodedImage);
     }
 
     return cannyImage;

@@ -8,7 +8,7 @@
 using namespace std;
 using namespace cv;
 
-#define STEP_BY_STEP false
+#define STEP_BY_STEP true
 
 int main() {
     for (int s = 0; s < SAMPLES; s++) {
@@ -17,11 +17,10 @@ int main() {
         configureFolder(sample);
 
         Mat image = imread(imagePath);
-        Mat canny = getImageCanny(image, STEP_BY_STEP);
-        vector<vector<Point>> contours = searchContours(canny, STEP_BY_STEP);
+        Mat canny = getBorderedImage(sample, image, STEP_BY_STEP);
+        vector<vector<Point>> contours = searchContours(sample, canny, STEP_BY_STEP);
 
-        saveOrShowImage(sample + "/original", image);
-        saveOrShowImage(sample + "/canny", canny);
+        saveOrShowImage(sample + "/00original", image);
 
         Mat imageWithConeHighlight = image.clone();
         for (int i = 0; i < contours.size(); i++) {

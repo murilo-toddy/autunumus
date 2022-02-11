@@ -6,12 +6,15 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
+#include "fileHandler.h"
+
 using namespace std;
 using namespace cv;
 
-#define AREA_TRESHHOLD 300
+// Minimum area that object must have to be considered cone
+#define AREA_TRESHHOLD 200
 
-vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStepByStep);
+vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const bool& showStepByStep);
 bool convexContourPointingUp(const vector<Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H

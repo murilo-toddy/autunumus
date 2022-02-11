@@ -1,5 +1,4 @@
 #include "contourHandler.h"
-#include "fileHandler.h"
 
 /**
  * @brief Finds contours for cones in an image
@@ -7,7 +6,7 @@
  * @param showStepByStep Show all intermediate steps
  * @return A vector containing cone contours
  */
-vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStepByStep) {
+vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const bool& showStepByStep) {
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
 
@@ -47,10 +46,10 @@ vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStep
     }
 
     if (showStepByStep) {
-        imshow("Default contours", defaultContours);
-        imshow("Polygon approximation", approximatedContours);
-        imshow("Convex contours", convexHullContours);
-        imshow("Pointing Upwards", desiredContours);
+        saveOrShowImage(sample + "/08default_contours", defaultContours);
+        saveOrShowImage(sample + "/09polygon", approximatedContours);
+        saveOrShowImage(sample + "/10convex", convexHullContours);
+        saveOrShowImage(sample + "/11upwards", desiredContours);
     }
 
     return pointingUpContours;
@@ -64,7 +63,7 @@ vector<vector<Point>> searchContours(const Mat& cannyImage, const bool& showStep
  */
 bool convexContourPointingUp(const vector<Point>& contour) {
     Rect boundingRectangle = boundingRect(contour);
-    double aspectRatio = boundingRectangle.width / boundingRectangle.height;
+    double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
     // If element's width is bigger than height, return false
     if (aspectRatio > 0.8) { return false; }
