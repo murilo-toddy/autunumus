@@ -6,6 +6,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
+#include "Image.h"
 #include "fileHandler.h"
 
 using namespace std;
@@ -20,6 +21,6 @@ using namespace cv;
 #define CANNY_LOW 80.0
 #define CANNY_HIGH 160.0
 
-Mat getBorderedImage(string sample, const Mat& image, const bool& showStepByStep);
+Mat getBorderedImage(Image *image, const bool& showStepByStep);
 
 #endif //CONEDETECTION_IMAGEPROCESSING_H
