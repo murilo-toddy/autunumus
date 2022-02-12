@@ -10,7 +10,8 @@
 using namespace std;
 using namespace cv;
 
-void configureFolder(const string& folderName);
-void saveOrShowImage(const string& name, const Mat& image);
+namespace file {
+    void configureFolder(const string &folderName);
+}
 
 #endif //CONEDETECTION_FILEHANDLER_H

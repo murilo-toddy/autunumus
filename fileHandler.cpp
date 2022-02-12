@@ -1,16 +1,6 @@
 #include "fileHandler.h"
 
-void configureFolder(const string& folderName) {
-    if(SAVE_IMAGES) {
-        system(("rm -r ../destination/" + folderName).c_str());
-        system(("mkdir ../destination/" + folderName).c_str());
-    }
-}
-
-void saveOrShowImage(const string& name, const Mat& image) {
-    if (SAVE_IMAGES) {
-        imwrite("../destination/" + name + ".jpg", image);
-    } else {
-        imshow("Original Image", image);
-    }
+void file::configureFolder(const string& folderName) {
+    system(("rm -r " + folderName).c_str());
+    system(("mkdir " + folderName).c_str());
 }
