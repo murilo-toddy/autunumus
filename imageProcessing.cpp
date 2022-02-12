@@ -6,7 +6,7 @@
  * @param showStepByStep Show all intermediate steps
  * @return Image with canny edges
  */
-void getBorderedImage(Image *image, const bool& showStepByStep) {
+void getBorderedImage(Image *image) {
     cvtColor(image->originalImage, image->mat.originalImageHsv, COLOR_BGR2HSV);
 
     // TODO tidy by using a hsv delimited vector, and use vector of masks instead
@@ -35,16 +35,6 @@ void getBorderedImage(Image *image, const bool& showStepByStep) {
     // Increases then decreases image thickness for better edge recognition
     dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
     erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
-    
-//    if (showStepByStep) {
-//        saveOrShowImage(sample + "/01hsv", image->mat.originalImageHsv);
-//        saveOrShowImage(sample + "/02hsv_low", image->mat.lowerMask);
-//        saveOrShowImage(sample + "/03hsv_high", image->mat.upperMask);
-//        saveOrShowImage(sample + "/04mask", image->mat.mask);
-//        saveOrShowImage(sample + "/05blurred", image->mat.blurredImage);
-//        saveOrShowImage(sample + "/06canny", image->mat.cannyImage);
-//        saveOrShowImage(sample + "/07dilated", image->mat.dilatedImage);
-//        saveOrShowImage(sample + "/08eroded", image->mat.erodedImage);
-//    }
+
     image->processedImage = image->mat.erodedImage;
 }

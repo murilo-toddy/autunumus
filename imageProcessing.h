@@ -21,6 +21,6 @@ using namespace cv;
 #define CANNY_LOW 80.0
 #define CANNY_HIGH 160.0
 
-void getBorderedImage(Image *image, const bool& showStepByStep);
+void getBorderedImage(Image *image);
 
 #endif //CONEDETECTION_IMAGEPROCESSING_H
