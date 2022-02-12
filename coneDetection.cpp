@@ -12,28 +12,17 @@ using namespace cv;
 #define STEP_BY_STEP true
 
 int main() {
-    for (int s = 0; s < SAMPLES; s++) {
-        string sample = to_string(s + 1);
-        auto *sampledImage = new Image(s + 1);
+    for (int s = 1; s <= SAMPLES; s++) {
+        cout << "Processing sample " << to_string(s) << endl;
+        auto *sampledImage = new Image(s);
 
-        string imagePath = "../source/" + sample + ".jpg";
-        configureFolder(sample);
+        // Processes image to find candidate edges
+        getBorderedImage(sampledImage);
 
-        cout << "Processing sample " << sample << endl;
+        // Finds all cone contours
+        searchContours(sampledImage);
 
-        Mat image = imread(imagePath);
-        Mat canny = getBorderedImage(sampledImage, STEP_BY_STEP);
-        vector<vector<Point>> contours = searchContours(sample, canny, STEP_BY_STEP);
-
-        saveOrShowImage(sample + "/00original", image);
-
-        Mat imageWithConeHighlight = image.clone();
-        for (int i = 0; i < contours.size(); i++) {
-            drawContours(imageWithConeHighlight, contours, i, Scalar(0, 255, 255), 2);
-        }
-
-        saveOrShowImage(sample + "/final", imageWithConeHighlight);
-        cout << contours.size() << " cone(s) found" << endl;
+        sampledImage->saveImagesOnDisk(STEP_BY_STEP);
     }
     return 0;
 }
