@@ -32,6 +32,7 @@ private:
 
 public:
     Mat originalImage;
+    Mat processedImage;
     Mat finalImage;
     transformations mat;
 
