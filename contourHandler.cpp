@@ -2,62 +2,51 @@
 
 /**
  * @brief Finds contours for cones in an image
- * @param cannyImage Image with canny edges to detect cones
+ * @param *image Image object with processed matrices loaded
  * @param showStepByStep Show all intermediate steps
  * @return A vector containing cone contours
  */
-vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const bool& showStepByStep) {
-    // Create matrices to store different transformations
-    int rows = cannyImage.rows, cols = cannyImage.cols;
-    Mat defaultContours(rows, cols, CV_8UC3, {0, 0, 0});
-    Mat approximatedContours(rows, cols, CV_8UC3, {0, 0, 0});
-    Mat convexHullContours(rows, cols, CV_8UC3, {0, 0, 0});
-    Mat desiredContours(rows, cols, CV_8UC3, {0, 0, 0});
-
-    // Vectors to store found contours
-    vector<vector<Point>> contours;
-    vector<Vec4i> hierarchy;
+void searchContours(Image *image) {
+    // Configure matrices to store each transformation
+    image->configureContourMatrices();
 
     // Finds all contours in image
-    findContours(cannyImage, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+    findContours(image->processedImage,
+                 image->cont.contours, image->cont.hierarchy,
+                 RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
-    // Vectors to store different contour types
-    vector<vector<Point>> listOfContours(contours.size());
-    vector<vector<Point>> convexContours(contours.size());
-    vector<vector<Point>> pointingUpContours;
+    // Configure filtering contour vectors to have fixed size
+    image->configureContourVectors();
 
-    for (int i = 0; i < contours.size(); i++) {
+    for (int i = 0; i < image->cont.contours.size(); i++) {
         // Checks if contour's area is greater than threshold
-        double area = contourArea(contours[i]);
+        double area = contourArea(image->cont.contours[i]);
         if (area < AREA_THRESHOLD) { continue; }
 
         // Approximates contour by a simpler polygon and verifies number of vertices
-        double perimeter = arcLength(contours[i], true);
-        approxPolyDP(contours[i], listOfContours[i], 0.02 * perimeter, true);
-        if (listOfContours[i].size() > POINTS_THRESHOLD || listOfContours[i].size() < 3) { continue; }
+        double perimeter = arcLength(image->cont.contours[i], true);
+        approxPolyDP(image->cont.contours[i], image->cont.filteredContours[i], 0.02 * perimeter, true);
+        if (image->cont.filteredContours[i].size() > POINTS_THRESHOLD || image->cont.filteredContours[i].size() < 3) { continue; }
 
         // Forces contours to be convex
-        convexHull(listOfContours[i], convexContours[i]);
+        convexHull(image->cont.filteredContours[i], image->cont.convexContours[i]);
 
         // Draws all contours on matrices
-        drawContours(defaultContours, contours, i, Scalar(30, 255, 255));
-        drawContours(approximatedContours, listOfContours, i, Scalar(30, 255, 255));
-        drawContours(convexHullContours, convexContours, i, Scalar(255, 0, 255), 2);
+        drawContours(image->mat.defaultContours, image->cont.contours, i, Scalar(30, 255, 255));
+        drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, Scalar(30, 255, 255));
+        drawContours(image->mat.convexContours, image->cont.convexContours, i, Scalar(255, 0, 255), 2);
 
         // Check if polygon is pointing upwards
-        if (!convexContourPointingUp(convexContours[i])) { continue; }
-        pointingUpContours.push_back(convexContours[i]);
-        drawContours(desiredContours, pointingUpContours, pointingUpContours.size() - 1, Scalar(255, 0, 255), 2);
-    }
+        if (!convexContourPointingUp(image->cont.convexContours[i])) { continue; }
+        image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
+        drawContours(image->mat.coneContours, image->cont.pointingUpContours,
+                     image->cont.pointingUpContours.size() - 1,
+                     Scalar(255, 0, 255), 2);
 
-    if (showStepByStep) {
-        saveOrShowImage(sample + "/09default_contours", defaultContours);
-        saveOrShowImage(sample + "/10polygon", approximatedContours);
-        saveOrShowImage(sample + "/11convex", convexHullContours);
-        saveOrShowImage(sample + "/12upwards", desiredContours);
+        drawContours(image->finalImage, image->cont.pointingUpContours,
+                     image->cont.pointingUpContours.size() - 1,
+                     Scalar(0, 255, 255), 2);
     }
-
-    return pointingUpContours;
 }
 
 
@@ -71,10 +60,10 @@ bool convexContourPointingUp(const vector<Point>& contour) {
     double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
     // If element's width is bigger than height, return false
-    if (aspectRatio > 0.8) { return false; }
+    if (aspectRatio > ASPECT_RATIO_THRESHOLD) { return false; }
 
     // Gets y center of contour and separates top points from bottom ones
-    double yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
+    int yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
     vector<Point> pointsAboveCenter;
     vector<Point> pointsBelowCenter;
     for (auto& point : contour) {

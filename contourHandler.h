@@ -6,6 +6,7 @@
 #include <opencv2/imgproc.hpp>
 #include <iostream>
 
+#include "Image.h"
 #include "fileHandler.h"
 
 using namespace std;
@@ -17,7 +18,10 @@ using namespace cv;
 // Maximum amount of points that simplified shape can have
 #define POINTS_THRESHOLD 8
 
-vector<vector<Point>> searchContours(string sample, const Mat& cannyImage, const bool& showStepByStep);
+// Maximum aspect ratio a contour can have to be considered a cone
+#define ASPECT_RATIO_THRESHOLD 0.8
+
+void searchContours(Image *image);
 bool convexContourPointingUp(const vector<Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H
