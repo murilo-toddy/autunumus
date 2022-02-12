@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 
+#include "fileHandler.h"
+
 using namespace cv;
 
 #define SOURCE_FOLDER "../source/"
@@ -18,28 +20,40 @@ typedef struct {
     Mat blurredImage, cannyImage, dilatedImage, erodedImage;
     Mat defaultContours, approximatedContours, convexContours;
     Mat coneContours;
-} transformations;
+} Transformations;
+
+typedef struct {
+    std::vector<std::vector<Point>> contours;
+    std::vector<Vec4i> hierarchy;
+    std::vector<std::vector<Point>> filteredContours, convexContours, pointingUpContours;
+} Contours;
 
 
 class Image {
 private:
     int identifier;
-    std::string imagePath;
+    std::string imagePath, destinationFolder;
 
-    void configureDestinationFolder();
-    Mat createMatrix();
-    Mat createMatrix(const int& rows, const int& cols);
+    void configureDestinationFolder() const;
+    Mat createFixedSizeMatrix() const;
+    std::vector<std::vector<Point>> createFixedSizeVector() const;
+
+    void writeOnDisk(const string& fileName, const Mat& matrix);
 
 public:
     Mat originalImage;
     Mat processedImage;
     Mat finalImage;
-    transformations mat;
+    Transformations mat;
+    Contours cont;
 
     explicit Image(const int& identifier);
 
-    void saveImagesOnDisk();
-    void openImages();
+    void configureContourMatrices();
+    void configureContourVectors();
+
+    void saveImagesOnDisk(const bool& saveStepByStep);
+    void openImages(const bool& showStepByStep);
 };
 
 
