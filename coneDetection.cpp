@@ -1,6 +1,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <iostream>
 
+#include "Image.h"
 #include "imageProcessing.h"
 #include "contourHandler.h"
 #include "fileHandler.h"
@@ -13,13 +14,15 @@ using namespace cv;
 int main() {
     for (int s = 0; s < SAMPLES; s++) {
         string sample = to_string(s + 1);
+        auto *sampledImage = new Image(s + 1);
+
         string imagePath = "../source/" + sample + ".jpg";
         configureFolder(sample);
 
         cout << "Processing sample " << sample << endl;
 
         Mat image = imread(imagePath);
-        Mat canny = getBorderedImage(sample, image, STEP_BY_STEP);
+        Mat canny = getBorderedImage(sampledImage, STEP_BY_STEP);
         vector<vector<Point>> contours = searchContours(sample, canny, STEP_BY_STEP);
 
         saveOrShowImage(sample + "/00original", image);
