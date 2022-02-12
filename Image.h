@@ -53,7 +53,7 @@ public:
     void configureContourVectors();
 
     void saveImagesOnDisk(const bool& saveStepByStep);
-    void openImages(const bool& showStepByStep);
+    void openImages(const bool& showStepByStep) const;
 };
 
 
