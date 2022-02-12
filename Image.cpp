@@ -1,7 +1,5 @@
 #include "Image.h"
 
-#include <iostream>
-
 Image::Image(const int& identifier) {
     this->identifier = identifier;
     this->imagePath = SOURCE_FOLDER + std::to_string(identifier) + ".jpg";

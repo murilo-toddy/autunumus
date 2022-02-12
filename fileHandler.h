@@ -5,7 +5,6 @@
 #include <cstdlib>
 
 #define SAMPLES 13
-#define SAVE_IMAGES true
 
 using namespace std;
 using namespace cv;

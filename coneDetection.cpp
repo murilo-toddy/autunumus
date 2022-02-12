@@ -1,4 +1,3 @@
-#include <opencv2/imgcodecs.hpp>
 #include <iostream>
 
 #include "Image.h"

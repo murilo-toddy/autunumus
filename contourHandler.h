@@ -7,7 +7,6 @@
 #include <iostream>
 
 #include "Image.h"
-#include "fileHandler.h"
 
 using namespace std;
 using namespace cv;

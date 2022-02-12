@@ -4,10 +4,8 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <iostream>
 
 #include "Image.h"
-#include "fileHandler.h"
 
 using namespace std;
 using namespace cv;
