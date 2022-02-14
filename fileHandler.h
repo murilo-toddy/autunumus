@@ -1,13 +1,12 @@
 #ifndef CONEDETECTION_FILEHANDLER_H
 #define CONEDETECTION_FILEHANDLER_H
 
-#include <opencv2/highgui.hpp>
 #include <cstdlib>
+#include <string>
 
-#define SAMPLES 13
+#define SAMPLES 14
 
-using namespace std;
-using namespace cv;
+using std::string;
 
 namespace file {
     void configureFolder(const string &folderName);

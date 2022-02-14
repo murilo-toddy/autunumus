@@ -1,14 +1,15 @@
 #ifndef CONEDETECTION_CONTOURHANDLER_H
 #define CONEDETECTION_CONTOURHANDLER_H
 
+#include <vector>
+
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include <iostream>
 
 #include "Image.h"
 
-using namespace std;
+using std::vector;
 using namespace cv;
 
 // Minimum area that object must have to be considered cone

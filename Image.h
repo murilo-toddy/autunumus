@@ -1,14 +1,15 @@
 #ifndef CONEDETECTION_IMAGE_H
 #define CONEDETECTION_IMAGE_H
 
-#include <opencv2/imgcodecs.hpp>
-#include <opencv2/highgui.hpp>
 #include <string>
 #include <vector>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
 
 #include "fileHandler.h"
 
 using namespace cv;
+using std::to_string;
 
 #define SOURCE_FOLDER      "../source/"
 #define DESTINATION_FOLDER "../output/"
