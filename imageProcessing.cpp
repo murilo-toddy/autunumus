@@ -1,10 +1,9 @@
 #include "imageProcessing.h"
 
 /**
- * @brief Find canny edges in an image
- * @param image Original image
- * @param showStepByStep Show all intermediate steps
- * @return Image with canny edges
+ * @brief Finds edges in an image and add information into image object
+ * @param image *Image object with original image loaded
+ * @author murilo-toddy
  */
 void getBorderedImage(Image *image) {
     cvtColor(image->originalImage, image->mat.originalImageHsv, COLOR_BGR2HSV);

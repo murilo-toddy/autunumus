@@ -1,10 +1,9 @@
 #include "contourHandler.h"
 
 /**
- * @brief Finds contours for cones in an image
- * @param *image Image object with processed matrices loaded
- * @param showStepByStep Show all intermediate steps
- * @return A vector containing cone contours
+ * @brief Finds contours for cones in an image and saves them into Image object
+ * @param image *Image object with processed matrices loaded
+ * @author murilo-toddy
  */
 void searchContours(Image *image) {
     // Configure matrices to store each transformation

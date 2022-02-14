@@ -10,7 +10,7 @@
 
 using namespace cv;
 
-#define SOURCE_FOLDER "../source/"
+#define SOURCE_FOLDER      "../source/"
 #define DESTINATION_FOLDER "../output/"
 
 
