@@ -3,7 +3,6 @@
 /**
  * @brief Finds contours for cones in an image and saves them into Image object
  * @param image *Image object with processed matrices loaded
- * @author murilo-toddy
  */
 void searchContours(Image *image) {
     // Configure matrices to store each transformation
@@ -73,13 +72,13 @@ bool convexContourPointingUp(const vector<Point>& contour) {
         }
     }
 
-    // Sort vectors by x to find left and rightmost points
-    sort(pointsBelowCenter.begin(), pointsBelowCenter.end(),
-        [](Point p1, Point p2)-> bool {
-            return (p1.x < p2.x);
-    });
+    // Get minimum and maximum x values below center in contour
     int leftmostPointBelowCenterX = pointsBelowCenter.front().x;
-    int rightmostPointBelowCenterX = pointsBelowCenter.back().x;
+    int rightmostPointBelowCenterX = pointsBelowCenter.front().x;
+    for(auto& point : contour) {
+        if(point.x < leftmostPointBelowCenterX) { leftmostPointBelowCenterX = point.x; }
+        if(point.x > rightmostPointBelowCenterX) { rightmostPointBelowCenterX = point.x; }
+    }
 
     // Determine if all top points are within lower bounds
     if (all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),

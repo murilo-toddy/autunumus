@@ -3,7 +3,6 @@
 /**
  * @brief Finds edges in an image and add information into image object
  * @param image *Image object with original image loaded
- * @author murilo-toddy
  */
 void getBorderedImage(Image *image) {
     cvtColor(image->originalImage, image->mat.originalImageHsv, COLOR_BGR2HSV);
