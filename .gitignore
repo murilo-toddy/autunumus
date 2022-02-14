@@ -34,7 +34,10 @@
 # CMake builds
 build
 cmake-build-debug
-.idea
 
 # Image outputs
 output
+
+# Other
+.vscode
+.idea
