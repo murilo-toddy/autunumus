@@ -8,12 +8,9 @@
 #define STEP_BY_STEP true
 
 int main() {
-    using std::cout;
-    using std::endl;
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
+    using std::cout, std::endl;
+    using std::chrono::duration, std::chrono::duration_cast;
+    using std::chrono::high_resolution_clock, std::chrono::milliseconds;
 
     for (int s = 1; s <= SAMPLES; s++) {
         cout << "** Processing sample " << to_string(s) << " **" << endl;
