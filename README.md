@@ -17,7 +17,7 @@ will contain a step-by-step transformation of the image, and will be saved in th
 ## Dependencies
 
 This project is built using
-- `C++14`
+- `C++17`
 - `OpenCV 4`
 - `CMake 3.18.4`
 
