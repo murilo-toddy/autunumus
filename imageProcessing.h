@@ -8,8 +8,6 @@
 
 #include "Image.h"
 
-using namespace cv;
-using std::vector;
 
 // Colors in (H, S, V) format to be considered
 #define HSV_LOW_BOTTOM  {0, 135, 135}

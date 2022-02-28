@@ -1,5 +1,8 @@
 #include "Image.h"
 
+using namespace cv;
+using std::to_string;
+
 Image::Image(const int& identifier) {
     this->identifier = identifier;
     this->imagePath = SOURCE_FOLDER + std::to_string(identifier) + ".jpg";

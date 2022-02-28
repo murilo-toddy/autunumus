@@ -6,10 +6,8 @@
 
 #define SAMPLES 14
 
-using std::string;
-
 namespace file {
-    void configureFolder(const string &folderName);
+    void configureFolder(const std::string &folderName);
 }
 
 #endif //CONEDETECTION_FILEHANDLER_H

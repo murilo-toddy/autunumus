@@ -1,10 +1,14 @@
 #include "contourHandler.h"
 
+using std::vector;
+
 /**
  * @brief Finds contours for cones in an image and saves them into Image object
  * @param image *Image object with processed matrices loaded
  */
 void searchContours(Image *image) {
+    using namespace cv;
+
     // Configure matrices to store each transformation
     image->configureContourMatrices();
 
@@ -54,7 +58,7 @@ void searchContours(Image *image) {
  * @return Boolean representing contour orientation
  */
 bool convexContourPointingUp(const vector<Point>& contour) {
-    Rect boundingRectangle = boundingRect(contour);
+    cv::Rect boundingRectangle = cv::boundingRect(contour);
     double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
     // If element's width is bigger than height, return false

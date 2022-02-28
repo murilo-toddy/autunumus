@@ -9,8 +9,6 @@
 
 #include "Image.h"
 
-using std::vector;
-using namespace cv;
 
 // Minimum area that object must have to be considered cone
 #define AREA_THRESHOLD 100
@@ -22,6 +20,6 @@ using namespace cv;
 #define ASPECT_RATIO_THRESHOLD 0.8
 
 void searchContours(Image *image);
-bool convexContourPointingUp(const vector<Point>& contour);
+bool convexContourPointingUp(const std::vector<Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H

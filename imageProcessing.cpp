@@ -1,5 +1,8 @@
 #include "imageProcessing.h"
 
+using namespace cv;
+using std::vector;
+
 /**
  * @brief Finds edges in an image and add information into image object
  * @param image *Image object with original image loaded
