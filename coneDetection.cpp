@@ -4,16 +4,22 @@
 #include "Image.h"
 #include "imageProcessing.h"
 #include "contourHandler.h"
+#include "colorFiltering.h"
 
 #define STEP_BY_STEP true
+#define COLOR_PICKING true
 
 int main() {
-    using std::cout, std::endl;
+    using std::cout;
     using std::chrono::duration, std::chrono::duration_cast;
     using std::chrono::high_resolution_clock, std::chrono::milliseconds;
 
+    if(COLOR_PICKING) {
+        showImage("../source/1.jpg");
+    }
+
     for (int s = 1; s <= SAMPLES; s++) {
-        cout << "** Processing sample " << to_string(s) << " **" << endl;
+        cout << "** Processing sample " << std::to_string(s) << " **\n";
         auto *sampledImage = new Image(s);
         auto processBegin = high_resolution_clock::now();
 
@@ -24,7 +30,7 @@ int main() {
         // Finds all cone contours
         searchContours(sampledImage);
         auto processedContours = high_resolution_clock::now();
-        cout << sampledImage->cont.pointingUpContours.size() << " cone(s) found" << endl;
+        cout << sampledImage->cont.pointingUpContours.size() << " cone(s) found\n";
 
         // Save images on disk
         sampledImage->saveImagesOnDisk(STEP_BY_STEP);
@@ -36,13 +42,13 @@ int main() {
         double coneDetection = processImage.count() + findContours.count();
         double processTotal = coneDetection + saveOnDisk.count();
 
-        cout << "Processing image: " << processImage.count() << " ms" << endl;
-        cout << "Finding contours: " << findContours.count() << " ms" << endl;
-        cout << "Cone detection:   " << coneDetection        << " ms" << endl;
-        cout << "Saving files:     " << saveOnDisk.count()   << " ms" << endl;
-        cout << "Iteration time:   " << processTotal         << " ms" << endl;
+        cout << "Processing image: " << processImage.count() << " ms\n";
+        cout << "Finding contours: " << findContours.count() << " ms\n";
+        cout << "Cone detection:   " << coneDetection        << " ms\n";
+        cout << "Saving files:     " << saveOnDisk.count()   << " ms\n";
+        cout << "Iteration time:   " << processTotal         << " ms\n";
 
-        cout << endl;
+        cout << "\n";
     }
     return 0;
 }
