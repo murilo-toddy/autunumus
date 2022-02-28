@@ -57,7 +57,7 @@ void searchContours(Image *image) {
  * @param contour Vector of points representing a contour
  * @return Boolean representing contour orientation
  */
-bool convexContourPointingUp(const vector<Point>& contour) {
+bool convexContourPointingUp(const vector<cv::Point>& contour) {
     cv::Rect boundingRectangle = cv::boundingRect(contour);
     double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
@@ -66,8 +66,8 @@ bool convexContourPointingUp(const vector<Point>& contour) {
 
     // Gets y center of contour and separates top points from bottom ones
     int yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
-    vector<Point> pointsAboveCenter;
-    vector<Point> pointsBelowCenter;
+    vector<cv::Point> pointsAboveCenter;
+    vector<cv::Point> pointsBelowCenter;
     for (auto& point : contour) {
         if (point.y < yCenter) {
             pointsAboveCenter.push_back(point);
@@ -86,7 +86,7 @@ bool convexContourPointingUp(const vector<Point>& contour) {
 
     // Determine if all top points are within lower bounds
     if (all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
-       [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](Point p) -> bool {
+       [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](cv::Point p) -> bool {
             return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
     }))
     return true;

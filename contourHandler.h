@@ -20,6 +20,6 @@
 #define ASPECT_RATIO_THRESHOLD 0.8
 
 void searchContours(Image *image);
-bool convexContourPointingUp(const std::vector<Point>& contour);
+bool convexContourPointingUp(const std::vector<cv::Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H

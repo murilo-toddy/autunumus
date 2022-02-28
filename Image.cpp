@@ -1,7 +1,7 @@
 #include "Image.h"
 
 using namespace cv;
-using std::to_string;
+using std::to_string, std::string;
 
 Image::Image(const int& identifier) {
     this->identifier = identifier;

@@ -11,7 +11,6 @@
 #define SOURCE_FOLDER      "../source/"
 #define DESTINATION_FOLDER "../output/"
 
-
 typedef struct {
     cv::Mat originalImageHsv;
     cv::Mat lowerMask, upperMask, mask;
@@ -21,9 +20,9 @@ typedef struct {
 } Transformations;
 
 typedef struct {
-    std::vector<std::vector<Point>> contours;
-    std::vector<Vec4i> hierarchy;
-    std::vector<std::vector<Point>> filteredContours, convexContours, pointingUpContours;
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierarchy;
+    std::vector<std::vector<cv::Point>> filteredContours, convexContours, pointingUpContours;
 } Contours;
 
 
@@ -34,9 +33,9 @@ private:
 
     void configureDestinationFolder() const;
     [[nodiscard]] cv::Mat createFixedSizeMatrix() const;
-    [[nodiscard]] std::vector<std::vector<Point>> createFixedSizeVector() const;
+    [[nodiscard]] std::vector<std::vector<cv::Point>> createFixedSizeVector() const;
 
-    void writeOnDisk(const string& fileName, const Mat& matrix);
+    void writeOnDisk(const std::string& fileName, const cv::Mat& matrix);
 
 public:
     cv::Mat originalImage;
