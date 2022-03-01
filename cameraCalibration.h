@@ -1,4 +1,8 @@
 #ifndef CONEDETECTION_CAMERACALIBRATION_H
 #define CONEDETECTION_CAMERACALIBRATION_H
 
+#include "cameraInput.h"
+
+void calibrateInputCamera();
+
 #endif //CONEDETECTION_CAMERACALIBRATION_H
