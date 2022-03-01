@@ -5,17 +5,23 @@
 #include "imageProcessing.h"
 #include "contourHandler.h"
 #include "colorFiltering.h"
+#include "cameraCalibration.h"
 
 #define STEP_BY_STEP true
-#define COLOR_PICKING true
+#define COLOR_PICKING false
+#define CALIBRATE_CAMERA true
 
-int main() {
+int main(int, char **) {
     using std::cout;
     using std::chrono::duration, std::chrono::duration_cast;
     using std::chrono::high_resolution_clock, std::chrono::milliseconds;
 
     if(COLOR_PICKING) {
         showImage("../source/1.jpg");
+    }
+
+    if(CALIBRATE_CAMERA) {
+        calibrateInputCamera();
     }
 
     for (int s = 1; s <= SAMPLES; s++) {
