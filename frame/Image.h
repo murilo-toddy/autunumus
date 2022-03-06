@@ -8,8 +8,8 @@
 
 #include "fileHandler.h"
 
-#define SOURCE_FOLDER      "../source/"
-#define DESTINATION_FOLDER "../output/"
+#define SOURCE_FOLDER      "../cone_detection/test_images/source/"
+#define DESTINATION_FOLDER "../cone_detection/test_images/output/"
 
 typedef struct {
     cv::Mat originalImageHsv;
