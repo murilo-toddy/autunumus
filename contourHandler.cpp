@@ -15,12 +15,13 @@ void searchContours(Image *image) {
     // Finds all contours in image
     findContours(image->processedImage,
                  image->cont.contours, image->cont.hierarchy,
-                 RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
+                 RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
+;
 
     // Configure filtering contour vectors to have fixed size
     image->configureContourVectors();
 
-    for (int i = 0; i < image->cont.contours.size(); i++) {
+    for (int i = 0; i < (int)image->cont.contours.size(); i++) {
         // Checks if contour's area is greater than threshold
         double area = contourArea(image->cont.contours[i]);
         if (area < AREA_THRESHOLD) { continue; }
@@ -89,5 +90,6 @@ bool convexContourPointingUp(const vector<cv::Point>& contour) {
        [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](cv::Point p) -> bool {
             return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
     }))
+
     return true;
 }
