@@ -1,12 +1,4 @@
-#include <iostream>
-#include <chrono>
-
-#include "../Image.h"
-#include "../imageProcessing.h"
-#include "../contourHandler.h"
-
-#define STEP_BY_STEP true
-
+#include "coneDetection.h"
 
 void coneDetectionSampledImages() {
     using std::cout;
@@ -15,14 +7,14 @@ void coneDetectionSampledImages() {
 
     for (int s = 1; s <= SAMPLES; s++) {
         cout << "** Processing sample " << std::to_string(s) << " **\n";
-        auto *sampledImage = new Image(s);
+        auto *sampledImage = new Image(SOURCE_FOLDER + std::to_string(s));
         auto processBegin = high_resolution_clock::now();
 
-        // Processes image to find candidate edges
+        // Process image to find candidate edges
         getBorderedImage(sampledImage);
         auto processedImages = high_resolution_clock::now();
 
-        // Finds all cone contours
+        // Find all cone contours
         searchContours(sampledImage);
         auto processedContours = high_resolution_clock::now();
         cout << sampledImage->cont.pointingUpContours.size() << " cone(s) found\n";
@@ -46,7 +38,6 @@ void coneDetectionSampledImages() {
         cout << "\n";
     }
 }
-
 
 void coneDetectionVideo() {
 
