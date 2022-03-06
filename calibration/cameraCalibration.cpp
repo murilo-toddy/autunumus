@@ -1,103 +1,102 @@
 #include "cameraCalibration.h"
-#include <iostream>
-#include <opencv2/calib3d.hpp>
-#include <opencv2/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
 
-void calibrateInputCamera() {
-//    readCameraInputData();
-//    return;
-    using namespace std;
-    using namespace cv;
+void calibrateCamera() {
+    // Collect all sample files
+    std::vector<cv::String> files;
+    cv::glob(SAMPLE_IMAGES_PATH, files, false);
 
-    vector<String> fileNames;
-    glob("../img/*.jpg", fileNames, false);
+    // Define world and image frames
+    cv::Size patternSize(CHESSBOARD_HEIGHT - 1, CHESSBOARD_WIDTH - 1);
+    std::vector<std::vector<cv::Point2f>> cameraFrame(files.size());
+    std::vector<std::vector<cv::Point3f>> worldFrame;
 
-    cv::Size patternSize(8 - 1, 8 - 1);
-    std::vector<std::vector<cv::Point2f>> q(fileNames.size());
-
-    std::vector<std::vector<cv::Point3f>> Q;
-    // 1. Generate checkerboard (world) coordinates Q. The board has 25 x 18
-    // fields with a size of 15x15mm
-
-    int checkerBoard[2] = {8,8};
-    // Defining the world coordinates for 3D points
-    std::vector<cv::Point3f> objp;
-    for(int i = 1; i<checkerBoard[1]; i++){
-        for(int j = 1; j<checkerBoard[0]; j++){
-            objp.push_back(cv::Point3f(j,i,0));
+    // Define world coordinates for points
+    std::vector<cv::Point3f> objectPosition;
+    for (int i = 1; i < CHESSBOARD_HEIGHT; i++) {
+        for (int j = 1; j < CHESSBOARD_WIDTH; j++) {
+            objectPosition.emplace_back(i, j, 0);
         }
     }
 
-    std::vector<cv::Point2f> imgPoint;
+    std::vector<cv::Point2f> imagePoint;
     // Detect feature points
     std::size_t i = 0;
-    for (auto const &f : fileNames) {
-        std::cout << std::string(f) << std::endl;
+    for (auto const &file : files) {
+        std::cout << "Analyzing " << std::string(file) << "\n";
 
-        // 2. Read in the image an call cv::findChessboardCorners()
-        cv::Mat img = cv::imread(fileNames[i]);
+        cv::Mat img = cv::imread(files[i]);
         cv::Mat gray;
 
         cv::cvtColor(img, gray, cv::COLOR_RGB2GRAY);
-        imshow("gray", gray);
-        waitKey(0);
+        bool patternFound = cv::findChessboardCorners(
+            gray,
+            patternSize,
+            cameraFrame[i],
+            cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE
+        );
 
-        bool patternFound = cv::findChessboardCorners(gray, patternSize, q[i], CALIB_CB_ADAPTIVE_THRESH + CALIB_CB_NORMALIZE_IMAGE);
-
-        // 2. Use cv::cornerSubPix() to refine the found corner detections
+        // Improve points detected
         if(patternFound){
-            cv::cornerSubPix(gray, q[i],cv::Size(11,11), cv::Size(-1,-1), cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1));
-            Q.push_back(objp);
+            cv::cornerSubPix(
+                gray, cameraFrame[i],
+                cv::Size(11, 11), cv::Size(-1, -1),
+                cv::TermCriteria(
+                    cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1
+                )
+            );
+            worldFrame.push_back(objectPosition);
         }
 
-        // Display
-        if (patternFound) {
-            cv::drawChessboardCorners(img, patternSize, q[i], patternFound);
-            cv::imshow("chessboard detection", img);
-            cv::waitKey(0);
-        }
+        // Show image with detected chessboard
+        cv::drawChessboardCorners(img, patternSize, cameraFrame[i], patternFound);
+        cv::imshow("Chessboard " + file, img);
+        cv::waitKey(0);
         i++;
     }
 
+    // Calculate intrinsic camera matrix
+    cv::Matx33f intrinsicMatrix(cv::Matx33f::eye());
+    cv::Vec<float, 5> distortionMatrix(0, 0, 0, 0, 0);
 
-    cv::Matx33f K(cv::Matx33f::eye());  // intrinsic camera matrix
-    cv::Vec<float, 5> k(0, 0, 0, 0, 0); // distortion coefficients
-
-    std::vector<cv::Mat> rvecs, tvecs;
+    std::vector<cv::Mat> rotationVectors, translationVectors;
     std::vector<double> stdIntrinsics, stdExtrinsics, perViewErrors;
     int flags = cv::CALIB_FIX_ASPECT_RATIO + cv::CALIB_FIX_K3 +
                 cv::CALIB_ZERO_TANGENT_DIST + cv::CALIB_FIX_PRINCIPAL_POINT;
-    cv::Size frameSize(1280, 1024);
+    cv::Size frameSize(1280, 960);
 
-    std::cout << "Calibrating..." << std::endl;
-    // 4. Call "float error = cv::calibrateCamera()" with the input coordinates
-    // and output parameters as declared above...
+    float error = cv::calibrateCamera(
+            worldFrame, cameraFrame, frameSize,
+            intrinsicMatrix, distortionMatrix,
+            rotationVectors, translationVectors, flags
+    );
 
-    float error = cv::calibrateCamera(Q, q, frameSize, K, k, rvecs, tvecs, flags);
+    std::cout << "Reprojection error = " << error
+              << "\nintrinsicMatrix =\n" << intrinsicMatrix
+              << "\ndistortionMatrix=\n" << distortionMatrix
+              << std::endl;
 
-    std::cout << "Reprojection error = " << error << "\nK =\n"
-              << K << "\nk=\n"
-              << k << std::endl;
-
-    // Precompute lens correction interpolation
+    // Lens correction interpolation
     cv::Mat mapX, mapY;
-    cv::initUndistortRectifyMap(K, k, cv::Matx33f::eye(), K, frameSize, CV_32FC1,
-                                mapX, mapY);
+    cv::initUndistortRectifyMap(
+        intrinsicMatrix, distortionMatrix, cv::Matx33f::eye(), 
+        intrinsicMatrix, frameSize, CV_32FC1,
+        mapX, mapY
+    );
+
+    cv::initUndistortRectifyMap(
+        intrinsicMatrix, distortionMatrix, cv::Matx33f::eye(),
+        intrinsicMatrix, frameSize, CV_32FC1,
+        mapX, mapY
+    );
 
     // Show lens corrected images
-    for (auto const &f : fileNames) {
-        std::cout << std::string(f) << std::endl;
-
+    for (auto const &f : files) {
         cv::Mat img = cv::imread(f, cv::IMREAD_COLOR);
-
         cv::Mat imgUndistorted;
-        // 5. Remap the image using the precomputed interpolation maps.
         cv::remap(img, imgUndistorted, mapX, mapY, cv::INTER_LINEAR);
 
         // Display
-        cv::imshow("undistorted image", imgUndistorted);
+        cv::imshow("undistorted image" + std::string(f), imgUndistorted);
         cv::waitKey(0);
     }
 }
