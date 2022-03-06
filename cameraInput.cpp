@@ -5,6 +5,23 @@ void readCameraInputData() {
     using namespace StApi;
     using namespace cv;
 
+    // Webcam
+    VideoCapture cap(0);
+    Mat image;
+    int i = 0;
+    while(true) {
+        int num = 20;
+        cout << i << endl;
+        cap >> image;
+        if(!(i % num)) {
+            imwrite("../calibration/calibration_images/" + to_string(i / num) + ".jpg", image);
+        }
+        imshow("Display", image);
+        waitKey(1);
+        i++;
+    }
+
+    // St Camera
     try {
         // Initialize StApi before using.
         CStApiAutoInit objStApiAutoInit;
@@ -45,7 +62,8 @@ void readCameraInputData() {
                 IStImage *pIStImage = pIStStreamBuffer->GetIStImage();
 
                 // Display the information of the acquired image data.
-                cout << "BlockId=" << pIStStreamBuffer->GetIStStreamBufferInfo()->GetFrameID()
+                uint64_t blockId = pIStStreamBuffer->GetIStStreamBufferInfo()->GetFrameID();
+                cout << "BlockId=" << blockId
                      << " Size:" << pIStImage->GetImageWidth() << " x " << pIStImage->GetImageHeight()
                      << " First byte =" << (uint32_t)*(uint8_t*)pIStImage->GetImageBuffer() << endl;
 
@@ -93,6 +111,11 @@ void readCameraInputData() {
                     }
 
                     // Show the image.
+                    int num = 300;
+                    if (blockId % num == 0) {
+                        imwrite("../calibration_images/" + to_string(blockId / num) + ".jpg", *pMat);
+                        cout << "Took Photo!!!" << endl;
+                    }
                     imshow("Image1", *pMat);
                     waitKey(1);
                 }
