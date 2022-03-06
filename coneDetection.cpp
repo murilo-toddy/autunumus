@@ -8,7 +8,7 @@
 #define STEP_BY_STEP true
 
 
-void coneDectectionSampledImages() {
+void coneDetectionSampledImages() {
     using std::cout;
     using std::chrono::duration, std::chrono::duration_cast;
     using std::chrono::high_resolution_clock, std::chrono::milliseconds;
