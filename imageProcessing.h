@@ -6,7 +6,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "Image.h"
+#include "frame/Image.h"
 
 
 // Colors in (H, S, V) format to be considered
