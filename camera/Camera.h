@@ -1,0 +1,14 @@
+//
+// Created by todao on 3/5/22.
+//
+
+#ifndef PATHDETECTIONALGORITHM_CAMERA_H
+#define PATHDETECTIONALGORITHM_CAMERA_H
+
+
+class Camera {
+
+};
+
+
+#endif //PATHDETECTIONALGORITHM_CAMERA_H

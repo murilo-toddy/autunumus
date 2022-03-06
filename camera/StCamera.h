@@ -1,0 +1,14 @@
+//
+// Created by todao on 3/5/22.
+//
+
+#ifndef PATHDETECTIONALGORITHM_STCAMERA_H
+#define PATHDETECTIONALGORITHM_STCAMERA_H
+
+
+class StCamera {
+
+};
+
+
+#endif //PATHDETECTIONALGORITHM_STCAMERA_H
