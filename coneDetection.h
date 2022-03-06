@@ -1,0 +1,9 @@
+#ifndef PATHDETECTIONALGORITHM_CONEDETECTION_H
+#define PATHDETECTIONALGORITHM_CONEDETECTION_H
+
+#define STEP_BY_STEP true
+
+void coneDetectionSampledImages();
+void coneDetectionVideo();
+
+#endif //PATHDETECTIONALGORITHM_CONEDETECTION_H

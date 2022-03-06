@@ -4,25 +4,14 @@
 #include "Image.h"
 #include "imageProcessing.h"
 #include "contourHandler.h"
-#include "colorFiltering.h"
-#include "cameraCalibration.h"
 
 #define STEP_BY_STEP true
-#define COLOR_PICKING false
-#define CALIBRATE_CAMERA true
 
-int main(int, char **) {
+
+void coneDectectionSampledImages() {
     using std::cout;
     using std::chrono::duration, std::chrono::duration_cast;
     using std::chrono::high_resolution_clock, std::chrono::milliseconds;
-
-    if(COLOR_PICKING) {
-        showImage("../source/1.jpg");
-    }
-
-    if(CALIBRATE_CAMERA) {
-        calibrateInputCamera();
-    }
 
     for (int s = 1; s <= SAMPLES; s++) {
         cout << "** Processing sample " << std::to_string(s) << " **\n";
@@ -44,17 +33,21 @@ int main(int, char **) {
 
         duration<double, std::milli> processImage = processedImages - processBegin;
         duration<double, std::milli> findContours = processedContours - processedImages;
-        duration<double, std::milli> saveOnDisk   = processEnd - processedContours;
+        duration<double, std::milli> saveOnDisk = processEnd - processedContours;
         double coneDetection = processImage.count() + findContours.count();
         double processTotal = coneDetection + saveOnDisk.count();
 
         cout << "Processing image: " << processImage.count() << " ms\n";
         cout << "Finding contours: " << findContours.count() << " ms\n";
-        cout << "Cone detection:   " << coneDetection        << " ms\n";
-        cout << "Saving files:     " << saveOnDisk.count()   << " ms\n";
-        cout << "Iteration time:   " << processTotal         << " ms\n";
+        cout << "Cone detection:   " << coneDetection << " ms\n";
+        cout << "Saving files:     " << saveOnDisk.count() << " ms\n";
+        cout << "Iteration time:   " << processTotal << " ms\n";
 
         cout << "\n";
     }
-    return 0;
+}
+
+
+void coneDetectionVideo() {
+
 }
