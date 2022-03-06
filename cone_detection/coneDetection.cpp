@@ -1,9 +1,9 @@
 #include <iostream>
 #include <chrono>
 
-#include "Image.h"
-#include "imageProcessing.h"
-#include "contourHandler.h"
+#include "../Image.h"
+#include "../imageProcessing.h"
+#include "../contourHandler.h"
 
 #define STEP_BY_STEP true
 
