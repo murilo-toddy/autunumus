@@ -6,10 +6,8 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "fileHandler.h"
+#include "../fileHandler.h"
 
-#define SOURCE_FOLDER      "../cone_detection/test_images/source/"
-#define DESTINATION_FOLDER "../cone_detection/test_images/output/"
 
 typedef struct {
     cv::Mat originalImageHsv;
@@ -44,7 +42,7 @@ public:
     Transformations mat;
     Contours cont;
 
-    explicit Image(const int& identifier);
+    explicit Image(const std::string& imagePath);
 
     void configureContourMatrices();
     void configureContourVectors();
