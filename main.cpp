@@ -9,9 +9,8 @@ enum OPERATION_MODE {
     PATH_DETECTION
 };
 
-int main(int argc, char** argv) {
-    OPERATION_MODE operation = CONE_DETECTION;
-
+int main(int, char**) {
+    OPERATION_MODE operation = CAMERA_CALIBRATION;
     switch (operation) {
         case COLOR_PICKING:
             showImage("../source/1.jpg");
@@ -20,7 +19,6 @@ int main(int argc, char** argv) {
             calibrateCamera();
             break;
         case CONE_DETECTION:
-            // coneDetectionSampledImages();
             coneDetectionSampledImages();
             break;
         case PATH_DETECTION:
