@@ -24,7 +24,7 @@ add_executable(${TARGET} ${SOURCES}
         fileHandler.cpp fileHandler.h
         contourHandler.cpp contourHandler.h
         imageProcessing.cpp imageProcessing.h
-        Image.cpp Image.h
+        frame/Image.cpp frame/Image.h
         borderLineDetection.cpp borderLineDetection.h
         calibration/cameraCalibration.cpp calibration/cameraCalibration.h
         colorFiltering.cpp colorFiltering.h
@@ -32,7 +32,7 @@ add_executable(${TARGET} ${SOURCES}
         cone_detection/coneDetection.cpp cone_detection/coneDetection.h
         camera/Camera.cpp camera/Camera.h
         camera/StCamera.cpp camera/StCamera.h
-    )
+        camera/matrices.h)
 target_link_libraries(${TARGET} ${OpenCV_LIBS} ${Genicam_Library} ${StApi_Library})
 set_target_properties(${TARGET}
         PROPERTIES LINK_FLAGS "${Genicam_LinkFlag} ${StApi_LinkFlag}"
