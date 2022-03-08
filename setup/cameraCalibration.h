@@ -8,7 +8,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#define SAMPLE_IMAGES_PATH "../calibration/calibration_images/*.jpg"
+#define SAMPLE_IMAGES_PATH "../setup/calibration_images/*.jpg"
 #define CHESSBOARD_HEIGHT  8
 #define CHESSBOARD_WIDTH   8
 
