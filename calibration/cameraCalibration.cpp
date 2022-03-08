@@ -83,12 +83,6 @@ void calibrateCamera() {
         mapX, mapY
     );
 
-    cv::initUndistortRectifyMap(
-        intrinsicMatrix, distortionMatrix, cv::Matx33f::eye(),
-        intrinsicMatrix, frameSize, CV_32FC1,
-        mapX, mapY
-    );
-
     // Show lens corrected images
     for (auto const &f : files) {
         cv::Mat img = cv::imread(f, cv::IMREAD_COLOR);

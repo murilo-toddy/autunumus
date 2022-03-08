@@ -1,8 +1,6 @@
 #ifndef CONEDETECTION_CAMERACALIBRATION_H
 #define CONEDETECTION_CAMERACALIBRATION_H
 
-#include "../cameraInput.h"
-
 #include <iostream>
 #include <fstream>
 #include <opencv2/calib3d.hpp>
