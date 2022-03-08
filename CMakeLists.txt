@@ -25,7 +25,7 @@ add_executable(${TARGET} ${SOURCES}
         contourHandler.cpp contourHandler.h
         imageProcessing.cpp imageProcessing.h
         frame/Image.cpp frame/Image.h
-        borderLineDetection.cpp borderLineDetection.h
+        path_detection/borderLineDetection.cpp path_detection/borderLineDetection.h
         setup/cameraCalibration.cpp setup/cameraCalibration.h
         setup/colorFiltering.cpp setup/colorFiltering.h
         cone_detection/coneDetection.cpp cone_detection/coneDetection.h
