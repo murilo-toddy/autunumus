@@ -5,8 +5,8 @@
 #include <chrono>
 
 #include "../frame/Image.h"
-#include "../imageProcessing.h"
-#include "../contourHandler.h"
+#include "../processing/imageProcessing.h"
+#include "../processing/contourHandler.h"
 
 #define SOURCE_FOLDER      "../cone_detection/test_images/source/"
 #define DESTINATION_FOLDER "../cone_detection/test_images/output/"

@@ -7,7 +7,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "frame/Image.h"
+#include "../frame/Image.h"
 
 
 // Minimum area that object must have to be considered cone

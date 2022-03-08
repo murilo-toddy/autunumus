@@ -22,8 +22,8 @@ set(TARGET "main")
 set(SOURCES "main.cpp")
 add_executable(${TARGET} ${SOURCES}
         fileHandler.cpp fileHandler.h
-        contourHandler.cpp contourHandler.h
-        imageProcessing.cpp imageProcessing.h
+        processing/contourHandler.cpp processing/contourHandler.h
+        processing/imageProcessing.cpp processing/imageProcessing.h
         frame/Image.cpp frame/Image.h
         path_detection/borderLineDetection.cpp path_detection/borderLineDetection.h
         setup/cameraCalibration.cpp setup/cameraCalibration.h
