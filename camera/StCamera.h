@@ -1,13 +1,15 @@
-//
-// Created by todao on 3/5/22.
-//
-
 #ifndef PATHDETECTIONALGORITHM_STCAMERA_H
 #define PATHDETECTIONALGORITHM_STCAMERA_H
 
+#include <StApi_TL.h>
+#include <opencv2/highgui.hpp>
+#include <opencv2/imgproc.hpp>
 
 class StCamera {
+private:
 
+public:
+    StCamera();
 };
 
 
