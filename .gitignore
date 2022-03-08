@@ -37,7 +37,7 @@ cmake-build-debug
 
 # Image outputs
 cone_detection/test_images/output
-calibration/calibration_images
+setup/calibration_images
 
 # Other
 .vscode
