@@ -28,7 +28,6 @@ add_executable(${TARGET} ${SOURCES}
         borderLineDetection.cpp borderLineDetection.h
         calibration/cameraCalibration.cpp calibration/cameraCalibration.h
         colorFiltering.cpp colorFiltering.h
-        cameraInput.cpp cameraInput.h
         cone_detection/coneDetection.cpp cone_detection/coneDetection.h
         camera/Camera.cpp camera/Camera.h
         camera/StCamera.cpp camera/StCamera.h
