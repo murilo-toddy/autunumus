@@ -80,16 +80,14 @@ bool convexContourPointingUp(const std::vector<cv::Point>& contour) {
     // Get minimum and maximum x values below center in contour
     int leftmostPointBelowCenterX = pointsBelowCenter.front().x;
     int rightmostPointBelowCenterX = pointsBelowCenter.front().x;
-    for(auto& point : contour) {
-        if(point.x < leftmostPointBelowCenterX) { leftmostPointBelowCenterX = point.x; }
-        if(point.x > rightmostPointBelowCenterX) { rightmostPointBelowCenterX = point.x; }
+    for (auto& point : pointsBelowCenter) {
+        if (point.x < leftmostPointBelowCenterX) { leftmostPointBelowCenterX = point.x; }
+        if (point.x > rightmostPointBelowCenterX) { rightmostPointBelowCenterX = point.x; }
     }
 
     // Determine if all top points are within lower bounds
-    if (all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
+    return all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
        [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](cv::Point p) -> bool {
             return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
-    }))
-
-    return true;
+    });
 }
