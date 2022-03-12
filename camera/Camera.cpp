@@ -13,8 +13,6 @@ Camera::Camera(const int &captureIndex, const int &width, const int &height) {
             this->intrinsicMatrix, this->frameSize, CV_32FC1,
             this->mapX, this->mapY
     );
-
-    std::cout << this->mapX << "\n" << this->mapY;
 }
 
 void Camera::readFrame() {
