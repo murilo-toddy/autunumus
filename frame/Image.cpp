@@ -2,11 +2,15 @@
 
 using namespace cv;
 using std::to_string, std::string;
+#include <iostream>
+
+#define DESTINATION_FOLDER "../cone_detection/test_images/output/"
 
 Image::Image(const string& imagePath) {
-    this->identifier = std::stoi(imagePath);
+    this->identifier = std::stoi(imagePath.substr(imagePath.find_last_of('/') + 1));
     this->imagePath = imagePath + ".jpg";
-    this->destinationFolder = to_string(this->identifier); // TODO UPDATE DESTINATION FOLDER
+    this->destinationFolder = DESTINATION_FOLDER + std::to_string(this->identifier);
+    std::cout << this->destinationFolder << std::endl;
     this->originalImage = imread(this->imagePath);
 }
 
