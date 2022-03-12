@@ -19,7 +19,8 @@ int main(int, char**) {
             calibrateCamera();
             break;
         case CONE_DETECTION:
-            coneDetectionSampledImages();
+//            coneDetectionSampledImages();
+            coneDetectionVideo();
             break;
         case PATH_DETECTION:
             break;
