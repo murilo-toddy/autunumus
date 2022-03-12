@@ -7,6 +7,7 @@
 #include "../frame/Image.h"
 #include "../processing/imageProcessing.h"
 #include "../processing/contourHandler.h"
+#include "../camera/Camera.h"
 
 #define SOURCE_FOLDER      "../cone_detection/test_images/source/"
 #define DESTINATION_FOLDER "../cone_detection/test_images/output/"
@@ -14,6 +15,6 @@
 #define STEP_BY_STEP true
 
 void coneDetectionSampledImages();
-void coneDetectionVideo();
+[[noreturn]] void coneDetectionVideo();
 
 #endif //PATHDETECTIONALGORITHM_CONEDETECTION_H

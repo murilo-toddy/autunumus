@@ -7,7 +7,8 @@ void coneDetectionSampledImages() {
 
     for (int s = 1; s <= SAMPLES; s++) {
         cout << "** Processing sample " << std::to_string(s) << " **\n";
-        auto *sampledImage = new Image(SOURCE_FOLDER + std::to_string(s));
+        cv::Mat image = cv::imread(SOURCE_FOLDER + std::to_string(s) + ".jpg");
+        auto *sampledImage = new Image(image, DESTINATION_FOLDER + std::to_string(s));
         auto processBegin = high_resolution_clock::now();
 
         // Process image to find candidate edges
@@ -40,5 +41,18 @@ void coneDetectionSampledImages() {
 }
 
 void coneDetectionVideo() {
+    Camera camera;
+    while(true) {
+        camera.readFrame();
+        auto *cameraFrame = new Image(camera.getMat(), "");
+        getBorderedImage(cameraFrame);
+        searchContours(cameraFrame);
+        cv::imshow("ConeDetection", cameraFrame->finalImage);
+        cv::imshow("mask", cameraFrame->mat.mask);
+        cv::imshow("border", cameraFrame->mat.cannyImage);
+        cv::imshow("contour", cameraFrame->mat.convexContours);
+        cv::waitKey(1);
 
+        delete cameraFrame;
+    }
 }
