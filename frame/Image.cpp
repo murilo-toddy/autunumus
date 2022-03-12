@@ -50,17 +50,15 @@ void Image::saveImagesOnDisk(const bool& saveStepByStep) {
 
     if(saveStepByStep) {
         this->writeOnDisk("01hsv", this->mat.originalImageHsv);
-        this->writeOnDisk("02mask_low", this->mat.lowerMask);
-        this->writeOnDisk("03mask_high", this->mat.upperMask);
-        this->writeOnDisk("04mask", this->mat.mask);
-        this->writeOnDisk("05blurred", this->mat.blurredImage);
-        this->writeOnDisk("06canny", this->mat.cannyImage);
-        this->writeOnDisk("07dilated", this->mat.dilatedImage);
-        this->writeOnDisk("08eroded", this->mat.erodedImage);
-        this->writeOnDisk("09default_contours", this->mat.defaultContours);
-        this->writeOnDisk("10polygon", this->mat.defaultContours);
-        this->writeOnDisk("11convex", this->mat.approximatedContours);
-        this->writeOnDisk("12upwards", this->mat.coneContours);
+        this->writeOnDisk("02mask", this->mat.mask);
+        this->writeOnDisk("03blurred", this->mat.blurredImage);
+        this->writeOnDisk("04canny", this->mat.cannyImage);
+        this->writeOnDisk("05dilated", this->mat.dilatedImage);
+        this->writeOnDisk("06eroded", this->mat.erodedImage);
+        this->writeOnDisk("07default_contours", this->mat.defaultContours);
+        this->writeOnDisk("08polygon", this->mat.defaultContours);
+        this->writeOnDisk("09convex", this->mat.approximatedContours);
+        this->writeOnDisk("10upwards", this->mat.coneContours);
     }
 }
 
@@ -68,8 +66,6 @@ void Image::openImages(const bool& showStepByStep) const {
     imshow("original", this->originalImage);
     if(showStepByStep) {
         imshow("hsv", this->mat.originalImageHsv);
-        imshow("mask low", this->mat.lowerMask);
-        imshow("mask high", this->mat.upperMask);
         imshow("mask", this->mat.mask);
         imshow("blurred", this->mat.blurredImage);
         imshow("canny", this->mat.cannyImage);

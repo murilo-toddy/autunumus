@@ -10,8 +10,7 @@
 
 
 typedef struct {
-    cv::Mat originalImageHsv;
-    cv::Mat lowerMask, upperMask, mask;
+    cv::Mat originalImageHsv, mask;
     cv::Mat blurredImage, cannyImage, dilatedImage, erodedImage;
     cv::Mat defaultContours, approximatedContours, convexContours;
     cv::Mat coneContours;
