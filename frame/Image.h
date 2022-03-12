@@ -26,8 +26,7 @@ typedef struct {
 
 class Image {
 private:
-    int identifier;
-    std::string imagePath, destinationFolder;
+    std::string destinationFolder;
 
     void configureDestinationFolder() const;
     [[nodiscard]] cv::Mat createFixedSizeMatrix() const;
@@ -42,7 +41,7 @@ public:
     Transformations mat;
     Contours cont;
 
-    explicit Image(const std::string& imagePath, const std::string& destinationFolder);
+    explicit Image(const cv::Mat& imageMatrix, const std::string& destinationFolder);
 
     void configureContourMatrices();
     void configureContourVectors();

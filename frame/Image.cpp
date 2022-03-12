@@ -1,14 +1,12 @@
 #include "Image.h"
 
-Image::Image(const std::string& imagePath, const std::string& destinationFolder) {
-    this->identifier = std::stoi(imagePath.substr(imagePath.find_last_of('/') + 1));
-    this->imagePath = imagePath + ".jpg";
-    this->destinationFolder = destinationFolder + std::to_string(this->identifier);
-    this->originalImage = cv::imread(this->imagePath);
+Image::Image(const cv::Mat& imageMatrix, const std::string& destinationFolder) {
+    this->originalImage = imageMatrix;
+    this->destinationFolder = destinationFolder;
 }
 
 cv::Mat Image::createFixedSizeMatrix() const {
-    return *new cv::Mat(this->originalImage.rows, this->originalImage.cols, CV_8UC3, {0, 0, 0});
+    return {this->originalImage.rows, this->originalImage.cols, CV_8UC3, {0, 0, 0}};
 }
 
 void Image::configureContourMatrices() {
@@ -20,7 +18,7 @@ void Image::configureContourMatrices() {
 }
 
 std::vector<std::vector<cv::Point>> Image::createFixedSizeVector() const {
-    return *new std::vector<std::vector<cv::Point>>(this->cont.contours.size());
+    return std::vector<std::vector<cv::Point>>(this->cont.contours.size());
 }
 
 void Image::configureContourVectors() {
