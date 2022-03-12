@@ -1,54 +1,54 @@
 #include "contourHandler.h"
 
-using std::vector;
-
 /**
  * @brief Finds contours for cones in an image and saves them into Image object
  * @param image *Image object with processed matrices loaded
  */
 void searchContours(Image *image) {
-    using namespace cv;
-
     // Configure matrices to store each transformation
     image->configureContourMatrices();
 
-    // Finds all contours in image
-    findContours(image->processedImage,
-                 image->cont.contours, image->cont.hierarchy,
-                 RETR_EXTERNAL, CHAIN_APPROX_SIMPLE)
-;
+    // Find all contours in image
+    cv::findContours(
+        image->processedImage,
+        image->cont.contours, image->cont.hierarchy,
+        cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE
+    );
 
     // Configure filtering contour vectors to have fixed size
     image->configureContourVectors();
 
     for (int i = 0; i < (int)image->cont.contours.size(); i++) {
-        // Checks if contour's area is greater than threshold
-        double area = contourArea(image->cont.contours[i]);
+        // Check if contour's area is greater than threshold
+        double area = cv::contourArea(image->cont.contours[i]);
         if (area < AREA_THRESHOLD) { continue; }
 
-        // Approximates contour by a simpler polygon and verifies number of vertices
-        double perimeter = arcLength(image->cont.contours[i], true);
-        approxPolyDP(image->cont.contours[i], image->cont.filteredContours[i], 0.02 * perimeter, true);
-        if (image->cont.filteredContours[i].size() > POINTS_THRESHOLD || image->cont.filteredContours[i].size() < 3) { continue; }
+        // Approximate contour by a simpler polygon and verifies number of vertices
+        double perimeter = cv::arcLength(image->cont.contours[i], true);
+        cv::approxPolyDP(image->cont.contours[i], image->cont.filteredContours[i], 0.02 * perimeter, true);
+        
+        // Check for amount of edges
+        if (image->cont.filteredContours[i].size() > POINTS_THRESHOLD || 
+                image->cont.filteredContours[i].size() < 3) { continue; }
 
         // Forces contours to be convex
         convexHull(image->cont.filteredContours[i], image->cont.convexContours[i]);
 
         // Draws all contours on matrices
-        drawContours(image->mat.defaultContours, image->cont.contours, i, Scalar(30, 255, 255));
-        drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, Scalar(30, 255, 255));
-        drawContours(image->mat.convexContours, image->cont.convexContours, i, Scalar(255, 0, 255), 2);
+        cv::drawContours(image->mat.defaultContours, image->cont.contours, i, cv::Scalar(30, 255, 255));
+        cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, cv::Scalar(30, 255, 255));
+        cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, cv::Scalar(255, 0, 255), 2);
 
         // Check if polygon is pointing upwards
         if (!convexContourPointingUp(image->cont.convexContours[i])) { continue; }
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
-        drawContours(image->mat.coneContours, image->cont.pointingUpContours,
+        cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
                      image->cont.pointingUpContours.size() - 1,
-                     Scalar(255, 0, 255), 2);
+                     cv::Scalar(255, 0, 255), 2);
 
-        drawContours(image->finalImage, image->cont.pointingUpContours,
+        cv::drawContours(image->finalImage, image->cont.pointingUpContours,
                      image->cont.pointingUpContours.size() - 1,
-                     Scalar(0, 255, 255), 2);
+                     cv::Scalar(0, 255, 255), 2);
     }
 }
 
@@ -58,7 +58,7 @@ void searchContours(Image *image) {
  * @param contour Vector of points representing a contour
  * @return Boolean representing contour orientation
  */
-bool convexContourPointingUp(const vector<cv::Point>& contour) {
+bool convexContourPointingUp(const std::vector<cv::Point>& contour) {
     cv::Rect boundingRectangle = cv::boundingRect(contour);
     double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
@@ -67,8 +67,8 @@ bool convexContourPointingUp(const vector<cv::Point>& contour) {
 
     // Gets y center of contour and separates top points from bottom ones
     int yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
-    vector<cv::Point> pointsAboveCenter;
-    vector<cv::Point> pointsBelowCenter;
+    std::vector<cv::Point> pointsAboveCenter;
+    std::vector<cv::Point> pointsBelowCenter;
     for (auto& point : contour) {
         if (point.y < yCenter) {
             pointsAboveCenter.push_back(point);
