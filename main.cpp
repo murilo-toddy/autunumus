@@ -1,6 +1,6 @@
-#include "calibration/colorFiltering.h"
+#include "setup/colorFiltering.h"
 #include "cone_detection/coneDetection.h"
-#include "calibration/cameraCalibration.h"
+#include "setup/cameraCalibration.h"
 
 enum OPERATION_MODE {
     COLOR_PICKING,
@@ -10,7 +10,7 @@ enum OPERATION_MODE {
 };
 
 int main(int, char**) {
-    OPERATION_MODE operation = CAMERA_CALIBRATION;
+    OPERATION_MODE operation = CONE_DETECTION;
     switch (operation) {
         case COLOR_PICKING:
             showImage("../source/1.jpg");
