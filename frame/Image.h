@@ -42,7 +42,7 @@ public:
     Transformations mat;
     Contours cont;
 
-    explicit Image(const std::string& imagePath);
+    explicit Image(const std::string& imagePath, const std::string& destinationFolder);
 
     void configureContourMatrices();
     void configureContourVectors();

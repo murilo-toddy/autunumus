@@ -1,21 +1,14 @@
 #include "Image.h"
 
-using namespace cv;
-using std::to_string, std::string;
-#include <iostream>
-
-#define DESTINATION_FOLDER "../cone_detection/test_images/output/"
-
-Image::Image(const string& imagePath) {
+Image::Image(const std::string& imagePath, const std::string& destinationFolder) {
     this->identifier = std::stoi(imagePath.substr(imagePath.find_last_of('/') + 1));
     this->imagePath = imagePath + ".jpg";
-    this->destinationFolder = DESTINATION_FOLDER + std::to_string(this->identifier);
-    std::cout << this->destinationFolder << std::endl;
-    this->originalImage = imread(this->imagePath);
+    this->destinationFolder = destinationFolder + std::to_string(this->identifier);
+    this->originalImage = cv::imread(this->imagePath);
 }
 
-Mat Image::createFixedSizeMatrix() const {
-    return *new Mat(this->originalImage.rows, this->originalImage.cols, CV_8UC3, {0, 0, 0});
+cv::Mat Image::createFixedSizeMatrix() const {
+    return *new cv::Mat(this->originalImage.rows, this->originalImage.cols, CV_8UC3, {0, 0, 0});
 }
 
 void Image::configureContourMatrices() {
@@ -26,8 +19,8 @@ void Image::configureContourMatrices() {
     this->mat.coneContours = this->createFixedSizeMatrix();
 }
 
-std::vector<std::vector<Point>> Image::createFixedSizeVector() const {
-    return *new std::vector<std::vector<Point>>(this->cont.contours.size());
+std::vector<std::vector<cv::Point>> Image::createFixedSizeVector() const {
+    return *new std::vector<std::vector<cv::Point>>(this->cont.contours.size());
 }
 
 void Image::configureContourVectors() {
@@ -39,7 +32,7 @@ void Image::configureDestinationFolder() const {
     file::configureFolder(this->destinationFolder);
 }
 
-void Image::writeOnDisk(const string& fileName, const Mat& matrix) {
+void Image::writeOnDisk(const std::string& fileName, const cv::Mat& matrix) {
     imwrite(this->destinationFolder + "/" + fileName + ".jpg", matrix);
 }
 
@@ -77,5 +70,5 @@ void Image::openImages(const bool& showStepByStep) const {
         imshow("upwards", this->mat.coneContours);
     }
     imshow("final", this->finalImage);
-    waitKey();
+    cv::waitKey();
 }
