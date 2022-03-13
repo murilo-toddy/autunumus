@@ -18,6 +18,7 @@ void searchContours(Image *image) {
 
     // Configure filtering contour vectors to have fixed size
     image->configureContourVectors();
+    cv::Scalar drawingColor(0, 255, 255);
 
     for (int i = 0; i < (int)image->cont.contours.size(); i++) {
         // Check if contour's area is greater than threshold
@@ -30,43 +31,42 @@ void searchContours(Image *image) {
         
         // Check for amount of edges
         if (image->cont.filteredContours[i].size() > POINTS_THRESHOLD || 
-                image->cont.filteredContours[i].size() < 3) { continue; }
+                image->cont.filteredContours[i].size() < 3
+            ) { continue; }
 
-        // Forces contours to be convex
+        // Force contours to be convex
         convexHull(image->cont.filteredContours[i], image->cont.convexContours[i]);
-
-        if (!REAL_TIME_ENV) {
-            // Draws all contours on matrices
-            cv::drawContours(image->mat.defaultContours, image->cont.contours, i, cv::Scalar(30, 255, 255));
-            cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i,
-                             cv::Scalar(30, 255, 255));
-            cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, cv::Scalar(255, 0, 255), 2);
-        }
 
         // Check if polygon is pointing upwards
         float distance = convexContourPointingUp(image->cont.convexContours[i]);
         if (distance == -1) { continue; }
 
+        // Polygon represents a cone
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
 
         if (!REAL_TIME_ENV) {
+            // Draw all contours on matrices
+            cv::drawContours(image->mat.defaultContours, image->cont.contours, i, drawingColor);
+            cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, drawingColor);
+            cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, drawingColor, 2);
+
             // Save image to cone contours mat
             cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
-                             image->cont.pointingUpContours.size() - 1,
-                             cv::Scalar(255, 0, 255), 2);
+                    image->cont.pointingUpContours.size() - 1, drawingColor, 2
+            );
 
             // Draw bounding rectangle and distance estimation
             cv::Rect boundingRectangle = cv::boundingRect(image->cont.pointingUpContours.back());
-            cv::rectangle(image->finalImage, boundingRectangle.tl(), boundingRectangle.br(), cv::Scalar(0, 255, 255), 2);
+            cv::rectangle(image->finalImage, boundingRectangle.tl(), boundingRectangle.br(), drawingColor, 2);
             cv::putText(image->finalImage, "Cone " + std::to_string(distance) + "cm",
-                        cv::Point(boundingRectangle.x, boundingRectangle.y - 10),
-                        cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 255), 1
-                    );
+                    {boundingRectangle.x, boundingRectangle.y - 10},
+                    cv::FONT_HERSHEY_DUPLEX, 0.7, drawingColor, 1
+            );
         }
 
         cv::drawContours(image->finalImage, image->cont.pointingUpContours,
-                     image->cont.pointingUpContours.size() - 1,
-                     cv::Scalar(0, 255, 255), 2);
+                image->cont.pointingUpContours.size() - 1, drawingColor, 2
+        );
     }
 }
 
