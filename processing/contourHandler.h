@@ -12,10 +12,10 @@
 
 /*
  * Parameters to estimate cone distance
- * Base distance:         25.0 cm
- * Relative pixel height: 425 px
+ * Base distance:         75.0 cm
+ * Relative pixel height: 421.8 px
  */
-#define CONE_HEIGHT_CONSTANT 25.0 * 425.0
+#define CONE_HEIGHT_CONSTANT 75.0 * 421.8
 
 // Minimum area that object must have to be considered cone
 #define AREA_THRESHOLD 300
