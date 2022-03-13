@@ -43,13 +43,18 @@ void coneDetectionSampledImages() {
 void coneDetectionVideo() {
     Camera camera;
     while(true) {
-        camera.readFrame();
+        auto processBegin = std::chrono::high_resolution_clock::now();
+
+        camera.readFrame(); // Read camera input
         auto *cameraFrame = new Image(camera.getMat(), "");
-        getBorderedImage(cameraFrame);
-        searchContours(cameraFrame);
+        getBorderedImage(cameraFrame); // Process frame
+        searchContours(cameraFrame);   // Find cone contours in frame
         cv::imshow("ConeDetection", cameraFrame->finalImage);
         cv::waitKey(1);
-
         delete cameraFrame;
+
+        auto processEnd = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> process = processEnd - processBegin;
+        std::cout << 1000 / (process.count()) << " fps\n";
     }
 }
