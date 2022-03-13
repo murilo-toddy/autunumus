@@ -10,17 +10,11 @@ enum OPERATION_MODE {
 };
 
 int main(int, char**) {
-    OPERATION_MODE operation = COLOR_PICKING;
+    OPERATION_MODE operation = CONE_DETECTION;
     switch (operation) {
         case COLOR_PICKING:
-            bool TEST_IN_FIXED_SAMPLE = true;
-            if (TEST_IN_FIXED_SAMPLE) {
-                findColorSpectrumSampleImage(
-                    "../cone_detection/test_images/source/14.jpg"
-                );
-            } else {
-                findColorSpectrumVideo();
-            }
+            findColorSpectrumSampleImage("../cone_detection/test_images/source/14.jpg");
+            // findColorSpectrumVideo();
             break;
         
         case CAMERA_CALIBRATION:
