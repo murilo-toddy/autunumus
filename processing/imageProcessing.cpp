@@ -2,20 +2,24 @@
 
 /**
  * @brief Generate a color map to filter for specific colors in hsv spectrum
- * @return map std::map<std::string, std::vector<cv::Scalar>> Color map
+ * @param void
+ * @return map std::map<std::string, std::vector<cv::Scalar>> HSV values to filter
  */
 std::map<std::string, std::vector<cv::Scalar>> loadColorMap() {
     // Scalars are in (H, S, V) format
     // Each color contains a lower and upper end
     return {
         { "LOW_RED",  {{ 0, 120, 120 },   { 15, 255, 255 }}  },
-        { "HIGH_RED", {{ 159, 135, 135 }, { 179, 255, 255 }} }
+        { "HIGH_RED", {{ 159, 135, 135 }, { 179, 255, 255 }} },
+        { "YELLOW",   {{ 16, 188, 116 },  { 63, 255, 238 }}  },
+        { "BLUE",     {{ 88, 134, 125 },  { 132, 236, 200 }} }
     };
 }
 
 /**
  * @brief Find edges in an image and add information into image object
  * @param image *Image object with original image loaded
+ * @return None
  */
 void getBorderedImage(Image *image) {
     cv::cvtColor(image->originalImage, image->mat.originalImageHsv, cv::COLOR_BGR2HSV);
