@@ -39,6 +39,7 @@ void getBorderedImage(Image *image) {
     }
 
     cv::Mat maskedImage = rangedImages[0].clone();
+    // TODO optimize weights
     for (int i = 1; i < (int)colorMap.size(); i++) {
         cv::addWeighted(maskedImage, 1, rangedImages[i], 1, 0, maskedImage);
     }
@@ -56,5 +57,4 @@ void getBorderedImage(Image *image) {
     cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
 
     image->processedImage = image->mat.erodedImage;
-    cv::imshow("proc", image->mat.mask);
 }
