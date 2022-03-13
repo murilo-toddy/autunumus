@@ -1,5 +1,10 @@
 #include "coneDetection.h"
 
+/**
+ * @brief Search for cones in sampled images
+ * @param void
+ * @return None
+ */
 void coneDetectionSampledImages() {
     using std::cout;
     using std::chrono::duration, std::chrono::duration_cast;
@@ -40,6 +45,11 @@ void coneDetectionSampledImages() {
     }
 }
 
+/**
+ * @brief Find cones using default camera input
+ * @param void
+ * @return None
+ */
 void coneDetectionVideo() {
     Camera camera;
     while(true) {
@@ -55,6 +65,6 @@ void coneDetectionVideo() {
 
         auto processEnd = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> process = processEnd - processBegin;
-        std::cout << 1000 / (process.count()) << " fps\n";
+        std::cout << "fps " << 1000 / (process.count()) << "\n";
     }
 }
