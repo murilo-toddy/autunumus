@@ -8,7 +8,7 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMap() {
     // Scalars are in (H, S, V) format
     // Each color contains a lower and upper end
     return {
-        { "LOW_RED",  {{ 0, 135, 135 },   { 15, 255, 255 }}  },
+        { "LOW_RED",  {{ 0, 120, 120 },   { 15, 255, 255 }}  },
         { "HIGH_RED", {{ 159, 135, 135 }, { 179, 255, 255 }} }
     };
 }
