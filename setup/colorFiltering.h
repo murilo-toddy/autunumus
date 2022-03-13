@@ -5,6 +5,7 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-[[noreturn]] void showImage(const std::string &imagePath);
+[[noreturn]] void findColorSpectrumSampleImage(const std::string &imagePath);
+void findColorSpectrumVideo();
 
 #endif //CONEDETECTION_COLORFILTERING_H
