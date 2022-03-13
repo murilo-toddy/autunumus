@@ -35,3 +35,23 @@ void showImage(const std::string &imagePath) {
         waitKey(1);
     }
 }
+
+void findColorSpectrumVideo() {
+    createTrackbar();
+    cv::VideoCapture cap(0);
+    cv::Mat image, hsv, mask;
+
+    while(cap.isOpened()) {
+        cap >> image;
+        cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+        cv::Scalar lower(hmin, smin, vmin);
+        cv::Scalar upper(hmax, smax, vmax);
+        
+        cv::inRange(hsv, lower, upper, mask);
+        
+        cv::imshow("Original image", image);
+        cv::imshow("Masked image", mask);
+        
+        cv::waitKey(1);
+    }
+}
