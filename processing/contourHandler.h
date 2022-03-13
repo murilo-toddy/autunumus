@@ -8,10 +8,17 @@
 #include <opencv2/imgproc.hpp>
 
 #include "../frame/Image.h"
+#include "../cone_detection/coneDetection.h"
 
+/*
+ * Parameters to estimate cone distance
+ * Base distance:         25.0 cm
+ * Relative pixel height: 425 px
+ */
+#define CONE_HEIGHT_CONSTANT 25.0 * 425.0
 
 // Minimum area that object must have to be considered cone
-#define AREA_THRESHOLD 100
+#define AREA_THRESHOLD 300
 
 // Maximum amount of points that simplified shape can have
 #define POINTS_THRESHOLD 8
@@ -20,6 +27,6 @@
 #define ASPECT_RATIO_THRESHOLD 0.8
 
 void searchContours(Image *image);
-bool convexContourPointingUp(const std::vector<cv::Point>& contour);
+float convexContourPointingUp(const std::vector<cv::Point>& contour);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H
