@@ -48,9 +48,6 @@ void coneDetectionVideo() {
         getBorderedImage(cameraFrame);
         searchContours(cameraFrame);
         cv::imshow("ConeDetection", cameraFrame->finalImage);
-        cv::imshow("mask", cameraFrame->mat.mask);
-        cv::imshow("border", cameraFrame->mat.cannyImage);
-        cv::imshow("contour", cameraFrame->mat.convexContours);
         cv::waitKey(1);
 
         delete cameraFrame;
