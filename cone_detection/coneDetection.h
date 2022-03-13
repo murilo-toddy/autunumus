@@ -13,7 +13,7 @@
 #define DESTINATION_FOLDER "../cone_detection/test_images/output/"
 
 #define STEP_BY_STEP   true
-#define REAL_TIME_ENV  true
+#define REAL_TIME_ENV  false
 
 void coneDetectionSampledImages();
 [[noreturn]] void coneDetectionVideo();
