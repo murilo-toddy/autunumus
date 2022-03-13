@@ -44,14 +44,14 @@ void getBorderedImage(Image *image) {
     }
     image->mat.mask = maskedImage;
 
-    // Function to operate in an image
+    // Morphing matrix
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
 
-    // Blurs image and performs canny edges detection
+    // Blur image and performs canny edges detection
     cv::GaussianBlur(image->mat.mask, image->mat.blurredImage, cv::Size(3, 3), 3, 0);
     cv::Canny(image->mat.blurredImage, image->mat.cannyImage, CANNY_LOW, CANNY_HIGH);
 
-    // Increases then decreases image thickness for better edge recognition
+    // Increase then decrease image thickness for better edge recognition
     cv::dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
     cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
 
