@@ -1,5 +1,6 @@
 #include "setup/colorFiltering.h"
 #include "cone_detection/coneDetection.h"
+#include "path_detection/borderLineDetection.h"
 #include "setup/cameraCalibration.h"
 
 enum OPERATION_MODE {
@@ -10,11 +11,11 @@ enum OPERATION_MODE {
 };
 
 int main(int, char**) {
-    OPERATION_MODE operation = CONE_DETECTION;
+    OPERATION_MODE operation = COLOR_PICKING;
     switch (operation) {
         case COLOR_PICKING:
-            findColorSpectrumSampleImage("../cone_detection/test_images/source/14.jpg");
-            // findColorSpectrumVideo();
+             findColorSpectrumSampleImage("../path_detection/test_images/3.jpg");
+//            findColorSpectrumVideo();
             break;
         
         case CAMERA_CALIBRATION:
@@ -22,10 +23,12 @@ int main(int, char**) {
             break;
 
         case CONE_DETECTION:
-            coneDetectionVideo();
+            coneDetectionSampledImages();
+//            coneDetectionVideo();
             break;
 
         case PATH_DETECTION:
+            findRoadMarkings();
             break;
     }
 }
