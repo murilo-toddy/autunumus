@@ -9,8 +9,8 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMap() {
     // Scalars are in (H, S, V) format
     // Each color contains a lower and upper end
     return {
-        { "LOW_RED",  {{ 0, 120, 120 },   { 15, 255, 255 }}  },
-        { "HIGH_RED", {{ 159, 135, 135 }, { 179, 255, 255 }} },
+        { "LOW_RED",  {{ 0, 120, 80 },    { 15, 255, 255 }}  },
+        { "HIGH_RED", {{ 159, 135, 90 },  { 179, 255, 160 }} },
         { "YELLOW",   {{ 16, 188, 116 },  { 63, 255, 238 }}  },
         { "BLUE",     {{ 88, 134, 125 },  { 132, 236, 200 }} },
         { "WHITE",    {{ 97, 0, 181 },    { 179, 37, 181 }}  }
@@ -56,4 +56,5 @@ void getBorderedImage(Image *image) {
     cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
 
     image->processedImage = image->mat.erodedImage;
+    cv::imshow("proc", image->mat.mask);
 }
