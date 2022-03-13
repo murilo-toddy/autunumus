@@ -34,17 +34,30 @@ void searchContours(Image *image) {
         // Forces contours to be convex
         convexHull(image->cont.filteredContours[i], image->cont.convexContours[i]);
 
-        // Draws all contours on matrices
-        cv::drawContours(image->mat.defaultContours, image->cont.contours, i, cv::Scalar(30, 255, 255));
-        cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, cv::Scalar(30, 255, 255));
-        cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, cv::Scalar(255, 0, 255), 2);
+        if (!REAL_TIME_ENV) {
+            // Draws all contours on matrices
+            cv::drawContours(image->mat.defaultContours, image->cont.contours, i, cv::Scalar(30, 255, 255));
+            cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i,
+                             cv::Scalar(30, 255, 255));
+            cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, cv::Scalar(255, 0, 255), 2);
+        }
 
         // Check if polygon is pointing upwards
-        if (!convexContourPointingUp(image->cont.convexContours[i])) { continue; }
+        float distance = convexContourPointingUp(image->cont.convexContours[i]);
+        if (distance == -1) { continue; }
+
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
-        cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
-                     image->cont.pointingUpContours.size() - 1,
-                     cv::Scalar(255, 0, 255), 2);
+
+        if (!REAL_TIME_ENV) {
+            cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
+                             image->cont.pointingUpContours.size() - 1,
+                             cv::Scalar(255, 0, 255), 2);
+
+            cv::Rect boundingRectangle = cv::boundingRect(image->cont.pointingUpContours.back());
+            cv::rectangle(image->finalImage, boundingRectangle.tl(), boundingRectangle.br(), cv::Scalar(0, 255, 255), 2);
+            cv::putText(image->finalImage, "RED CONE " + std::to_string(distance) + "cm",
+                        cv::Point(boundingRectangle.x, boundingRectangle.y - 10), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 255), 1);
+        }
 
         cv::drawContours(image->finalImage, image->cont.pointingUpContours,
                      image->cont.pointingUpContours.size() - 1,
@@ -58,12 +71,12 @@ void searchContours(Image *image) {
  * @param contour Vector of points representing a contour
  * @return Boolean representing contour orientation
  */
-bool convexContourPointingUp(const std::vector<cv::Point>& contour) {
+float convexContourPointingUp(const std::vector<cv::Point>& contour) {
     cv::Rect boundingRectangle = cv::boundingRect(contour);
     double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
 
     // If element's width is bigger than height, return false
-    if (aspectRatio > ASPECT_RATIO_THRESHOLD) { return false; }
+    if (aspectRatio > ASPECT_RATIO_THRESHOLD) { return -1; }
 
     // Gets y center of contour and separates top points from bottom ones
     int yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
@@ -86,8 +99,12 @@ bool convexContourPointingUp(const std::vector<cv::Point>& contour) {
     }
 
     // Determine if all top points are within lower bounds
-    return all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
+    if (all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
        [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](cv::Point p) -> bool {
             return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
-    });
+    })) {
+        // Return distance to cone
+        return CONE_HEIGHT_CONSTANT / boundingRectangle.height;
+    }
+    return -1;
 }
