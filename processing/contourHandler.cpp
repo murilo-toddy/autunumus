@@ -3,6 +3,7 @@
 /**
  * @brief Finds contours for cones in an image and saves them into Image object
  * @param image *Image object with processed matrices loaded
+ * @return None
  */
 void searchContours(Image *image) {
     // Configure matrices to store each transformation
@@ -49,14 +50,18 @@ void searchContours(Image *image) {
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
 
         if (!REAL_TIME_ENV) {
+            // Save image to cone contours mat
             cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
                              image->cont.pointingUpContours.size() - 1,
                              cv::Scalar(255, 0, 255), 2);
 
+            // Draw bounding rectangle and distance estimation
             cv::Rect boundingRectangle = cv::boundingRect(image->cont.pointingUpContours.back());
             cv::rectangle(image->finalImage, boundingRectangle.tl(), boundingRectangle.br(), cv::Scalar(0, 255, 255), 2);
-            cv::putText(image->finalImage, "RED CONE " + std::to_string(distance) + "cm",
-                        cv::Point(boundingRectangle.x, boundingRectangle.y - 10), cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 255), 1);
+            cv::putText(image->finalImage, "Cone " + std::to_string(distance) + "cm",
+                        cv::Point(boundingRectangle.x, boundingRectangle.y - 10),
+                        cv::FONT_HERSHEY_DUPLEX, 0.7, cv::Scalar(0, 255, 255), 1
+                    );
         }
 
         cv::drawContours(image->finalImage, image->cont.pointingUpContours,
@@ -69,7 +74,7 @@ void searchContours(Image *image) {
 /**
  * @brief Determines if a contour is pointing upwards
  * @param contour Vector of points representing a contour
- * @return Boolean representing contour orientation
+ * @return Distance to cone. Returns -1 if no cone is found
  */
 float convexContourPointingUp(const std::vector<cv::Point>& contour) {
     cv::Rect boundingRectangle = cv::boundingRect(contour);
