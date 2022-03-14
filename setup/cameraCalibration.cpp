@@ -29,21 +29,21 @@ void calibrateCamera() {
 
         cv::cvtColor(img, gray, cv::COLOR_RGB2GRAY);
         bool patternFound = cv::findChessboardCorners(
-            gray,
-            patternSize,
-            cameraFrame[i],
-            cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE
-        );
+                gray,
+                patternSize,
+                cameraFrame[i],
+                cv::CALIB_CB_ADAPTIVE_THRESH + cv::CALIB_CB_NORMALIZE_IMAGE
+            );
 
         // Improve points detected
         if(patternFound){
             cv::cornerSubPix(
-                gray, cameraFrame[i],
-                cv::Size(11, 11), cv::Size(-1, -1),
-                cv::TermCriteria(
-                    cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1
-                )
-            );
+                    gray, cameraFrame[i],
+                    cv::Size(11, 11), cv::Size(-1, -1),
+                    cv::TermCriteria(
+                        cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1
+                    )
+                );
             worldFrame.push_back(objectPosition);
         }
 
@@ -68,7 +68,7 @@ void calibrateCamera() {
             worldFrame, cameraFrame, frameSize,
             intrinsicMatrix, distortionMatrix,
             rotationVectors, translationVectors, flags
-    );
+        );
 
     std::cout << "Reprojection error = " << error
               << "\nintrinsicMatrix =\n" << intrinsicMatrix
@@ -78,19 +78,19 @@ void calibrateCamera() {
     // Lens correction interpolation
     cv::Mat mapX, mapY;
     cv::initUndistortRectifyMap(
-        intrinsicMatrix, distortionMatrix, cv::Matx33f::eye(), 
-        intrinsicMatrix, frameSize, CV_32FC1,
-        mapX, mapY
-    );
+            intrinsicMatrix, distortionMatrix, cv::Matx33f::eye(), 
+            intrinsicMatrix, frameSize, CV_32FC1,
+            mapX, mapY
+        );
 
     // Show lens corrected images
-    for (auto const &f : files) {
-        cv::Mat img = cv::imread(f, cv::IMREAD_COLOR);
+    for (auto const& file : files) {
+        cv::Mat img = cv::imread(file, cv::IMREAD_COLOR);
         cv::Mat imgUndistorted;
         cv::remap(img, imgUndistorted, mapX, mapY, cv::INTER_LINEAR);
 
         // Display
-        cv::imshow("undistorted image" + std::string(f), imgUndistorted);
+        cv::imshow("undistorted image" + std::string(file), imgUndistorted);
         cv::waitKey(0);
     }
 }

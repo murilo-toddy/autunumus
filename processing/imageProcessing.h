@@ -10,9 +10,11 @@
 
 #include "../frame/Image.h"
 
+
 // Canny edges threshold
 #define CANNY_LOW       80.0
 #define CANNY_HIGH      160.0
+
 
 void getBorderedImage(Image *image);
 

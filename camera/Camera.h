@@ -7,6 +7,7 @@
 
 #include "matrices.h"
 
+
 class Camera {
 private:
     cv::VideoCapture cap;

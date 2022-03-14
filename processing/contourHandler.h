@@ -10,6 +10,7 @@
 #include "../frame/Image.h"
 #include "../cone_detection/coneDetection.h"
 
+
 /*
  * Parameters to estimate cone distance
  * Base distance:         75.0 cm
@@ -25,6 +26,9 @@
 
 // Maximum aspect ratio a contour can have to be considered a cone
 #define ASPECT_RATIO_THRESHOLD 0.8
+
+#define DRAWING_COLOR {0, 255, 255}
+
 
 void searchContours(Image *image);
 float convexContourPointingUp(const std::vector<cv::Point>& contour);

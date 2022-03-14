@@ -11,7 +11,7 @@ enum OPERATION_MODE {
 };
 
 int main(int, char**) {
-    OPERATION_MODE operation = COLOR_PICKING;
+    OPERATION_MODE operation = CONE_DETECTION;
     switch (operation) {
         case COLOR_PICKING:
              findColorSpectrumSampleImage("../path_detection/test_images/3.jpg");
@@ -23,8 +23,8 @@ int main(int, char**) {
             break;
 
         case CONE_DETECTION:
-            coneDetectionSampledImages();
-//            coneDetectionVideo();
+//            coneDetectionSampledImages();
+            coneDetectionVideo();
             break;
 
         case PATH_DETECTION:

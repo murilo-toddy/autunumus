@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include <iostream>
 
-Camera::Camera(const int &captureIndex, const int &width, const int &height) {
+Camera::Camera(const int& captureIndex, const int& width, const int& height) {
     this->cap.open(captureIndex);
     this->frameSize = cv::Size(width, height);
 
@@ -28,6 +28,6 @@ void Camera::showFrame() {
     cv::imshow("Camera", this->correctedMat);
 }
 
-void Camera::saveFrame(const std::string &path) {
+void Camera::saveFrame(const std::string& path) {
     cv::imwrite(path, this->correctedMat);
 }

@@ -1,6 +1,31 @@
 #include "contourHandler.h"
 
 /**
+ * @brief Draw contours on image object
+ * @param image Image object
+ * @param index Index of the contour
+ * @param distance Distance of found cone
+ */
+void drawContours(Image *image, const int& index, const float& distance) {
+    cv::drawContours(image->mat.defaultContours, image->cont.contours, index, DRAWING_COLOR);
+    cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, index, DRAWING_COLOR);
+    cv::drawContours(image->mat.convexContours, image->cont.convexContours, index, DRAWING_COLOR, 2);
+
+    // Save image to cone contours mat
+    cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
+                     image->cont.pointingUpContours.size() - 1, DRAWING_COLOR, 2
+        );
+
+    // Draw bounding rectangle and distance estimation
+    cv::Rect boundingRectangle = cv::boundingRect(image->cont.pointingUpContours.back());
+    cv::rectangle(image->finalImage, boundingRectangle, DRAWING_COLOR);
+    cv::putText(image->finalImage, "Cone " + std::to_string(distance) + "cm",
+                {boundingRectangle.x, boundingRectangle.y - 10},
+                cv::FONT_HERSHEY_DUPLEX, 0.7, DRAWING_COLOR, 1
+        );
+}
+
+/**
  * @brief Finds contours for cones in an image and saves them into Image object
  * @param image *Image object with processed matrices loaded
  * @return None
@@ -11,10 +36,10 @@ void searchContours(Image *image) {
 
     // Find all contours in image
     cv::findContours(
-        image->processedImage,
-        image->cont.contours, image->cont.hierarchy,
-        cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE
-    );
+            image->processedImage,
+            image->cont.contours, image->cont.hierarchy,
+            cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE
+        );
 
     // Configure filtering contour vectors to have fixed size
     image->configureContourVectors();
@@ -46,22 +71,7 @@ void searchContours(Image *image) {
 
         if (!REAL_TIME_ENV) {
             // Draw all contours on matrices
-            cv::drawContours(image->mat.defaultContours, image->cont.contours, i, drawingColor);
-            cv::drawContours(image->mat.approximatedContours, image->cont.filteredContours, i, drawingColor);
-            cv::drawContours(image->mat.convexContours, image->cont.convexContours, i, drawingColor, 2);
-
-            // Save image to cone contours mat
-            cv::drawContours(image->mat.coneContours, image->cont.pointingUpContours,
-                    image->cont.pointingUpContours.size() - 1, drawingColor, 2
-            );
-
-            // Draw bounding rectangle and distance estimation
-            cv::Rect boundingRectangle = cv::boundingRect(image->cont.pointingUpContours.back());
-            cv::rectangle(image->finalImage, boundingRectangle.tl(), boundingRectangle.br(), drawingColor, 2);
-            cv::putText(image->finalImage, "Cone " + std::to_string(distance) + "cm",
-                    {boundingRectangle.x, boundingRectangle.y - 10},
-                    cv::FONT_HERSHEY_DUPLEX, 0.7, drawingColor, 1
-            );
+            drawContours(image, i, distance);
         }
 
         cv::drawContours(image->finalImage, image->cont.pointingUpContours,
@@ -105,7 +115,7 @@ float convexContourPointingUp(const std::vector<cv::Point>& contour) {
 
     // Determine if all top points are within lower bounds
     if (all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
-       [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](cv::Point p) -> bool {
+       [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](const cv::Point& p) -> bool {
             return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
     })) {
         // Return distance to cone

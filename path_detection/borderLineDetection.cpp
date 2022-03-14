@@ -22,7 +22,7 @@ void findRoadMarkings() {
     cv::glob(BORDER_IMAGES_PATH, files, false);
     std::map<std::string, std::vector<cv::Scalar>> colorMap = loadColorMapRoadMarkings();
 
-    for (auto const& file : files) {
+    for (const auto& file : files) {
         std::cout << "** Processing sample " << std::string(file) << " **\n";
         cv::Mat image = cv::imread(file), hsv;
 
