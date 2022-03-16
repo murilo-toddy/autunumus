@@ -74,9 +74,44 @@ void searchContours(Image *image) {
             drawContours(image, i, distance);
         }
 
-        cv::drawContours(image->finalImage, image->cont.pointingUpContours,
-                image->cont.pointingUpContours.size() - 1, drawingColor, 2
-        );
+//        cv::drawContours(image->finalImage, image->cont.pointingUpContours,
+//                image->cont.pointingUpContours.size() - 1, drawingColor, 2
+//        );
+
+        // TODO optimize
+        std::vector<cv::Point> contour = image->cont.pointingUpContours.back();
+        cv::Rect boundingRectangle = cv::boundingRect(contour);
+        int yCenter = boundingRectangle.tl().y + boundingRectangle.height / 2;
+
+        std::vector<cv::Point> pointsAboveCenter;
+        std::vector<cv::Point> pointsBelowCenter;
+        for (auto& point : contour) {
+            if (point.y < yCenter) {
+                pointsAboveCenter.push_back(point);
+            } else {
+                pointsBelowCenter.push_back(point);
+            }
+        }
+
+        // Get minimum and maximum x values below center in contour
+        cv::Point leftmostPointBelowCenter = pointsBelowCenter.front();
+        cv::Point rightmostPointBelowCenter = pointsBelowCenter.front();
+        for (auto& point : pointsBelowCenter) {
+            if (point.x < leftmostPointBelowCenter.x) { leftmostPointBelowCenter = point; }
+            if (point.x > rightmostPointBelowCenter.x) { rightmostPointBelowCenter = point; }
+        }
+
+        cv::Point higherPoint = pointsAboveCenter.front();
+        for (auto& point : pointsAboveCenter) {
+            if (point.y < higherPoint.y) { higherPoint = point; }
+        }
+
+        cv::circle(image->finalImage, leftmostPointBelowCenter, 2, {255, 0, 0}, 2);
+        cv::circle(image->finalImage, rightmostPointBelowCenter, 2, {255, 0, 0}, 2);
+        cv::circle(image->finalImage, higherPoint, 2, {255, 0, 0}, 2);
+        cv::line(image->finalImage, leftmostPointBelowCenter, higherPoint, DRAWING_COLOR, 2);
+        cv::line(image->finalImage, leftmostPointBelowCenter, rightmostPointBelowCenter, DRAWING_COLOR, 2);
+        cv::line(image->finalImage, rightmostPointBelowCenter, higherPoint, DRAWING_COLOR, 2);
     }
 }
 
