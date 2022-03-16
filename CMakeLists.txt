@@ -31,7 +31,7 @@ add_executable(${TARGET} ${SOURCES}
         cone_detection/coneDetection.cpp cone_detection/coneDetection.h
         camera/Camera.cpp camera/Camera.h
         camera/StCamera.cpp camera/StCamera.h
-        camera/matrices.h)
+        camera/matrices.h cone_detection/Cone.cpp cone_detection/Cone.h)
 target_link_libraries(${TARGET} ${OpenCV_LIBS} ${Genicam_Library} ${StApi_Library})
 set_target_properties(${TARGET}
         PROPERTIES LINK_FLAGS "${Genicam_LinkFlag} ${StApi_LinkFlag}"
