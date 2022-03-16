@@ -11,7 +11,7 @@ enum OPERATION_MODE {
 };
 
 int main(int, char**) {
-    OPERATION_MODE operation = CONE_DETECTION;
+    OPERATION_MODE operation = CAMERA_CALIBRATION;
     switch (operation) {
         case COLOR_PICKING:
              findColorSpectrumSampleImage("../path_detection/test_images/3.jpg");

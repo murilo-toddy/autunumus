@@ -1,10 +1,10 @@
 #ifndef PATHDETECTIONALGORITHM_MATRICES_H
 #define PATHDETECTIONALGORITHM_MATRICES_H
 
-#define DISTORTION_MATRIX_VALUES {0.00778276, -0.115895, 0, 0, 0}
+#define DISTORTION_MATRIX_VALUES {0.174514, -0.692748, 0, 0, 0}
 #define INTRINSIC_MATRIX_VALUES  {  \
-            1425.4357, 0, 639.5,    \
-            0, 1425.4357, 479.5,    \
+            1419.4415, 0, 639.5,     \
+            0, 1419.4415, 479.5,     \
             0, 0, 1                 \
         }
 
