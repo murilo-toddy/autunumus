@@ -64,7 +64,7 @@ void calibrateCamera() {
                 cv::CALIB_ZERO_TANGENT_DIST + cv::CALIB_FIX_PRINCIPAL_POINT;
     cv::Size frameSize(1280, 960);
 
-    float error = cv::calibrateCamera(
+    double error = cv::calibrateCamera(
             worldFrame, cameraFrame, frameSize,
             intrinsicMatrix, distortionMatrix,
             rotationVectors, translationVectors, flags
