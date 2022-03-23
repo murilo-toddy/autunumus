@@ -9,6 +9,55 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMapRoadMarkings() {
     };
 }
 
+std::vector<cv::Point2f> slidingWindow(cv::Mat image, cv::Rect window) {
+        std::vector<cv::Point2f> points;
+        const cv::Size imgSize = image.size();
+        bool shouldBreak = false;
+
+        while (true) {
+            float currentX = window.x + window.width * 0.5f;
+            cv::Mat roi = image(window); //Extract region of interest
+            std::vector<cv::Point2f> locations;
+
+            findNonZero(roi, locations); //Get all non-black pixels. All are white in our case
+            float avgX = 0.0f;
+
+            for (int i = 0; i < locations.size(); ++i) { //Calculate average X position         {
+                float x = locations[i].x;
+                avgX += window.x + x;
+            }
+
+        avgX = locations.empty() ? currentX : avgX / locations.size();
+
+        cv::Point point(avgX, window.y + window.height * 0.5f);
+        points.push_back(point);
+
+        //Move the window up         window.y -= window.height;
+        window.y -= window.height;
+
+        //For the uppermost position         if (window.y < 0)
+        if (window.y < 0) {
+            window.y = 0;
+            shouldBreak = true;
+        }
+
+        //Move x position
+        window.x += (point.x - currentX);
+
+        //Make sure the window doesn't overflow, we get an error if we try to get data outside the matrix
+        if (window.x < 0)
+            window.x = 0;
+
+        if (window.x + window.width >= imgSize.width)
+            window.x = imgSize.width - window.width - 1;
+
+        if (shouldBreak)
+            break;
+    }
+
+    return points;
+}
+
 void findRoadMarkings() {
     /*
      * TODO
@@ -24,8 +73,9 @@ void findRoadMarkings() {
 
     for (const auto& file : files) {
         std::cout << "** Processing sample " << std::string(file) << " **\n";
-        cv::Mat image = cv::imread(file), hsv;
+        cv::Mat image = cv::imread("../path_detection/test_images/4.jpg"), hsv;
 
+        std::cout << "yas";
         // Generate source points to birds eye view
         cv::Point2f sourceVertices[4] = {
                 cv::Point(700, 605),
@@ -72,10 +122,51 @@ void findRoadMarkings() {
         cv::morphologyEx(maskedImage, maskedImage, cv::MORPH_CLOSE, kernel);
 
         const int thresholdVal = 150;
-        threshold(maskedImage, maskedImage, thresholdVal, 255, cv::THRESH_BINARY);
+        cv::threshold(maskedImage, maskedImage, thresholdVal, 255, cv::THRESH_BINARY);
+        std::vector<cv::Point2f> points = slidingWindow(maskedImage, cv::Rect(0, 420, 120, 60));
+
+        std::vector<cv::Point> allPts; //Used for the end polygon at the end.
+        std::vector<cv::Point2f> outPts;
+        perspectiveTransform(points, outPts, invertedPerspectiveMatrix); //Transform points back into original image space
+//Draw the points onto the out image
+        for (int i = 0; i < outPts.size() - 1; ++i)
+        {
+            line(image, outPts[i], outPts[i + 1], cv::Scalar(255, 0, 0), 3);
+            allPts.push_back(cv::Point(outPts[i].x, outPts[i].y));
+        }
+
+        allPts.push_back(cv::Point(outPts[outPts.size() - 1].x, outPts[outPts.size() - 1].y));
+
+        cv::Mat out;
+        cvtColor(maskedImage, out, cv::COLOR_GRAY2BGR); //Conver the processing image to color so that we can visualise the lines
+        for (int i = 0; i < points.size() - 1; ++i) //Draw a line on the processed image
+            line(out, points[i], points[i + 1], cv::Scalar(255, 0, 0));
+
+//Sliding window for the right side
+            points = slidingWindow(maskedImage, cv::Rect(520, 420, 120, 60));
+            perspectiveTransform(points, outPts, invertedPerspectiveMatrix);
+
+//Draw the other lane and append points
+        for (int i = 0; i < outPts.size() - 1; ++i)
+        {
+            line(image, outPts[i], outPts[i + 1], cv::Scalar(0, 0, 255), 3);
+            allPts.push_back(cv::Point(outPts[outPts.size() - i - 1].x, outPts[outPts.size() - i - 1].y));
+        }
+
+        allPts.push_back(cv::Point(outPts[0].x - (outPts.size() - 1) , outPts[0].y));
+
+        for (int i = 0; i < points.size() - 1; ++i)
+            line(out, points[i], points[i + 1], cv::Scalar(0, 0, 255));
+
+//Create a green-ish overlay
+        std::vector<std::vector<cv::Point>> arr;
+        arr.push_back(allPts);
+        cv::Mat overlay = cv::Mat::zeros(image.size(), image.type());
+        fillPoly(overlay, arr, cv::Scalar(0, 255, 100));
+        addWeighted(image, 1, overlay, 0.5, 0, image); //Overlay it
+        imshow("Output", image);
 
 
-        cv::imshow("Image", image);
         cv::waitKey(0);
     }
 }
