@@ -26,7 +26,30 @@ void findRoadMarkings() {
         std::cout << "** Processing sample " << std::string(file) << " **\n";
         cv::Mat image = cv::imread(file), hsv;
 
-        cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+        // Generate source points to birds eye view
+        cv::Point2f sourceVertices[4] = {
+                cv::Point(700, 605),
+                cv::Point(890, 605),
+                cv::Point(1760, 1030),
+                cv::Point(20, 1030)
+        };
+
+        // Respective mapping points, size of image
+        cv::Point2f destinationVertices[4] = {
+                cv::Point(0, 0),
+                cv::Point(WIDTH, 0),
+                cv::Point(WIDTH, HEIGHT),
+                cv::Point(0, HEIGHT)
+        };
+
+        cv::Mat perspectiveMatrix = cv::getPerspectiveTransform(sourceVertices, destinationVertices);
+        cv::Mat birdsEyeView(HEIGHT, WIDTH, CV_8UC3), invertedPerspectiveMatrix;
+        cv::invert(perspectiveMatrix, invertedPerspectiveMatrix);
+
+        cv::warpPerspective(image, birdsEyeView, perspectiveMatrix, birdsEyeView.size(),  cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+
+        // Color filtering
+        cv::cvtColor(birdsEyeView, hsv, cv::COLOR_BGR2HSV);
         int index = 0;
         std::vector<cv::Mat> rangedImages(colorMap.size());
         // Filter for specific image colors
@@ -37,7 +60,7 @@ void findRoadMarkings() {
 
         cv::Mat maskedImage = rangedImages[0].clone();
         for (int i = 1; i < (int)colorMap.size(); i++) {
-            cv::addWeighted(maskedImage, 1, rangedImages[i], 1, 0, maskedImage);
+            cv::add(maskedImage, rangedImages[i], maskedImage);
         }
 
         cv::imshow("Image", image);

@@ -12,6 +12,8 @@
 
 #define BORDER_IMAGES_PATH "../path_detection/test_images"
 
+#define HEIGHT 480
+#define WIDTH  640
 
 void findRoadMarkings();
 
