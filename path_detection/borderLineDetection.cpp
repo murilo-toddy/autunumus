@@ -4,8 +4,9 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMapRoadMarkings() {
     // Scalars are in (H, S, V) format
     // Each color contains a lower and upper end
     return {
-        { "WHITE",  {{0, 0, 207}, {110, 22, 255}}},
-        { "YELLOW", {}}
+//        { "WHITE",  {{0, 0, 207},    {110, 22, 255}}},
+        {"WHITE", {{87, 0, 203}, {125, 48, 241}}},
+        { "YELLOW", {{0, 0, 128}, {43, 200, 247}}}
     };
 }
 
@@ -71,20 +72,15 @@ void findRoadMarkings() {
     cv::glob(BORDER_IMAGES_PATH, files, false);
     std::map<std::string, std::vector<cv::Scalar>> colorMap = loadColorMapRoadMarkings();
 
+    std::size_t i = 0;
     for (const auto& file : files) {
+        cv::Mat image = cv::imread(files[i]);
+//        cv::imshow("Original image", image);
+//        cv::waitKey();
         std::cout << "** Processing sample " << std::string(file) << " **\n";
-        cv::Mat image = cv::imread("../path_detection/test_images/4.jpg"), hsv;
+        cv::Mat hsv;
 
-        std::cout << "yas";
         // Generate source points to birds eye view
-        cv::Point2f sourceVertices[4] = {
-                cv::Point(700, 605),
-                cv::Point(890, 605),
-                cv::Point(1760, 1030),
-                cv::Point(20, 1030)
-        };
-
-        // Respective mapping points, size of image
         cv::Point2f destinationVertices[4] = {
                 cv::Point(0, 0),
                 cv::Point(WIDTH, 0),
@@ -92,11 +88,20 @@ void findRoadMarkings() {
                 cv::Point(0, HEIGHT)
         };
 
+        // Respective mapping points, size of image
+        cv::Point2f sourceVertices[4] = {
+                cv::Point(0, 300),
+                cv::Point(720, 300),
+                cv::Point(720, 1000),
+                cv::Point(0, 1000)
+        };
+
         cv::Mat perspectiveMatrix = cv::getPerspectiveTransform(sourceVertices, destinationVertices);
-        cv::Mat birdsEyeView(HEIGHT, WIDTH, CV_8UC3), invertedPerspectiveMatrix;
+        cv::Mat birdsEyeView(WIDTH, HEIGHT, CV_8UC3), invertedPerspectiveMatrix;
         cv::invert(perspectiveMatrix, invertedPerspectiveMatrix);
 
         cv::warpPerspective(image, birdsEyeView, perspectiveMatrix, birdsEyeView.size(),  cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        cv::imshow("bev", birdsEyeView);
 
         // Color filtering
         cv::cvtColor(birdsEyeView, hsv, cv::COLOR_BGR2HSV);
@@ -108,10 +113,12 @@ void findRoadMarkings() {
             index++;
         }
 
+        std::cout << "yas" << std::endl;
         cv::Mat maskedImage = rangedImages[0].clone();
         for (int i = 1; i < (int)colorMap.size(); i++) {
             cv::add(maskedImage, rangedImages[i], maskedImage);
         }
+
 
         // Try to improve gaps
         cv::GaussianBlur(maskedImage, maskedImage, cv::Size(9, 9), 0);
@@ -121,6 +128,8 @@ void findRoadMarkings() {
 
         cv::morphologyEx(maskedImage, maskedImage, cv::MORPH_CLOSE, kernel);
 
+        cv::imshow("Maks", maskedImage);
+        cv::waitKey();
         const int thresholdVal = 150;
         cv::threshold(maskedImage, maskedImage, thresholdVal, 255, cv::THRESH_BINARY);
         std::vector<cv::Point2f> points = slidingWindow(maskedImage, cv::Rect(0, 420, 120, 60));
@@ -164,9 +173,9 @@ void findRoadMarkings() {
         cv::Mat overlay = cv::Mat::zeros(image.size(), image.type());
         fillPoly(overlay, arr, cv::Scalar(0, 255, 100));
         addWeighted(image, 1, overlay, 0.5, 0, image); //Overlay it
+//        std::cout << "yas" << std::endl;
         imshow("Output", image);
-
-
         cv::waitKey(0);
+        i++;
     }
 }

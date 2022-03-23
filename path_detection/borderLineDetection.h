@@ -6,14 +6,16 @@
 #include <map>
 
 #include <opencv2/core.hpp>
+#include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
 
-#define BORDER_IMAGES_PATH "../path_detection/test_images"
+#define BORDER_IMAGES_PATH "../path_detection/test_images/"
+#define BORDER_SAMPLE_IMAGES_PATH "../path_detection/test_images/*.jpg"
 
-#define HEIGHT 480
-#define WIDTH  640
+#define HEIGHT 1280
+#define WIDTH  720
 
 void findRoadMarkings();
 
