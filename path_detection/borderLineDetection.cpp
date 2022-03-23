@@ -63,6 +63,18 @@ void findRoadMarkings() {
             cv::add(maskedImage, rangedImages[i], maskedImage);
         }
 
+        // Try to improve gaps
+        cv::GaussianBlur(maskedImage, maskedImage, cv::Size(9, 9), 0);
+        cv::Mat kernel = cv::Mat::ones(15, 15, CV_8U);
+        cv::dilate(maskedImage, maskedImage, kernel);
+        cv::erode(maskedImage, maskedImage, kernel);
+
+        cv::morphologyEx(maskedImage, maskedImage, cv::MORPH_CLOSE, kernel);
+
+        const int thresholdVal = 150;
+        threshold(maskedImage, maskedImage, thresholdVal, 255, cv::THRESH_BINARY);
+
+
         cv::imshow("Image", image);
         cv::waitKey(0);
     }
