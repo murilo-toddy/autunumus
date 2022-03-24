@@ -14,7 +14,7 @@ int main(int, char**) {
     OPERATION_MODE operation = PATH_DETECTION;
     switch (operation) {
         case COLOR_PICKING:
-             findColorSpectrumSampleImage("../path_detection/test_images/3.jpg");
+             findColorSpectrumSampleImage("../path_detection/test_images/1.jpg");
 //            findColorSpectrumVideo();
             break;
         
@@ -23,8 +23,8 @@ int main(int, char**) {
             break;
 
         case CONE_DETECTION:
-//            coneDetectionSampledImages();
-            coneDetectionVideo();
+            coneDetectionSampledImages();
+//            coneDetectionVideo();
             break;
 
         case PATH_DETECTION:

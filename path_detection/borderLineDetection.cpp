@@ -113,12 +113,10 @@ void findRoadMarkings() {
             index++;
         }
 
-        std::cout << "yas" << std::endl;
         cv::Mat maskedImage = rangedImages[0].clone();
         for (int i = 1; i < (int)colorMap.size(); i++) {
             cv::add(maskedImage, rangedImages[i], maskedImage);
         }
-
 
         // Try to improve gaps
         cv::GaussianBlur(maskedImage, maskedImage, cv::Size(9, 9), 0);
@@ -127,9 +125,8 @@ void findRoadMarkings() {
         cv::erode(maskedImage, maskedImage, kernel);
 
         cv::morphologyEx(maskedImage, maskedImage, cv::MORPH_CLOSE, kernel);
-
         cv::imshow("Maks", maskedImage);
-        cv::waitKey();
+
         const int thresholdVal = 150;
         cv::threshold(maskedImage, maskedImage, thresholdVal, 255, cv::THRESH_BINARY);
         std::vector<cv::Point2f> points = slidingWindow(maskedImage, cv::Rect(0, 420, 120, 60));
@@ -137,9 +134,9 @@ void findRoadMarkings() {
         std::vector<cv::Point> allPts; //Used for the end polygon at the end.
         std::vector<cv::Point2f> outPts;
         perspectiveTransform(points, outPts, invertedPerspectiveMatrix); //Transform points back into original image space
-//Draw the points onto the out image
-        for (int i = 0; i < outPts.size() - 1; ++i)
-        {
+
+        //Draw the points onto the out image
+        for (int i = 0; i < outPts.size() - 1; ++i) {
             line(image, outPts[i], outPts[i + 1], cv::Scalar(255, 0, 0), 3);
             allPts.push_back(cv::Point(outPts[i].x, outPts[i].y));
         }
@@ -147,34 +144,34 @@ void findRoadMarkings() {
         allPts.push_back(cv::Point(outPts[outPts.size() - 1].x, outPts[outPts.size() - 1].y));
 
         cv::Mat out;
-        cvtColor(maskedImage, out, cv::COLOR_GRAY2BGR); //Conver the processing image to color so that we can visualise the lines
-        for (int i = 0; i < points.size() - 1; ++i) //Draw a line on the processed image
-            line(out, points[i], points[i + 1], cv::Scalar(255, 0, 0));
+        cv::cvtColor(maskedImage, out, cv::COLOR_GRAY2BGR); //Conver the processing image to color so that we can visualise the lines
+        for (int i = 0; i < points.size() - 1; ++i) { //Draw a line on the processed image
+            cv::line(out, points[i], points[i + 1], cv::Scalar(255, 0, 0));
+        }
 
-//Sliding window for the right side
-            points = slidingWindow(maskedImage, cv::Rect(520, 420, 120, 60));
-            perspectiveTransform(points, outPts, invertedPerspectiveMatrix);
+        //Sliding window for the right side
+        points = slidingWindow(maskedImage, cv::Rect(520, 420, 120, 60));
+        cv::perspectiveTransform(points, outPts, invertedPerspectiveMatrix);
 
-//Draw the other lane and append points
-        for (int i = 0; i < outPts.size() - 1; ++i)
-        {
-            line(image, outPts[i], outPts[i + 1], cv::Scalar(0, 0, 255), 3);
+        //Draw the other lane and append points
+        for (int i = 0; i < outPts.size() - 1; ++i) {
+            cv::line(image, outPts[i], outPts[i + 1], cv::Scalar(0, 0, 255), 3);
             allPts.push_back(cv::Point(outPts[outPts.size() - i - 1].x, outPts[outPts.size() - i - 1].y));
         }
 
         allPts.push_back(cv::Point(outPts[0].x - (outPts.size() - 1) , outPts[0].y));
 
-        for (int i = 0; i < points.size() - 1; ++i)
-            line(out, points[i], points[i + 1], cv::Scalar(0, 0, 255));
+        for (int i = 0; i < points.size() - 1; ++i) {
+            cv::line(out, points[i], points[i + 1], cv::Scalar(0, 0, 255));
+        }
 
-//Create a green-ish overlay
+        //Create a green-ish overlay
         std::vector<std::vector<cv::Point>> arr;
         arr.push_back(allPts);
         cv::Mat overlay = cv::Mat::zeros(image.size(), image.type());
-        fillPoly(overlay, arr, cv::Scalar(0, 255, 100));
-        addWeighted(image, 1, overlay, 0.5, 0, image); //Overlay it
-//        std::cout << "yas" << std::endl;
-        imshow("Output", image);
+        cv::fillPoly(overlay, arr, cv::Scalar(0, 255, 100));
+        cv::addWeighted(image, 1, overlay, 0.5, 0, image); //Overlay it
+        cv::imshow("Output", out);
         cv::waitKey(0);
         i++;
     }
