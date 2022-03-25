@@ -84,17 +84,14 @@ void findRoadMarkings() {
             );
         }
 
-//        cv::inRange(matrix, cv::Scalar(0, 0, 155), cv::Scalar(0, 0, 255), matrix);
         cv::imshow("asd", matrix);
-        cv::Mat newMat(WIDTH, HEIGHT, CV_8UC3);
+        cv::Mat newMat(WIDTH, HEIGHT, CV_8UC3, cv::Scalar(0, 0, 0));
         cv::Mat newMatr;
         cv::warpPerspective(matrix, newMat, invertedPerspectiveMatrix, image.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-//        cv::imshow("sdfsdfs", newMat);
         cv::inRange(newMat, cv::Scalar(0, 0, 155), cv::Scalar(0, 0, 255), newMatr);
-        cv::imshow("sdfsdfs", newMat);
         cv::add(image, newMat, image);
 
-        cv::imshow("lala", image);
+        cv::imshow("Final image", image);
         cv::waitKey();
         i++;
     }
