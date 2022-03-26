@@ -37,6 +37,7 @@ cmake-build-debug
 
 # Image outputs
 cone_detection/test_images/output
+cone_detection/video/output
 
 # Other
 .vscode
