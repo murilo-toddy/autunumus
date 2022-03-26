@@ -48,19 +48,26 @@ void coneDetectionSampledImages() {
  */
 void coneDetectionVideo() {
     Camera camera;
+    int frame = 0;
     while(true) {
         auto processBegin = std::chrono::high_resolution_clock::now();
 
         camera.readFrame(); // Read camera input
-        auto *cameraFrame = new Image(camera.getMat(), "");
+        auto *cameraFrame = new Image(camera.getMat(), CONTINUOUS_DESTINATION_FOLDER + std::to_string(frame));
         getBorderedImage(cameraFrame); // Process frame
         searchContours(cameraFrame);   // Find cone contours in frame
         cv::imshow("ConeDetection", cameraFrame->finalImage);
         cv::waitKey(1);
-        delete cameraFrame;
 
+        if (!(frame % FRAMES_TO_SAVE)) {
+            std::cout << "Saving frame" << std::endl;
+            cameraFrame->saveImagesOnDisk(true);
+        }
+
+        delete cameraFrame;
         auto processEnd = std::chrono::high_resolution_clock::now();
         std::chrono::duration<double, std::milli> process = processEnd - processBegin;
         std::cout << "fps " << 1000 / (process.count()) << "\n";
+        frame++;
     }
 }

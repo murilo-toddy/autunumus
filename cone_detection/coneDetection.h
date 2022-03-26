@@ -16,6 +16,8 @@
 #define STEP_BY_STEP   true
 #define REAL_TIME_ENV  false
 
+#define CONTINUOUS_DESTINATION_FOLDER "../cone_detection/video/output/"
+#define FRAMES_TO_SAVE                20
 
 void coneDetectionSampledImages();
 [[noreturn]] void coneDetectionVideo();
