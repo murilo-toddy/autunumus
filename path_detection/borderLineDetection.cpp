@@ -4,7 +4,6 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMapRoadMarkings() {
     // Scalars are in (H, S, V) format
     // Each color contains a lower and upper end
     return {
-//        { "WHITE",  {{0, 0, 207},    {110, 22, 255}}},
         {"WHITE", {{87, 0, 203}, {125, 48, 241}}},
         { "YELLOW", {{0, 0, 128}, {43, 200, 247}}}
     };
@@ -20,8 +19,6 @@ void findRoadMarkings() {
     std::size_t i = 0;
     for (const auto& file : files) {
         cv::Mat image = cv::imread(files[i]);
-//        cv::imshow("Original image", image);
-//        cv::waitKey();
         std::cout << "** Processing sample " << std::string(file) << " **\n";
         cv::Mat hsv;
 
@@ -84,7 +81,6 @@ void findRoadMarkings() {
             );
         }
 
-        cv::imshow("asd", matrix);
         cv::Mat newMat(WIDTH, HEIGHT, CV_8UC3, cv::Scalar(0, 0, 0));
         cv::Mat newMatr;
         cv::warpPerspective(matrix, newMat, invertedPerspectiveMatrix, image.size(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
