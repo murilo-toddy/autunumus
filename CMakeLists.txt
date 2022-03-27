@@ -16,5 +16,5 @@ add_executable(${TARGET} ${SOURCES}
         setup/colorFiltering.cpp setup/colorFiltering.h
         cone_detection/coneDetection.cpp cone_detection/coneDetection.h
         camera/Camera.cpp camera/Camera.h
-        camera/matrices.h cone_detection/Cone.cpp cone_detection/Cone.h)
+        camera/matrices.h cone_detection/Cone.cpp cone_detection/Cone.h main.h)
 target_link_libraries(${TARGET} ${OpenCV_LIBS})
