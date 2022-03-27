@@ -1,21 +1,17 @@
-#include "setup/colorFiltering.h"
-#include "cone_detection/coneDetection.h"
-#include "path_detection/borderLineDetection.h"
-#include "setup/cameraCalibration.h"
+#include "main.h"
 
-enum OPERATION_MODE {
-    COLOR_PICKING,
-    CAMERA_CALIBRATION,
-    CONE_DETECTION,
-    PATH_DETECTION
-};
+#define PATH "../path_detection/test_images/1.jpg"
+OPERATION_MODE operation = COLOR_PICKING;
+INPUT_MODE inputMode = CAMERA_INPUT;
 
 int main(int, char**) {
-    OPERATION_MODE operation = CONE_DETECTION;
     switch (operation) {
         case COLOR_PICKING:
-             findColorSpectrumSampleImage("../path_detection/test_images/1.jpg");
-//            findColorSpectrumVideo();
+            if (inputMode == SAMPLED_IMAGE) {
+                findColorSpectrumSampleImage(PATH);
+            } else {
+                findColorSpectrumVideo();
+            }
             break;
         
         case CAMERA_CALIBRATION:
@@ -23,8 +19,11 @@ int main(int, char**) {
             break;
 
         case CONE_DETECTION:
-//            coneDetectionSampledImages();
-            coneDetectionVideo();
+            if (inputMode == SAMPLED_IMAGE) {
+                coneDetectionSampledImages();
+            } else {
+                coneDetectionVideo();
+            }
             break;
 
         case PATH_DETECTION:
