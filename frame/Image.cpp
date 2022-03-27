@@ -47,8 +47,8 @@ void Image::saveImagesOnDisk(const bool& saveStepByStep) {
         this->writeOnDisk("05dilated", this->mat.dilatedImage);
         this->writeOnDisk("06eroded", this->mat.erodedImage);
         this->writeOnDisk("07default_contours", this->mat.defaultContours);
-        this->writeOnDisk("08polygon", this->mat.defaultContours);
-        this->writeOnDisk("09convex", this->mat.approximatedContours);
+        this->writeOnDisk("08polygon", this->mat.approximatedContours);
+        this->writeOnDisk("09convex", this->mat.convexContours);
         this->writeOnDisk("10upwards", this->mat.coneContours);
     }
 }
@@ -63,8 +63,8 @@ void Image::openImages(const bool& showStepByStep) const {
         imshow("dilated", this->mat.dilatedImage);
         imshow("eroded", this->mat.erodedImage);
         imshow("default contours", this->mat.defaultContours);
-        imshow("polygon", this->mat.defaultContours);
-        imshow("convex", this->mat.approximatedContours);
+        imshow("polygon", this->mat.approximatedContours);
+        imshow("convex", this->mat.convexContours);
         imshow("upwards", this->mat.coneContours);
     }
     imshow("final", this->finalImage);
