@@ -381,7 +381,7 @@ if __name__ == '__main__':
 
     # Loop over all motor tick records.
     # This is the FastSLAM filter loop, with prediction and correction.
-    f = open("fast_slam_counter.txt", "w")
+    f = open("../robot_data/slam.txt", "w")
     for i in range(len(logfile.motor_ticks)):
         # Prediction.
         control = map(lambda x: x * ticks_to_mm, logfile.motor_ticks[i])
