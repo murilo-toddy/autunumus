@@ -1,8 +1,10 @@
 from math import sin, cos
 
+import numpy as np
+
 
 # Convert robot pose (x, y, theta) into (x, y) in world coordinates
-def scanner_to_world(pose, point: list[float]) -> tuple[float, float]:
+def scanner_to_world(pose, point: list[np.ndarray]) -> tuple[float, float]:
     dx = cos(pose[2])
     dy = sin(pose[2])
     x, y = point
