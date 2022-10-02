@@ -6,18 +6,19 @@ from particle import Particle
 
 
 # Write a list of landmarks to file
-def write_landmarks(file_desc, line_header: str, cylinder_list: list) -> None:
+def write_landmarks(file_desc, line_header: str, landmarks: list) -> None:
     file_desc.write(f"{line_header} ")
-    for c in cylinder_list:
-        c = (float(c[0]), float(c[1]))
-        file_desc.write("%f %f " % c)
+    for landmark in landmarks:
+        pos = landmark.position
+        file_desc.write("%f %f " % (float(pos[0]), float(pos[1])))
     file_desc.write("\n")
 
 
 # Write error ellipses to file
-def write_error_ellipses(file_desc, line_header: str, covariance_matrix_list: list) -> None:
+def write_error_ellipses(file_desc, line_header: str, landmarks: list) -> None:
     file_desc.write(f"{line_header} ")
-    for m in covariance_matrix_list:
+    for landmark in landmarks:
+        m = landmark.covariance
         eigenvals, eigenvects = np.linalg.eig(m)
         angle = atan2(eigenvects[1, 0], eigenvects[0, 0])
         file_desc.write("%f %f %f " % (angle, sqrt(eigenvals[0]), sqrt(eigenvals[1])))

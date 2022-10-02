@@ -73,5 +73,5 @@ if __name__ == '__main__':
             write_particles(f, "PA", fs.particles)
             write_particle_pose(f, "F", mean, scanner_displacement)
             write_robot_variance(f, "E", errors)
-            write_landmarks(f, "W C", fs.particles[output_particle].landmark_positions)
-            write_error_ellipses(f, "W E", fs.particles[output_particle].landmark_covariances)
+            write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
+            write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
