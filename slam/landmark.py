@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from math import sqrt, sin, cos, atan2, pi
+from math import sin, cos
 
 import numpy as np
 
@@ -67,60 +67,3 @@ def get_cylinders_from_scan(scan: list[float], jump: float, min_dist: float, cyl
         x, y = distance*cos(bearing), distance*sin(bearing)
         result.append((np.array([distance, bearing]), np.array([x, y])))
     return result
-
-
-def get_mean(particles):
-    """Compute mean position and heading from a given set of particles."""
-    # Note this function would more likely be a part of FastSLAM or a base class
-    # of FastSLAM. It has been moved here for the purpose of keeping the
-    # FastSLAM class short in this tutorial.
-    mean_x, mean_y = 0.0, 0.0
-    head_x, head_y = 0.0, 0.0
-    for p in particles:
-        x, y, theta = p.pose
-        mean_x += x
-        mean_y += y
-        head_x += cos(theta)
-        head_y += sin(theta)
-    n = max(1, len(particles))
-    return np.array([mean_x / n, mean_y / n, atan2(head_y, head_x)])
-
-
-def get_error_ellipse_and_heading_variance(particles, mean):
-    """Given a set of particles and their mean (computed by get_mean()),
-       returns a tuple: (angle, stddev1, stddev2, heading-stddev) which is
-       the orientation of the xy error ellipse, the half axis 1, half axis 2,
-       and the standard deviation of the heading."""
-    # Note this function would more likely be a part of FastSLAM or a base class
-    # of FastSLAM. It has been moved here for the purpose of keeping the
-    # FastSLAM class short in this tutorial.
-    center_x, center_y, center_heading = mean
-    n = len(particles)
-    if n < 2:
-        return 0.0, 0.0, 0.0, 0.0
-
-    # Compute covariance matrix in xy.
-    sxx, sxy, syy = 0.0, 0.0, 0.0
-    for p in particles:
-        x, y, theta = p.pose
-        dx = x - center_x
-        dy = y - center_y
-        sxx += dx * dx
-        sxy += dx * dy
-        syy += dy * dy
-    cov_xy = np.array([[sxx, sxy], [sxy, syy]]) / (n-1)
-
-    # Get variance of heading.
-    var_heading = 0.0
-    for p in particles:
-        dh = (p.pose[2] - center_heading + pi) % (2*pi) - pi
-        var_heading += dh * dh
-    var_heading = var_heading / (n-1)
-
-    # Convert xy to error ellipse.
-    eigenvals, eigenvects = np.linalg.eig(cov_xy)
-    ellipse_angle = atan2(eigenvects[1, 0], eigenvects[0, 0])
-
-    return (ellipse_angle, sqrt(abs(eigenvals[0])),
-            sqrt(abs(eigenvals[1])),
-            sqrt(var_heading))
