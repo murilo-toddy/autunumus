@@ -353,8 +353,8 @@ if __name__ == '__main__':
     cylinder_offset = 0.2
 
     # Filter constants.
-    control_motion_factor = 0.15  # Error in motor control.
-    control_turn_factor = 0.55  # Additional error due to slip when turning.
+    control_motion_factor = 0.1  # Error in motor control.
+    control_turn_factor = 0.6  # Additional error due to slip when turning.
     measurement_distance_stddev = 1  # Distance measurement error of cylinders.
     measurement_angle_stddev = 1.5 / 180.0 * pi  # Angle measurement error.
     minimum_correspondence_likelihood = 1e-7  # Min likelihood of correspondence.
@@ -362,7 +362,7 @@ if __name__ == '__main__':
     # Generate initial particles. Each particle is (x, y, theta).
     number_of_particles = 50
     # start_state = np.array([20.0, 20.0, 45.0 / 180.0 * pi])
-    start_state = np.array([9.953761677051627, 36.12791136345065, -0.4518609926531719])
+    start_state = np.array([4.953761677051627, 16.12791136345065, -0.4518609926531719])
     initial_particles = [copy.copy(Particle(start_state))
                          for _ in range(number_of_particles)]
 
