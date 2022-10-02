@@ -376,8 +376,8 @@ if __name__ == '__main__':
 
     # Read data.
     logfile = LegoLogfile()
-    logfile.read("motor.txt")
-    logfile.read("lidar.txt")
+    logfile.read("../robot_data/motor.txt")
+    logfile.read("../robot_data/lidar.txt")
 
     # Loop over all motor tick records.
     # This is the FastSLAM filter loop, with prediction and correction.
