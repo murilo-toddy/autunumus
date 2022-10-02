@@ -89,7 +89,7 @@ class Trajectory(DrawableObject):
             if at_step < len(self.standard_deviations):
                 stddev = self.standard_deviations[at_step]
                 # Note this assumes correct aspect ratio.
-                factor = canvas_size[0] / world_size[0]
+                factor = canvas_size[0] / world_size[0] * 20
                 points = self.get_ellipse_points(p, stddev[0],
                                                  stddev[1] * factor, stddev[2] * factor)
                 if self.cursor_object4:
@@ -102,7 +102,7 @@ class Trajectory(DrawableObject):
                         len(self.standard_deviations[0]) > 3:
                     angle = min(self.standard_deviations[at_step][3], pi)
                     points = self.get_ellipse_points(p, p[2], 30.0, 30.0,
-                                                     -angle, angle)
+                                                     -3 * angle, 3 * angle)
                     points = [p[0:2]] + points + [p[0:2]]
                     if self.cursor_object3:
                         self.canvas.delete(self.cursor_object3)
@@ -140,7 +140,7 @@ class Landmarks(DrawableObject):
 
 class Points(DrawableObject):
     # Points, optionally with error ellipses.
-    def __init__(self, points, canvas, color="red", radius=5, ellipses=[], ellipse_factor=1.0):
+    def __init__(self, points, canvas, color="red", radius=5, ellipses=[], ellipse_factor=5.0):
         self.points = points
         self.canvas = canvas
         self.color = color
@@ -232,7 +232,7 @@ def slider_moved(index):
         d.draw(i)
 
     # Print info about current point.
-    info.config(text=logfile.info(i))
+    info.config(text=robot.info(i))
 
 
 def add_file():
@@ -247,44 +247,44 @@ def add_file():
 
 
 def load_data():
-    global canvas_size, sensor_canvas_extents, world_size, max_scanner_range
+    global canvas_size, world_size
     for filename in all_file_names:
-        logfile.read(filename)
+        robot.read(filename)
 
     global draw_objects
     draw_objects = []
-    scale.configure(to=logfile.size() - 1)
+    scale.configure(to=robot.size() - 1)
 
     # Insert: landmarks.
-    draw_objects.append(Landmarks(logfile.landmarks, world_canvas, canvas_size, world_size))
+    draw_objects.append(Landmarks(robot.landmarks, world_canvas, canvas_size, world_size))
 
     # Insert: reference trajectory.
-    positions = [to_world_canvas(pos, canvas_size, world_size) for pos in logfile.reference_positions]
+    positions = [to_world_canvas(pos, canvas_size, world_size) for pos in robot.reference_positions]
     draw_objects.append(Trajectory(positions, world_canvas, world_size, canvas_size,
                                    cursor_color="red", background_color="#FFB4B4"))
 
     # Insert: world objects, cylinders and corresponding world objects, ellipses.
-    if logfile.world_cylinders:
+    if robot.world_cylinders:
         positions = [[to_world_canvas(pos, canvas_size, world_size)
                       for pos in cylinders_one_scan]
-                     for cylinders_one_scan in logfile.world_cylinders]
+                     for cylinders_one_scan in robot.world_cylinders]
         # Also setup cylinders if present.
         # Note this assumes correct aspect ratio.
         factor = canvas_size[0] / world_size[0]
         draw_objects.append(Points(positions, world_canvas, "#DC23C5",
-                                   ellipses=logfile.world_ellipses,
+                                   ellipses=robot.world_ellipses,
                                    ellipse_factor=factor))
 
     # Insert: detected cylinders, transformed into world coord system.
-    if logfile.detected_cylinders and logfile.filtered_positions and \
-            len(logfile.filtered_positions[0]) > 2:
+    if robot.detected_cylinders and robot.filtered_positions and \
+            len(robot.filtered_positions[0]) > 2:
         positions = []
-        for i in range(min(len(logfile.detected_cylinders), len(logfile.filtered_positions))):
+        for i in range(min(len(robot.detected_cylinders), len(robot.filtered_positions))):
             this_pose_positions = []
-            pos = logfile.filtered_positions[i]
+            pos = robot.filtered_positions[i]
             dx = cos(pos[2])
             dy = sin(pos[2])
-            for pole in logfile.detected_cylinders[i]:
+            for pole in robot.detected_cylinders[i]:
                 x = pole[0] * dx - pole[1] * dy + pos[0]
                 y = pole[0] * dy + pole[1] * dx + pos[1]
                 p = to_world_canvas((x, y), canvas_size, world_size)
@@ -293,23 +293,23 @@ def load_data():
         draw_objects.append(Points(positions, world_canvas, "#88FF88"))
 
     # Insert: particles.
-    if logfile.particles:
+    if robot.particles:
         positions = [
             [(to_world_canvas(pos, canvas_size, world_size) + (pos[2],))
              for pos in particles_one_scan]
-            for particles_one_scan in logfile.particles]
+            for particles_one_scan in robot.particles]
         draw_objects.append(Particles(positions, world_canvas, "#80E080"))
 
     # Insert: filtered trajectory.
-    if logfile.filtered_positions:
-        if len(logfile.filtered_positions[0]) > 2:
+    if robot.filtered_positions:
+        if len(robot.filtered_positions[0]) > 2:
             positions = [tuple(list(to_world_canvas(pos, canvas_size, world_size)) + [pos[2]]) for pos in
-                         logfile.filtered_positions]
+                         robot.filtered_positions]
         else:
-            positions = [to_world_canvas(pos, canvas_size, world_size) for pos in logfile.filtered_positions]
+            positions = [to_world_canvas(pos, canvas_size, world_size) for pos in robot.filtered_positions]
         # If there is error ellipses, insert them as well.
         draw_objects.append(Trajectory(positions, world_canvas, world_size, canvas_size,
-                                       standard_deviations=logfile.filtered_stddev,
+                                       standard_deviations=robot.filtered_stddev,
                                        cursor_color="blue", background_color="lightblue",
                                        position_stddev_color="#8080ff", theta_stddev_color="#c0c0ff"))
 
@@ -322,7 +322,8 @@ def load_data():
 # Main program.
 if __name__ == '__main__':
 
-    logfile = Robot()
+    # Load all robot data
+    robot = Robot()
 
     # Graphics Interface setup
     root = Tk()

@@ -56,7 +56,6 @@ class Robot():
                 if first_scan_data:
                     self.scan_data = []
                     first_scan_data = False
-                    """Cuidado"""
                 self.scan_data.append(tuple([float(s) for s in sp[3:]]))
 
             # I is indices of poles in the scan.
