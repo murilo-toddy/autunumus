@@ -4,6 +4,8 @@ from math import sqrt, pi, atan2, sin, cos
 
 import numpy as np
 
+from particle import Particle
+
 
 class FastSLAM:
     def __init__(self, initial_particles,
@@ -37,18 +39,18 @@ class FastSLAM:
             post_r = random.gauss(right, right_std)
             p.move(post_l, post_r)
 
-    def update_and_compute_weights(self, landmarks):
+    def update_particles_and_compute_weights(self, landmarks: list[np.ndarray]) -> list[float]:
         """ Update all particles and return their weights """
         measurement_intrinsic_covariance = \
             np.diag([self.measurement_distance_stddev ** 2,
                      self.measurement_angle_stddev ** 2])
+
         weights = []
         for p in self.particles:
-            # Added: decrement landmark counter for any landmark that should be
-            # visible.
+            # Decrement particle counter if it should have been observed
             p.decrement_visible_landmark_counters(self.scanner_displacement)
 
-            # Loop over all measurements.
+            # Loop over all measurements
             number_of_landmarks = p.number_of_landmarks()
             weight = 1.0
             for measurement, measurement_in_scanner_system in landmarks:
@@ -58,17 +60,16 @@ class FastSLAM:
                     self.minimum_correspondence_likelihood,
                     measurement_intrinsic_covariance, self.scanner_displacement)
 
-            # Append overall weight of this particle to weight list.
+            # Append overall weight of this particle to weight list
             weights.append(weight)
 
-            # Added: remove spurious landmarks (with negative counter).
+            # Delete landmarks with negative counter
             p.remove_spurious_landmarks()
 
         return weights
 
-    def resample(self, weights):
-        """Return a list of particles which have been resampled, proportional
-           to the given weights."""
+    def resample(self, weights: list[float]) -> list[Particle]:
+        """ Return resampled particles from calculated weights """
         new_particles = []
         max_weight = max(weights)
         index = random.randint(0, len(self.particles) - 1)
@@ -81,15 +82,13 @@ class FastSLAM:
             new_particles.append(copy.deepcopy(self.particles[index]))
         return new_particles
 
-    def correct(self, landmarks):
-        """The correction step of FastSLAM."""
-        # Update all particles and compute their weights.
-        weights = self.update_and_compute_weights(landmarks)
-        # Then resample, based on the weight array.
+    def correct(self, landmarks: list[np.ndarray]) -> None:
+        """ Correction step """
+        weights = self.update_particles_and_compute_weights(landmarks)
         self.particles = self.resample(weights)
 
-    # Compute mean position and heading from a given set of particles
     def get_mean(self):
+        """ Calculate mean position and heading for every particle """
         mean_x, mean_y = 0.0, 0.0
         head_x, head_y = 0.0, 0.0
         for p in self.particles:
@@ -102,8 +101,8 @@ class FastSLAM:
         self.mean = np.array([mean_x / n, mean_y / n, atan2(head_y, head_x)])
         return self.mean
 
-    # Given a set of particles and their mean, returns orientation of xy error ellipse
-    def get_error_ellipse_and_heading_variance(self):
+    def get_error_ellipse_and_heading_variance(self) -> tuple[float, float, float, float]:
+        """ Calculate orientation of xy error ellipse for each particle """
         center_x, center_y, center_heading = self.mean
         n = len(self.particles)
         if n < 2:
