@@ -4,7 +4,7 @@ import rosbag
 from tf.transformations import euler_from_quaternion
 
 
-def format_lidar_data(odom_len):
+def format_lidar_data():
     with open("lidar.info", "w") as lidar_info_file:
         for topic, msg, t in bag.read_messages(topics="/scan"):
             lidar_info_file.write(f"angle_max: {msg.angle_max}\n")
@@ -27,7 +27,6 @@ def format_lidar_data(odom_len):
     
     with open("lidar_prov.txt", "r") as lidar_file:
         lidar_lines = lidar_file.readlines()
-        lidar_len = len(lidar_lines)
         skip = 4  # Whole division was giving 3 while value is 3.9
         with open("lidar.txt", "w") as lidar_filtered_file:
             for idx, line in enumerate(lidar_lines):
@@ -67,7 +66,7 @@ if __name__ == "__main__":
     bag = rosbag.Bag("./2022-10-01-16-05-01.bag")
     
     # Odom formatting
-    odom_len = format_odometry_data_and_calculate_motor_tick()
+    format_odometry_data_and_calculate_motor_tick()
 
     # Lidar formatting
-    format_lidar_data(odom_len)
+    format_lidar_data()
