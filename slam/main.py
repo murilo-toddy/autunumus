@@ -60,8 +60,8 @@ if __name__ == '__main__':
             fs.correct(cylinders)
 
             # Get mean and variance for particles
-            mean = get_mean(fs.particles)
-            errors = get_error_ellipse_and_heading_variance(fs.particles, mean)
+            mean = fs.get_mean()
+            errors = fs.get_error_ellipse_and_heading_variance()
 
             # Output landmarks of particle which is closest to the mean position.
             output_particle = min([
