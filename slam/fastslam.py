@@ -49,7 +49,7 @@ class FastSLAM:
         weights = []
         for p in self.particles:
             # Decrement particle counter if it should have been observed
-            p.decrement_visible_landmark_counters(self.scanner_displacement)
+            p.decrement_visible_landmark_counters()
 
             # Loop over all measurements
             number_of_landmarks = p.number_of_landmarks()
@@ -59,7 +59,7 @@ class FastSLAM:
                     measurement, measurement_in_scanner_system,
                     number_of_landmarks,
                     self.minimum_correspondence_likelihood,
-                    measurement_intrinsic_covariance, self.scanner_displacement)
+                    measurement_intrinsic_covariance)
 
             # Append overall weight of this particle to weight list
             weights.append(weight)
