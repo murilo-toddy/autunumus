@@ -25,7 +25,7 @@ def write_error_ellipses(file_desc, line_header: str, covariance_matrix_list: li
 
 
 # Write robot variance to file
-def write_robot_variance(file_desc, line_header: str, error: list) -> None:
+def write_robot_variance(file_desc, line_header: str, error: tuple[float, float, float, float]) -> None:
     file_desc.write(f"{line_header} ")
     file_desc.write("%f %f %f %f\n" % error)
 

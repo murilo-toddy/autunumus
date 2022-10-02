@@ -11,7 +11,7 @@ def scanner_to_world(pose, point: list[float]) -> tuple[float, float]:
 
 class Lidar:
     @staticmethod
-    def beam_index_to_angle(index: int) -> float:
+    def beam_index_to_angle(index: float) -> float:
         """ Convert a beam index to an angle, in radians """ 
         return -1.5707999467849731 + index * 0.004369401838630438
 

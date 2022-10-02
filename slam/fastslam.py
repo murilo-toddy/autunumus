@@ -39,7 +39,8 @@ class FastSLAM:
             post_r = random.gauss(right, right_std)
             p.move(post_l, post_r)
 
-    def update_particles_and_compute_weights(self, landmarks: list[np.ndarray]) -> list[float]:
+    def update_particles_and_compute_weights(self, landmarks: list[tuple[np.ndarray, np.ndarray]]) \
+            -> list[float]:
         """ Update all particles and return their weights """
         measurement_intrinsic_covariance = \
             np.diag([self.measurement_distance_stddev ** 2,
@@ -82,7 +83,7 @@ class FastSLAM:
             new_particles.append(copy.deepcopy(self.particles[index]))
         return new_particles
 
-    def correct(self, landmarks: list[np.ndarray]) -> None:
+    def correct(self, landmarks: list[tuple[np.ndarray, np.ndarray]]) -> None:
         """ Correction step """
         weights = self.update_particles_and_compute_weights(landmarks)
         self.particles = self.resample(weights)
