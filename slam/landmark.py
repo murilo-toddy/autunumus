@@ -1,62 +1,73 @@
+from dataclasses import dataclass
 from math import sqrt, sin, cos, atan2, pi
+
 import numpy as np
+
 from transformations import Lidar
 
-# Find the derivative in scan data, ignoring invalid measurements.
-def compute_derivative(scan, min_dist):
-    jumps = [ 0 ]
+
+@dataclass
+class Landmark:
+    counter: int
+    position: list[np.ndarray]
+    covariance: list[np.ndarray]
+
+
+# Calculate derivative of a list, considering values greater than min_dist
+def compute_derivative(scan: list[float], min_dist: float) -> list[float]:
+    derivative_list = [0]
     for i in range(1, len(scan) - 1):
-        l = scan[i-1]
-        r = scan[i+1]
-        if l > min_dist and r > min_dist:
-            derivative = (r - l) / 2.0
-            jumps.append(derivative)
+        left = scan[i-1]
+        right = scan[i+1]
+        if left > min_dist and right > min_dist:
+            derivative = (right - left) / 2.0
+            derivative_list.append(derivative)
         else:
-            jumps.append(0)
-    jumps.append(0)
-    return jumps
+            derivative_list.append(0)
+    derivative_list.append(0)
+    return derivative_list
+
 
 # For each area between a left falling edge and a right rising edge,
-# determine the average ray number and the average depth.
-def find_cylinders(scan, scan_derivative, jump, min_dist):
+# determine the average ray number and the average depth
+def find_cylinders(scan: list[float], scan_derivative: list[float], jump: float, min_dist: float) \
+        -> list[tuple[float, float]]:
     cylinder_list = []
     on_cylinder = False
     sum_ray, sum_depth, rays = 0.0, 0.0, 0
-
     for i in range(len(scan_derivative)):
+        # Start a new cylinder, independent of on_cylinder
         if scan_derivative[i] < -jump:
-            # Start a new cylinder, independent of on_cylinder.
             on_cylinder = True
             sum_ray, sum_depth, rays = 0.0, 0.0, 0
+        # Save cylinder if there was one
         elif scan_derivative[i] > jump:
-            # Save cylinder if there was one.
             if on_cylinder and rays:
                 cylinder_list.append((sum_ray/rays, sum_depth/rays))
             on_cylinder = False
-        # Always add point, if it is a valid measurement.
+        # Always add point, if it is a valid measurement
         elif scan[i] > min_dist:
             sum_ray += i
             sum_depth += scan[i]
             rays += 1
     return cylinder_list
 
-# Detects cylinders and computes range, bearing and cartesian coordinates
-# (in the scanner's coordinate system).
-# The result is modified from previous versions: it returns a list of
-# tuples of two numpy arrays, the first being (distance, bearing), the second
-# being (x, y) in the scanner's coordinate system.
-def get_cylinders_from_scan(scan, jump, min_dist, cylinder_offset):
+
+# Detect cylinder and return its position in world coordinates, cartesian and polar
+def get_cylinders_from_scan(scan: list[float], jump: float, min_dist: float, cylinder_offset: float) \
+        -> list[tuple[np.ndarray, np.ndarray]]:
     der = compute_derivative(scan, min_dist)
     cylinders = find_cylinders(scan, der, jump, min_dist)
     result = []
     for c in cylinders:
-        # Compute the angle and distance measurements.
+        # Compute the angle and distance measurements
         bearing = Lidar.beam_index_to_angle(c[0])
         distance = c[1] + cylinder_offset
-        # Compute x, y of cylinder in the scanner system.
+        # Compute x, y of cylinder in the scanner system
         x, y = distance*cos(bearing), distance*sin(bearing)
-        result.append( (np.array([distance, bearing]), np.array([x, y])) )
+        result.append((np.array([distance, bearing]), np.array([x, y])))
     return result
+
 
 def get_mean(particles):
     """Compute mean position and heading from a given set of particles."""
@@ -74,6 +85,7 @@ def get_mean(particles):
     n = max(1, len(particles))
     return np.array([mean_x / n, mean_y / n, atan2(head_y, head_x)])
 
+
 def get_error_ellipse_and_heading_variance(particles, mean):
     """Given a set of particles and their mean (computed by get_mean()),
        returns a tuple: (angle, stddev1, stddev2, heading-stddev) which is
@@ -85,7 +97,7 @@ def get_error_ellipse_and_heading_variance(particles, mean):
     center_x, center_y, center_heading = mean
     n = len(particles)
     if n < 2:
-        return (0.0, 0.0, 0.0, 0.0)
+        return 0.0, 0.0, 0.0, 0.0
 
     # Compute covariance matrix in xy.
     sxx, sxy, syy = 0.0, 0.0, 0.0
@@ -107,7 +119,7 @@ def get_error_ellipse_and_heading_variance(particles, mean):
 
     # Convert xy to error ellipse.
     eigenvals, eigenvects = np.linalg.eig(cov_xy)
-    ellipse_angle = atan2(eigenvects[1,0], eigenvects[0,0])
+    ellipse_angle = atan2(eigenvects[1, 0], eigenvects[0, 0])
 
     return (ellipse_angle, sqrt(abs(eigenvals[0])),
             sqrt(abs(eigenvals[1])),

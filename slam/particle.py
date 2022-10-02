@@ -1,13 +1,16 @@
+from math import pi, sqrt, exp, atan2
+
 import numpy as np
-from math import sin, cos, pi, sqrt, exp, atan2
+
 from transformations import *
 
 
 class Particle:
-    def __init__(self, pose: list, robot_width: float, scanner_displacement: float):
+    def __init__(self, pose: np.ndarray, robot_width: float, scanner_displacement: float):
         self.pose = pose
         self.w = robot_width
         self.scanner_displacement = scanner_displacement
+        self.landmarks = []
         # TODO update to dictionary
         self.landmark_positions = []
         self.landmark_covariances = []
@@ -22,7 +25,7 @@ class Particle:
         self.pose = self.state_transition(self.pose, (left, right), self.w)
 
     @staticmethod
-    def state_transition(state: list, control: tuple, w: float) -> np.array:
+    def state_transition(state: np.ndarray, control: tuple, w: float) -> np.array:
         """ Moving model for robot given control u """
         x, y, theta = state
         l, r = control

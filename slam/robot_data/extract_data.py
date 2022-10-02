@@ -1,10 +1,11 @@
+from math import sin, cos
+
 import rosbag
 from tf.transformations import euler_from_quaternion
-from math import sin, cos
 
 
 def format_lidar_data(odom_len):
-    with open("lidar_info", "w") as lidar_info_file:
+    with open("lidar.info", "w") as lidar_info_file:
         for topic, msg, t in bag.read_messages(topics="/scan"):
             lidar_info_file.write(f"angle_max: {msg.angle_max}\n")
             lidar_info_file.write(f"angle_min: {msg.angle_min}\n")

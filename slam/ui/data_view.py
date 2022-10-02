@@ -1,8 +1,8 @@
+from math import sin, cos, pi, ceil
 from tkinter import *
 from tkinter import filedialog
-from robot_lib import *
-from math import sin, cos, pi, ceil
 
+from robot_lib import *
 
 # Canvas definitions
 canvas_size = (600, 400)

@@ -1,7 +1,9 @@
-from math import sqrt
-import random
-import numpy as np
 import copy
+import random
+from math import sqrt
+
+import numpy as np
+
 
 class FastSLAM:
     def __init__(self, initial_particles,
