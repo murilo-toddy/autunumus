@@ -1,22 +1,21 @@
 from math import sin, cos
 
 
-def scanner_to_world(pose, point):
-    """Given a robot pose (rx, ry, heading) and a point (x, y) in the
-        scanner's coordinate system, return the point's coordinates in the
-        world coordinate system."""
+# Convert robot pose (x, y, theta) into (x, y) in world coordinates
+def scanner_to_world(pose, point: list[float]) -> tuple[float, float]:
     dx = cos(pose[2])
     dy = sin(pose[2])
     x, y = point
-    return (x * dx - y * dy + pose[0], x * dy + y * dx + pose[1])   
+    return x * dx - y * dy + pose[0], x * dy + y * dx + pose[1]
 
 
 class Lidar:
     @staticmethod
-    def beam_index_to_angle(i, mounting_angle=0.0):
-        """Convert a beam index to an angle, in radians.""" 
-        return -1.5707999467849731 + i * 0.004369401838630438
+    def beam_index_to_angle(index: int) -> float:
+        """ Convert a beam index to an angle, in radians """ 
+        return -1.5707999467849731 + index * 0.004369401838630438
 
     @staticmethod
-    def min_max_bearing():
-        return (-1.5707999467849731, 1.5707999467849731)
+    def min_max_bearing() -> tuple[float, float]:
+        """ Minimum and maximum angle detected by lidar """
+        return -1.5707999467849731, 1.5707999467849731
