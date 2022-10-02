@@ -1,4 +1,4 @@
-from math import sin, cos, pi, ceil
+from math import sin, cos, ceil
 from tkinter import *
 from tkinter import filedialog
 
@@ -65,7 +65,7 @@ class Trajectory(DrawableObject):
         if self.points:
             p_xy_only = []
             for p in self.points:
-                self.canvas.create_oval( \
+                self.canvas.create_oval(
                     p[0] - self.point_size2, p[1] - self.point_size2,
                     p[0] + self.point_size2, p[1] + self.point_size2,
                     fill=self.background_color, outline="")
@@ -81,7 +81,7 @@ class Trajectory(DrawableObject):
         if at_step < len(self.points):
             p = self.points[at_step]
             # Draw position (point).
-            self.cursor_object = self.canvas.create_oval( \
+            self.cursor_object = self.canvas.create_oval(
                 p[0] - self.point_size2 - 1, p[1] - self.point_size2 - 1,
                 p[0] + self.point_size2 + 1, p[1] + self.point_size2 + 1,
                 fill=self.cursor_color, outline="")

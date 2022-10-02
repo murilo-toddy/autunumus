@@ -1,6 +1,7 @@
 from math import pi
 
-class Robot():
+
+class Robot:
     def __init__(self):
         self.reference_positions = []
         self.scan_data = []
