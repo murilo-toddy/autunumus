@@ -263,28 +263,28 @@ def load_data():
     draw_objects.append(Trajectory(positions, world_canvas, world_size, canvas_size,
                                    cursor_color="red", background_color="#FFB4B4"))
 
-    # Insert: world objects, cylinders and corresponding world objects, ellipses.
-    if robot.world_cylinders:
+    # Insert: world objects, landmarks and corresponding world objects, ellipses.
+    if robot.world_landmarks:
         positions = [[to_world_canvas(pos, canvas_size, world_size)
-                      for pos in cylinders_one_scan]
-                     for cylinders_one_scan in robot.world_cylinders]
-        # Also setup cylinders if present.
+                      for pos in landmarks_one_scan]
+                     for landmarks_one_scan in robot.world_landmarks]
+        # Also setup landmarks if present.
         # Note this assumes correct aspect ratio.
         factor = canvas_size[0] / world_size[0]
         draw_objects.append(Points(positions, world_canvas, "#DC23C5",
                                    ellipses=robot.world_ellipses,
                                    ellipse_factor=factor))
 
-    # Insert: detected cylinders, transformed into world coord system.
-    if robot.detected_cylinders and robot.filtered_positions and \
+    # Insert: detected landmarks, transformed into world coord system.
+    if robot.detected_landmarks and robot.filtered_positions and \
             len(robot.filtered_positions[0]) > 2:
         positions = []
-        for i in range(min(len(robot.detected_cylinders), len(robot.filtered_positions))):
+        for i in range(min(len(robot.detected_landmarks), len(robot.filtered_positions))):
             this_pose_positions = []
             pos = robot.filtered_positions[i]
             dx = cos(pos[2])
             dy = sin(pos[2])
-            for pole in robot.detected_cylinders[i]:
+            for pole in robot.detected_landmarks[i]:
                 x = pole[0] * dx - pole[1] * dy + pos[0]
                 y = pole[0] * dy + pole[1] * dx + pos[1]
                 p = to_world_canvas((x, y), canvas_size, world_size)

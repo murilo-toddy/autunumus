@@ -9,8 +9,8 @@ class Robot():
         self.filtered_positions = []
         self.filtered_stddev = []
         self.landmarks = []
-        self.detected_cylinders = []
-        self.world_cylinders = []
+        self.detected_landmarks = []
+        self.world_landmarks = []
         self.world_ellipses = []
         self.particles = []
         self.last_ticks = None
@@ -29,8 +29,8 @@ class Robot():
         first_filtered_positions = True
         first_filtered_stddev = True
         first_landmarks = True
-        first_detected_cylinders = True
-        first_world_cylinders = True
+        first_detected_landmarks = True
+        first_world_landmarks = True
         first_world_ellipses = True
         first_particles = True
         f = open(filename)
@@ -112,7 +112,7 @@ class Robot():
             # of time.
             # File format: L <type> info...
             # Supported types:
-            # Cylinder: L C x y diameter.
+            # landmark: L C x y diameter.
             # Stored: List of (<type> info) tuples.
             elif sp[0] == 'L':
                 if first_landmarks:
@@ -124,16 +124,16 @@ class Robot():
             # D is detected landmarks (in each scan).
             # File format: D <type> info...
             # Supported types:
-            # Cylinder: D C x y x y ...
-            #   Stored: List of lists of (x, y) tuples of the cylinder positions,
+            # landmark: D C x y x y ...
+            #   Stored: List of lists of (x, y) tuples of the landmark positions,
             #   one list per scan.
             elif sp[0] == 'D':
                 if sp[1] == 'C':
-                    if first_detected_cylinders:
-                        self.detected_cylinders = []
-                        first_detected_cylinders = False
+                    if first_detected_landmarks:
+                        self.detected_landmarks = []
+                        first_detected_landmarks = False
                     cyl = sp[2:]
-                    self.detected_cylinders.append([
+                    self.detected_landmarks.append([
                         (float(cyl[2 * i]), float(cyl[2 * i + 1]))
                         for i in range(int(len(cyl) / 2))
                     ])
@@ -141,8 +141,8 @@ class Robot():
             # W is information to be plotted in the world (in each scan).
             # File format: W <type> info...
             # Supported types:
-            # Cylinder: W C x y x y ...
-            #   Stored: List of lists of (x, y) tuples of the cylinder positions,
+            # landmark: W C x y x y ...
+            #   Stored: List of lists of (x, y) tuples of the landmark positions,
             #   one list per scan.
             # Error ellipses: W E angle axis1 axis, angle axis1 axis2 ...
             #   where angle is the ellipse's orientations and axis1 and axis2 are the lenghts
@@ -152,12 +152,12 @@ class Robot():
             #   define the center point of the ellipse.
             elif sp[0] == 'W':
                 if sp[1] == 'C':
-                    if first_world_cylinders:
-                        self.world_cylinders = []
-                        first_world_cylinders = False
+                    if first_world_landmarks:
+                        self.world_landmarks = []
+                        first_world_landmarks = False
 
                     cyl = sp[2:]
-                    self.world_cylinders.append([
+                    self.world_landmarks.append([
                         (float(cyl[2 * i]), float(cyl[2 * i + 1]))
                         for i in range(int(len(cyl) / 2))
                     ])
@@ -235,5 +235,5 @@ class Robot():
         return max(len(self.reference_positions), len(self.scan_data),
                    len(self.pole_indices), len(self.motor_ticks),
                    len(self.filtered_positions), len(self.filtered_stddev),
-                   len(self.detected_cylinders), len(self.world_cylinders),
+                   len(self.detected_landmarks), len(self.world_landmarks),
                    len(self.particles))

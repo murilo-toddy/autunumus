@@ -1,8 +1,9 @@
 import copy
+from math import pi
 
 from fastslam import FastSLAM
 from file_handler import *
-from landmark import *
+from landmark import get_landmarks_from_scan
 from particle import Particle
 from robot import *
 
@@ -10,16 +11,16 @@ from robot import *
 scanner_displacement = 0.3
 robot_width = 0.4
 
-# Cylinder extraction and estimation constants
+# Landmark extraction and estimation constants
 minimum_valid_distance = 1
 depth_jump = 4
-cylinder_offset = 0.2
+landmark_offset = 0.2
 
 # Filter constants
-control_motion_factor = 0.1  # Error in motor control.
-control_turn_factor = 0.6  # Additional error due to slip when turning.
-measurement_distance_stddev = 1  # Distance measurement error of cylinders.
-measurement_angle_stddev = 1.5 / 180.0 * pi  # Angle measurement error.
+control_motion_factor = 0.1  # Error in motor control
+control_turn_factor = 0.6  # Additional error due to slip when turning
+measurement_distance_stddev = 1  # Distance measurement error of landmark
+measurement_angle_stddev = 1.5 / 180.0 * pi  # Angle measurement error
 
 # Minimum accepted correspondence likelihood
 minimum_correspondence_likelihood = 1e-7
@@ -55,9 +56,9 @@ if __name__ == '__main__':
             fs.predict(control)
 
             # Correction step
-            cylinders = get_cylinders_from_scan(robot_data.scan_data[i], depth_jump,
-                                                minimum_valid_distance, cylinder_offset)
-            fs.correct(cylinders)
+            landmarks = get_landmarks_from_scan(robot_data.scan_data[i], depth_jump,
+                                                minimum_valid_distance, landmark_offset)
+            fs.correct(landmarks)
 
             # Get mean and variance for particles
             mean = fs.get_mean()
