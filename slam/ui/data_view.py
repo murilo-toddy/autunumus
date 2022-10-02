@@ -1,6 +1,5 @@
 from tkinter import *
 from tkinter import filedialog
-from lego_robot import *
 from robot_lib import *
 from math import sin, cos, pi, ceil
 
@@ -323,7 +322,7 @@ def load_data():
 # Main program.
 if __name__ == '__main__':
 
-    logfile = LegoLogfile()
+    logfile = Robot()
 
     # Graphics Interface setup
     root = Tk()
