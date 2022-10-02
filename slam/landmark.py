@@ -9,8 +9,8 @@ from transformations import Lidar
 @dataclass
 class Landmark:
     counter: int
-    position: list[np.ndarray]
-    covariance: list[np.ndarray]
+    position: np.ndarray
+    covariance: np.ndarray
 
 
 # Calculate derivative of a list, considering values greater than min_dist
