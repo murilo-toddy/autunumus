@@ -7,7 +7,7 @@ from math import sin, cos, pi, ceil
 
 # Canvas definitions
 canvas_size = (600, 400)
-world_size = (60.0, 30.0)
+world_size = (40.0, 25.0)
 
 
 class DrawableObject(object):

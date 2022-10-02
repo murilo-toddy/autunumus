@@ -54,7 +54,7 @@ def format_odometry_data_and_calculate_motor_tick():
                         l = (yaw - oyaw) * ((x - ox) / (sin(yaw) - sin(oyaw)) - w/2)
                         r = l + w*(yaw-oyaw)
                     motor_file.write(f"M {l} {r}\n")
-                    odom_file.write(f"F {x+30} {y+30} {yaw}\n")
+                    odom_file.write(f"F {x+25} {y+10} {yaw}\n")
 
                 old_pose = [x, y, yaw]
 
