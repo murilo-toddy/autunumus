@@ -1,3 +1,5 @@
 venv
 __pycache__
 slam.txt
+fastslam.txt
+fastslam2.txt
