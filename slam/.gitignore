@@ -3,3 +3,4 @@ __pycache__
 slam.txt
 fastslam.txt
 fastslam2.txt
+*.bag

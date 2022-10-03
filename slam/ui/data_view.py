@@ -241,8 +241,7 @@ def slider_moved(index):
 def add_file():
     filename = filedialog.askopenfilename(filetypes=[("all files", ".*"), ("txt files", ".txt")])
     if filename:
-        # If the file is in the list already, remove it (so it will be appended
-        # at the end).
+        # If exists, reappend filename at the end
         if filename in all_file_names:
             all_file_names.remove(filename)
         all_file_names.append(filename)
@@ -327,7 +326,7 @@ def autorun():
     if auto_run_info.get() == 1:
         slider_index = (slider_index + 1) % (robot.size() - 1)
         slider_moved(slider_index)
-        root.after(5, autorun)
+        root.after(2, autorun)
 
 
 # Main program.
