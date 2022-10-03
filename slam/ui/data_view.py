@@ -211,7 +211,7 @@ def to_world_canvas(world_point, canvas_extents, world_extents):
     """Transforms a point from world coord system to world canvas coord system."""
     x = int(world_point[0] / world_extents[0] * canvas_extents[0])
     y = int(canvas_extents[1] - 1 - world_point[1] / world_extents[1] * canvas_extents[1])
-    return (x, y)
+    return x, y
 
 
 # Sensor canvas is "in driving direction", with x up, y left, (0,0) in the center
@@ -221,7 +221,7 @@ def to_sensor_canvas(sensor_point, canvas_extents, scanner_range):
     scale = canvas_extents[0] / 2.0 / scanner_range
     x = int(canvas_extents[0] / 2.0 - sensor_point[1] * scale)
     y = int(canvas_extents[1] / 2.0 - 1 - sensor_point[0] * scale)
-    return (x, y)
+    return x, y
 
 
 def slider_moved(index):
@@ -337,9 +337,9 @@ if __name__ == '__main__':
     info.pack()
     frame2 = Frame(root)
     frame2.pack()
-    load = Button(frame2, text="Load (additional) logfile", command=add_file)
+    load = Button(frame2, text="Load data file", command=add_file)
     load.pack(side=LEFT)
-    reload_all = Button(frame2, text="Reload all", command=load_data)
+    reload_all = Button(frame2, text="Reload files", command=load_data)
     reload_all.pack(side=RIGHT)
 
     # The list of objects to draw.
