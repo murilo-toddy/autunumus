@@ -1,10 +1,12 @@
 import copy
 from math import pi
 
+from numpy import number
+
 from fastslam import FastSLAM
+from fastslam2 import FastSLAM2
 from file_handler import *
 from landmark import get_landmarks_from_scan
-from particle import Particle
 from robot import *
 
 # Robot constants
@@ -29,27 +31,18 @@ minimum_correspondence_likelihood = 1e-7
 # Linear complexity
 number_of_particles = 50
 
-if __name__ == '__main__':
-    initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
-    start_state = np.array(initial_pose)
-    initial_particles = [copy.copy(Particle(start_state, robot_width, scanner_displacement))
-                         for _ in range(number_of_particles)]
 
-    # Setup filter.
-    fs = FastSLAM(initial_particles,
+def fastslam(robot_data: Robot, slam, filename: str) -> None:
+    # Slam algorithm setup
+    fs = slam(start_state, number_of_particles,
                   robot_width, scanner_displacement,
                   control_motion_factor, control_turn_factor,
                   measurement_distance_stddev,
                   measurement_angle_stddev,
                   minimum_correspondence_likelihood)
 
-    # Read data.
-    robot_data = Robot()
-    robot_data.read("./robot_data/motor.txt")
-    robot_data.read("./robot_data/lidar.txt")
-
     # Loop over all motor tick records.
-    with open("./robot_data/slam.txt", "w") as f:
+    with open(f"./robot_data/{filename}", "w") as f:
         for i in range(len(robot_data.motor_ticks)):
             # Prediction step
             control = robot_data.motor_ticks[i]
@@ -75,3 +68,16 @@ if __name__ == '__main__':
             write_robot_variance(f, "E", errors)
             write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
             write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
+
+
+if __name__ == '__main__':
+    initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
+    start_state = np.array(initial_pose)
+
+    # Read data.
+    robot_data = Robot()
+    robot_data.read("./robot_data/motor.txt")
+    robot_data.read("./robot_data/lidar.txt")
+
+    fastslam(robot_data, FastSLAM, "fastslam.txt")
+    fastslam(robot_data, FastSLAM2, "fastslam2.txt")
