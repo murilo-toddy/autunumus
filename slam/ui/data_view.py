@@ -1,4 +1,5 @@
 from math import sin, cos, ceil
+from re import A
 from tkinter import *
 from tkinter import filedialog
 
@@ -7,6 +8,7 @@ from robot_lib import *
 # Canvas definitions
 canvas_size = (600, 400)
 world_size = (40.0, 25.0)
+slider_index = 0
 
 
 class DrawableObject(object):
@@ -226,13 +228,14 @@ def to_sensor_canvas(sensor_point, canvas_extents, scanner_range):
 
 def slider_moved(index):
     """Callback for moving the scale slider."""
-    i = int(index)
+    global slider_index
+    slider_index = int(index)
     # Call all draw objects.
     for d in draw_objects:
-        d.draw(i)
+        d.draw(slider_index)
 
     # Print info about current point.
-    info.config(text=robot.info(i))
+    info.config(text=robot.info(slider_index))
 
 
 def add_file():
@@ -319,6 +322,14 @@ def load_data():
         d.background_draw()
 
 
+def autorun():
+    global slider_index
+    if auto_run_info.get() == 1:
+        slider_index = (slider_index + 1) % (robot.size() - 1)
+        slider_moved(slider_index)
+        root.after(5, autorun)
+
+
 # Main program.
 if __name__ == '__main__':
 
@@ -339,6 +350,9 @@ if __name__ == '__main__':
     frame2.pack()
     load = Button(frame2, text="Load data file", command=add_file)
     load.pack(side=LEFT)
+    auto_run_info = IntVar()
+    auto_run = Checkbutton(frame2, text="Autorun", variable=auto_run_info, command=autorun)
+    auto_run.pack(side=RIGHT)
     reload_all = Button(frame2, text="Reload files", command=load_data)
     reload_all.pack(side=RIGHT)
 
