@@ -43,5 +43,3 @@ cone_detection/video/output
 .vscode
 .idea
 
-__pycache__
-*.bag
