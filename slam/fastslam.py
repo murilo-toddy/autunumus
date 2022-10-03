@@ -8,13 +8,11 @@ from particle import Particle
 
 
 class FastSLAM:
-    def __init__(self, initial_particles,
+    def __init__(self, start_state, number_of_particles,
                  robot_width, scanner_displacement,
                  control_motion_factor, control_turn_factor,
                  measurement_distance_stddev, measurement_angle_stddev,
                  minimum_correspondence_likelihood):
-        self.particles = initial_particles
-
         self.mean = []
         self.robot_width = robot_width
         self.scanner_displacement = scanner_displacement
@@ -24,6 +22,13 @@ class FastSLAM:
         self.measurement_angle_stddev = measurement_angle_stddev
         self.minimum_correspondence_likelihood = \
             minimum_correspondence_likelihood
+
+        self.particles = self._get_initial_particles(start_state, number_of_particles)
+
+    def _get_initial_particles(self, start_state, number_of_particles):
+        """ Load initial array of particles """
+        return [copy.copy(Particle(start_state, self.robot_width, self.scanner_displacement))
+                for _ in range(number_of_particles)]
 
     def predict(self, control: tuple[float, float]) -> None:
         """ Prediction step """
