@@ -1,4 +1,4 @@
-# Simultaneous Location and Mapping
+<h1 align="center">Simultaneous Location and Mapping</h1>
 
 This module contains a `FastSLAM 1.0` and `2.0` implementation in `Python` and `Numpy`.
 It takes as input robot's left and right wheel encoders and LiDAR data. Further configuration

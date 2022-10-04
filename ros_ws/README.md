@@ -1,4 +1,4 @@
-# ROS Environment
+<h1 align="center">ROS Environment</h1>
 
 This module defines a ROS simulation using Gazebo and RViz. Its main objective is to collect
 input data from a robot to feed the SLAM algorithm.
