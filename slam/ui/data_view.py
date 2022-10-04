@@ -1,5 +1,4 @@
 from math import sin, cos, ceil
-from re import A
 from tkinter import *
 from tkinter import filedialog
 

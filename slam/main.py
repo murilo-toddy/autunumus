@@ -1,7 +1,4 @@
-import copy
 from math import pi
-
-from numpy import number
 
 from fastslam import FastSLAM
 from fastslam2 import FastSLAM2
@@ -68,7 +65,6 @@ def fastslam(robot_data: Robot, slam, filename: str) -> None:
             write_robot_variance(f, "E", errors)
             write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
             write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
-
 
 if __name__ == '__main__':
     initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
