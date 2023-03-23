@@ -1,5 +1,9 @@
 #include "cameraCalibration.h"
 
+
+/**
+ *
+ */
 void calibrateCamera() {
     // Collect all sample files
     std::vector<cv::String> files;
@@ -17,7 +21,7 @@ void calibrateCamera() {
             objectPosition.emplace_back(i, j, 0);
         }
     }
-
+    
     std::vector<cv::Point2f> imagePoint;
     // Detect feature points
     std::size_t i = 0;
@@ -93,4 +97,10 @@ void calibrateCamera() {
         cv::imshow("undistorted image" + std::string(file), imgUndistorted);
         cv::waitKey(0);
     }
+}
+
+
+int main (int, char**) {
+    calibrateCamera();
+    return 0;
 }

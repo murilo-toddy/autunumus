@@ -27,7 +27,7 @@ void Image::configureContourVectors() {
 }
 
 void Image::configureDestinationFolder() const {
-    file::configureFolder(this->destinationFolder);
+    file::configure_folder(this->destinationFolder);
 }
 
 void Image::writeOnDisk(const std::string& fileName, const cv::Mat& matrix) {

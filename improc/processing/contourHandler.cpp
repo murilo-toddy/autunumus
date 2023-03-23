@@ -1,4 +1,5 @@
 #include "contourHandler.h"
+#include <cwchar>
 
 /**
  * @brief Draw contours on image object
@@ -158,3 +159,4 @@ float convexContourPointingUp(const std::vector<cv::Point>& contour) {
     }
     return -1;
 }
+

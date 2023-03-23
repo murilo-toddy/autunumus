@@ -6,6 +6,7 @@
 #include <opencv2/imgcodecs.hpp>
 
 
+// TODO this should be a different file
 [[noreturn]] void findColorSpectrumSampleImage(const std::string &imagePath);
 void findColorSpectrumVideo();
 
