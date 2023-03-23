@@ -1,7 +1,22 @@
-#include "main.h"
-
+#include "setup/colorFiltering.h"
+#include "cone_detection/coneDetection.h"
+#include "path_detection/borderLineDetection.h"
+// #include "setup/cameraCalibration.h"
 #define PATH "../path_detection/test_images/1.jpg"
-OPERATION_MODE operation = COLOR_PICKING;
+
+enum OPERATION_MODE {
+    COLOR_PICKING,
+    CAMERA_CALIBRATION,
+    CONE_DETECTION,
+    PATH_DETECTION
+};
+
+enum INPUT_MODE {
+    SAMPLED_IMAGE,
+    CAMERA_INPUT
+};
+
+OPERATION_MODE operation = CONE_DETECTION;
 INPUT_MODE inputMode = CAMERA_INPUT;
 
 int main(int, char**) {
@@ -15,7 +30,7 @@ int main(int, char**) {
             break;
         
         case CAMERA_CALIBRATION:
-            calibrateCamera();
+            // calibrateCamera();
             break;
 
         case CONE_DETECTION:
@@ -31,3 +46,4 @@ int main(int, char**) {
             break;
     }
 }
+
