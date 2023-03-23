@@ -23,8 +23,11 @@ add_executable(${TARGET} ${SOURCES}
 )
 
 set(CALIBRATE "calibrate")
+set(CALIBRATE_SOURCES "camera/calibration/calibrate_camera.cpp"
+    "camera/calibration/calibrate_camera.h")
 add_executable(${CALIBRATE}
-    camera/cameraCalibration.cpp camera/cameraCalibration.h
+    ${CALIBRATE_SOURCES}
+    file_ops/file_handler.cpp file_ops/file_handler.h
 )
 
 target_link_libraries(${TARGET} ${OpenCV_LIBS})
