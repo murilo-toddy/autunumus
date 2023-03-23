@@ -12,6 +12,7 @@
 
 namespace file {
     void create_folder(const std::string &path);
+    void delete_folder(const std::string &path);
     void configure_folder(const std::string &folder_path);
     void save_opencv_matrix(const std::string &directory, const std::string &file_name, const cv::Mat& matrix);
 }
