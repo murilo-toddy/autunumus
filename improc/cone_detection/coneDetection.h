@@ -9,6 +9,7 @@
 #include "../processing/contourHandler.h"
 #include "../camera/Camera.h"
 
+#define SAMPLES 14
 
 #define SOURCE_FOLDER      "../cone_detection/test_images/source/"
 #define DESTINATION_FOLDER "../cone_detection/test_images/output/"
