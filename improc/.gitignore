@@ -34,6 +34,7 @@
 # CMake builds
 build
 cmake-build-debug
+.cache
 
 # Image outputs
 cone_detection/test_images/output
