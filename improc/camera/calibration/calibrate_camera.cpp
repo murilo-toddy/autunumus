@@ -1,13 +1,6 @@
 #include "calibrate_camera.h"
 
 
-std::vector<cv::String> load_calibration_images(const std::string &path) {
-    std::vector<cv::String> files;
-    cv::glob(path, files, false);
-    return files;
-}
-
-
 cv::Mat analyze_image(int index, cv::String file, cv::Size pattern_size, 
             const std::vector<cv::Point3f> &object_position,
             std::vector<std::vector<cv::Point2f>> &camera_frame,
@@ -40,7 +33,7 @@ cv::Mat analyze_image(int index, cv::String file, cv::Size pattern_size,
 
 void calibrate_camera() {
     // Collect all sample files
-    std::vector<cv::String> files = load_calibration_images(SAMPLE_IMAGES_PATH);
+    std::vector<cv::String> files = file::load_images_from_query(SAMPLE_IMAGES_PATH);
     std::vector<cv::Mat> processed_images(files.size());
 
     // Define world and image frames
@@ -64,7 +57,8 @@ void calibrate_camera() {
                 object_position, camera_frame, world_frame);
 
         if(SAVE_IMAGES) {
-            file::save_opencv_matrix(OUTPUT_PATH, std::string(files[i]), image);
+            file::save_opencv_matrix_to_file(OUTPUT_PATH, 
+                    std::string(files[i]), image);
         }
     }
 
@@ -90,11 +84,10 @@ void calibrate_camera() {
     }
 
     if(SAVE_MATRIX) {
-        std::ofstream out_matrix;
-        out_matrix.open(CORRECTION_MATRIX_PATH);
-        out_matrix << distortion_matrix << "\n";
-        out_matrix << intrinsic_matrix << "\n";
-        out_matrix.close();
+        file::save_array_to_file(CORRECTION_MATRIX_PATH, "distortion.mat", 5,
+                distortion_matrix.val);
+        file::save_array_to_file(CORRECTION_MATRIX_PATH, "intrinsic.mat", 9,
+                intrinsic_matrix.val);
         if(DEBUG) std::cout << "Matrices updated\n";
     }
     
@@ -112,7 +105,8 @@ void calibrate_camera() {
 
         if(SAVE_IMAGES) {
             std::string image_name = std::string(file) + " corrected";
-            file::save_opencv_matrix(OUTPUT_PATH, image_name, image_undistorted);
+            file::save_opencv_matrix_to_file(OUTPUT_PATH, image_name, 
+                    image_undistorted);
             if(DEBUG) std::cout << image_name << " saved\n";
         }
     }

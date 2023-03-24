@@ -24,7 +24,7 @@
 #define CHESSBOARD_HEIGHT  8
 #define CHESSBOARD_WIDTH   8
 
-#define CORRECTION_MATRIX_PATH "./camera/correction_matrices"
+#define CORRECTION_MATRIX_PATH "./camera"
 
 
 void calibrate_camera();
