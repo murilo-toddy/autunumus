@@ -1,33 +1,50 @@
 #include "Camera.h"
-#include <iostream>
+#include "matrices.h"
 
-Camera::Camera(const int& captureIndex, const int& width, const int& height) {
-    this->cap.open(captureIndex);
-    this->frameSize = cv::Size(width, height);
 
-    this->intrinsicMatrix = cv::Matx33f(INTRINSIC_MATRIX_VALUES);
-    this->distortionMatrix = cv::Vec<float, 5>(DISTORTION_MATRIX_VALUES);
+Camera::Camera(const int camera_index, const int width, const int height) {
+    cap.open(camera_index);
+    frame_size = cv::Size(width, height);
 
-    cv::initUndistortRectifyMap(
-            this->intrinsicMatrix, this->distortionMatrix, cv::Matx33f::eye(),
-            this->intrinsicMatrix, this->frameSize, CV_32FC1,
-            this->mapX, this->mapY
-    );
+    float* intrinsic_matrix_array = file::load_array_from_file(MATRICES_PATH, 
+            INTRINSIC_MATRIX_FILE_NAME, 9);
+    intrinsic_matrix = cv::Matx33f(intrinsic_matrix_array);
+
+    float* distortion_matrix_array = file::load_array_from_file(MATRICES_PATH,
+            DISTORTION_MATRIX_FILE_NAME, 5);
+    distortion_matrix = cv::Vec<float, 5>(distortion_matrix);
+
+    cv::initUndistortRectifyMap(intrinsic_matrix, distortion_matrix, 
+            cv::Matx33f::eye(), intrinsic_matrix, frame_size, CV_32FC1,
+            map_x, map_y);
+
+    free(intrinsic_matrix_array);
+    free(distortion_matrix_array);
 }
 
-void Camera::readFrame() {
-    this->cap >> this->inputMat;
-    cv::remap(this->inputMat, this->correctedMat, this->mapX, this->mapY, cv::INTER_LINEAR);
+
+cv::Mat Camera::update_frame() {
+    cap >> input_matrix;
+    cv::remap(input_matrix, corrected_matrix, map_x, map_y, cv::INTER_LINEAR);
+    return corrected_matrix;
 }
 
-cv::Mat Camera::getMat() {
-    return this->correctedMat;
+
+cv::Mat Camera::get_corrected_frame() {
+    return corrected_matrix;
 }
 
-void Camera::showFrame() {
-    cv::imshow("Camera", this->correctedMat);
+
+cv::Mat Camera::get_original_frame() {
+    return input_matrix;
 }
 
-void Camera::saveFrame(const std::string& path) {
-    cv::imwrite(path, this->correctedMat);
+
+void Camera::show_frame() {
+    cv::imshow("Camera", corrected_matrix);
+}
+
+
+void Camera::save_frame(const std::string path, const std::string file_name) {
+    file::save_opencv_matrix_to_file(path, file_name, corrected_matrix);
 }
