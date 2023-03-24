@@ -22,6 +22,7 @@
 #define CHESSBOARD_HEIGHT  8
 #define CHESSBOARD_WIDTH   8
 
+#define MATRIX_PATH "./setup/matrix.txt"
 
 void calibrate_camera(const bool debug);
 

@@ -1,7 +1,4 @@
 #include "calibrate_camera.h"
-#include <fstream>
-#include <iostream>
-#include <ostream>
 
 
 std::vector<cv::String> load_calibration_images(const std::string &path) {
