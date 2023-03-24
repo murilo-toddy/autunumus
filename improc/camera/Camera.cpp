@@ -25,7 +25,9 @@ Camera::Camera(const int camera_index, const int width, const int height) {
 
 cv::Mat Camera::update_frame() {
     cap >> input_matrix;
-    cv::remap(input_matrix, corrected_matrix, map_x, map_y, cv::INTER_LINEAR);
+    if(CORRECT_CAMERA_INPUT_DISTORTION) {
+        cv::remap(input_matrix, corrected_matrix, map_x, map_y, cv::INTER_LINEAR);
+    } else { corrected_matrix = input_matrix; }
     return corrected_matrix;
 }
 
