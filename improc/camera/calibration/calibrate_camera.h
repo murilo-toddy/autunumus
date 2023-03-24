@@ -19,8 +19,8 @@
 #define IMAGE_WIDTH  1280
 #define IMAGE_HEIGHT 960
 
-#define SAMPLE_IMAGES_PATH "./camera/calibration/calibration_source/*"
-#define OUTPUT_PATH        "./camera/calibration/calibration_output"
+#define SAMPLE_IMAGES_PATH "./images/calibration"
+#define OUTPUT_PATH        "./camera/calibration/output_images"
 #define CHESSBOARD_HEIGHT  8
 #define CHESSBOARD_WIDTH   8
 
