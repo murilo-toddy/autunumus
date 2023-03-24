@@ -1,55 +1,56 @@
-#include "colorFiltering.h"
+#include "color_mask.h"
 
 
-int hmin = 0, smin = 0, vmin = 0;
-int hmax = 179, smax = 255, vmax = 255;
+typedef struct {
+    int min, max;
+} color_range;
+
+color_range hue{0, 179}, sat{0, 255}, val{0, 255};
 
 
 /**
  * @brief Create a Trackbar to allow HSV parameters changing
  */
-void createTrackbar() {
+void create_trackbar() {
     cv::namedWindow("Trackbar", cv::WINDOW_AUTOSIZE);
-    cv::createTrackbar("Hue Min", "Trackbar", &hmin, 179);
-    cv::createTrackbar("Hue Max", "Trackbar", &hmax, 179);
-    cv::createTrackbar("Sat Min", "Trackbar", &smin, 255);
-    cv::createTrackbar("Sat Max", "Trackbar", &smax, 255);
-    cv::createTrackbar("Val Min", "Trackbar", &vmin, 255);
-    cv::createTrackbar("Val Max", "Trackbar", &vmax, 255);
+    cv::createTrackbar("Hue Min", "Trackbar", &hue.min, 179);
+    cv::createTrackbar("Hue Max", "Trackbar", &hue.max, 179);
+    cv::createTrackbar("Sat Min", "Trackbar", &sat.min, 255);
+    cv::createTrackbar("Sat Max", "Trackbar", &sat.max, 255);
+    cv::createTrackbar("Val Min", "Trackbar", &val.min, 255);
+    cv::createTrackbar("Val Max", "Trackbar", &val.max, 255);
 }
 
+
 /**
- * @brief Create trackbar for dynamic color filtering using sampled images as input
+ * @brief Update image frame from camera input
  */
-void findColorSpectrumSampleImage(const std::string &imagePath) {
-    createTrackbar();
-    cv::Mat image = cv::imread(imagePath), hsv, mask;
+cv::Mat update_frame(cv::VideoCapture cap) {
+    cv::Mat image; cap >> image;
+    return image;
+}
+
+
+/**
+ * @brief Apply HSV masking to image or live video
+ */
+void apply_hsv_mask_to_matrix() {
+    create_trackbar();
+    cv::Mat image, hsv, mask;
+    cv::VideoCapture cap;
+    if(operation_mode == CAMERA_INPUT) {
+        cap = cv::VideoCapture(CAMERA_INDEX);
+    } else {
+        image = cv::imread(SOURCE_IMAGE_PATH);
+    }
 
     while(true) {
-        cvtColor(image, hsv, cv::COLOR_BGR2HSV);
-        cv::Scalar lower(hmin, smin, vmin);
-        cv::Scalar upper(hmax, smax, vmax);
-        inRange(hsv, lower, upper, mask);
-
-        cv::imshow("Original image", image);
-        cv::imshow("Masked image", mask);
-        cv::waitKey(1);
-    }
-}
-
-/**
- * @brief Create trackbar for dynamic color filtering using video capture as input
- */
-void findColorSpectrumVideo() {
-    createTrackbar();
-    cv::VideoCapture cap(0);
-    cv::Mat image, hsv, mask;
-
-    while(cap.isOpened()) {
-        cap >> image;
+        if(operation_mode == CAMERA_INPUT) {
+            image = update_frame(cap);
+        }
         cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
-        cv::Scalar lower(hmin, smin, vmin);
-        cv::Scalar upper(hmax, smax, vmax);
+        cv::Scalar lower(hue.min, sat.min, val.min);
+        cv::Scalar upper(hue.max, sat.max, val.max);
         cv::inRange(hsv, lower, upper, mask);
         
         cv::imshow("Original image", image);
@@ -60,11 +61,7 @@ void findColorSpectrumVideo() {
 
 
 int main(int, char**) {
-    if(USE_LIVE_VIDEO) {
-        findColorSpectrumVideo();
-    } else {
-        findColorSpectrumSampleImage("./source");
-    }
+    apply_hsv_mask_to_matrix();  
     return 0;
 }
 

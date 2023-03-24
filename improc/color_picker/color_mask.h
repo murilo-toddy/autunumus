@@ -5,11 +5,17 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#define USE_LIVE_VIDEO true
+#define SOURCE_IMAGE_PATH "./cone_detection/source_images/1.jpg"
+#define CAMERA_INDEX 0
+
+enum mode {
+    CAMERA_INPUT,
+    SOURCE_IMAGE
+};
+
+const mode operation_mode = SOURCE_IMAGE;
 
 
-// TODO this should be a different file
-[[noreturn]] void findColorSpectrumSampleImage(const std::string &imagePath);
-void findColorSpectrumVideo();
+void apply_hsv_mask_to_matrix();
 
 #endif //CONEDETECTION_COLORFILTERING_H
