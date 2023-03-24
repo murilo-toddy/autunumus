@@ -1,7 +1,9 @@
 #include "colorFiltering.h"
 
+
 int hmin = 0, smin = 0, vmin = 0;
 int hmax = 179, smax = 255, vmax = 255;
+
 
 /**
  * @brief Create a Trackbar to allow HSV parameters changing
@@ -65,3 +67,4 @@ int main(int, char**) {
     }
     return 0;
 }
+
