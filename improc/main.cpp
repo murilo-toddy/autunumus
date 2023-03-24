@@ -1,10 +1,8 @@
 #include "cone_detection/coneDetection.h"
 #include "path_detection/borderLineDetection.h"
 #define PATH "../path_detection/test_images/1.jpg"
-// #include "setup/cameraCalibration.h"
 
 enum OPERATION_MODE {
-    COLOR_PICKING,
     CONE_DETECTION,
     PATH_DETECTION
 };
