@@ -1,5 +1,5 @@
-#include "cone_detection/coneDetection.h"
-#include "path_detection/borderLineDetection.h"
+#include "cone_detection/cone_detection.h"
+#include "path_detection/roadmark_detection.h"
 #define PATH "../path_detection/test_images/1.jpg"
 
 enum OPERATION_MODE {
@@ -19,7 +19,7 @@ int main(int, char**) {
     switch (operation) {
         case CONE_DETECTION:
             if (inputMode == SAMPLED_IMAGE) {
-                coneDetectionSampledImages();
+                cone_detection_from_sample_images();
             } else {
                 coneDetectionVideo();
             }

@@ -10,7 +10,7 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
 
-#include "../../file_ops/file_handler.h"
+#include "../../io/file_handler.h"
 
 #define DEBUG       true
 #define SAVE_IMAGES true

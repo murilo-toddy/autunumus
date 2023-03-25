@@ -70,3 +70,4 @@ void Image::openImages(const bool& showStepByStep) const {
     imshow("final", this->finalImage);
     cv::waitKey();
 }
+

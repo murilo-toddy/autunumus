@@ -98,13 +98,14 @@ void calibrate_camera() {
             map_x, map_y);
 
     // Save lens corrected images
-    for (auto const& file : files) {
+    for (int i = 0; i < files.size(); i++) {
+        cv::String file = files[i];
         cv::Mat image = cv::imread(file, cv::IMREAD_COLOR);
         cv::Mat image_undistorted;
         cv::remap(image, image_undistorted, map_x, map_y, cv::INTER_LINEAR);
 
         if(SAVE_IMAGES) {
-            std::string image_name = std::string(file) + " corrected";
+            std::string image_name = std::to_string(i) + " corrected.jpg";
             file::save_opencv_matrix_to_file(OUTPUT_PATH, image_name, 
                     image_undistorted);
             if(DEBUG) std::cout << image_name << " saved\n";

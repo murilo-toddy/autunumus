@@ -8,7 +8,6 @@
 #include <opencv2/imgproc.hpp>
 
 #include "../frame/Image.h"
-#include "../cone_detection/coneDetection.h"
 
 
 /*

@@ -1,4 +1,4 @@
-#include "imageProcessing.h"
+#include "image_processing.h"
 
 /**
  * @brief Generate a color map to filter for specific colors in hsv spectrum

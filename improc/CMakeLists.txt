@@ -7,25 +7,51 @@ find_package(OpenCV REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") 
 
+set(CONFIG_SOURCE "config.h")
 
 set(FILE_HANDLER_SOURCES
-    "file_ops/file_handler.cpp"
-    "file_ops/file_handler.h"
+    "io/file_handler.cpp"
+    "io/file_handler.h"
 )
+
+set(CAMERA_SOURCES
+    "camera/Camera.cpp"
+    "camera/Camera.h"
+)
+
+set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES} 
+    ${FILE_HANDLER_SOURCES} ${CONFIG_SOURCE}
+)
+
+
+set(CONE_DETECTION_SOURCES
+    "cone_detection/cone_detection.cpp"
+    "cone_detection/cone_detection.h"
+)
+
+set(CONE_DETECTION_DEPENDENCIES 
+    ${CONE_DETECTION_SOURCES} ${CAMERA_DEPENDENCIES}
+    "cone_detection/frame/Image.cpp"
+    "cone_detection/frame/Image.h"
+    "cone_detection/processing/image_processing.cpp"
+    "cone_detection/processing/image_processing.h"
+    "cone_detection/processing/contour_handler.cpp"
+    "cone_detection/processing/contour_handler.h"
+)
+
+
+set(PATH_DETECTION_SOURCES
+    "path_detection/roadmark_detection.cpp"
+    "path_detection/roadmark_detection.h"
+)
+
 
 # Main cone and path detection algorithm
 set(TARGET "main")
-set(SOURCES "main.cpp")
-add_executable(${TARGET} ${SOURCES}
-    ${FILE_HANDLER_SOURCES}
-    processing/imageProcessing.cpp processing/imageProcessing.h
-    processing/contourHandler.cpp processing/contourHandler.h
-    frame/Image.cpp frame/Image.h
-    path_detection/borderLineDetection.cpp path_detection/borderLineDetection.h
-    cone_detection/coneDetection.cpp cone_detection/coneDetection.h
-    camera/Camera.cpp camera/Camera.h
-    camera/matrices.h cone_detection/Cone.cpp
-    cone_detection/Cone.h
+set(MAIN "main.cpp" "config.h")
+add_executable(${TARGET} ${MAIN}
+    ${CONE_DETECTION_DEPENDENCIES}
+    ${PATH_DETECTION_SOURCES}
 )
 
 # Camera calibration using Zhang's method
@@ -42,7 +68,7 @@ add_executable(${CALIBRATE}
 
 
 # Color picking using HSV mask
-set(COLOR_PICKER "color_picker")
+set(COLOR_PICKER "mask")
 set(COLOR_PICKER_SOURCES 
     "color_picker/color_mask.cpp"
     "color_picker/color_mask.h"
@@ -50,6 +76,7 @@ set(COLOR_PICKER_SOURCES
 
 add_executable(${COLOR_PICKER}
     ${COLOR_PICKER_SOURCES}
+    ${CAMERA_DEPENDENCIES}
 )
 
 

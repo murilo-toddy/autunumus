@@ -23,30 +23,20 @@ void create_trackbar() {
 
 
 /**
- * @brief Update image frame from camera input
- */
-cv::Mat update_frame(cv::VideoCapture cap) {
-    cv::Mat image; cap >> image;
-    return image;
-}
-
-
-/**
  * @brief Apply HSV masking to image or live video
  */
 void apply_hsv_mask_to_matrix() {
     create_trackbar();
     cv::Mat image, hsv, mask;
-    cv::VideoCapture cap;
+    Camera camera;
     if(operation_mode == CAMERA_INPUT) {
-        cap = cv::VideoCapture(CAMERA_INDEX);
     } else {
         image = cv::imread(SOURCE_IMAGE_PATH);
     }
 
     while(true) {
         if(operation_mode == CAMERA_INPUT) {
-            image = update_frame(cap);
+            image = camera.update_frame();
         }
         cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
         cv::Scalar lower(hue.min, sat.min, val.min);

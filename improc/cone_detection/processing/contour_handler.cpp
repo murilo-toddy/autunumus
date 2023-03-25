@@ -1,5 +1,4 @@
-#include "contourHandler.h"
-#include <cwchar>
+#include "contour_handler.h"
 
 /**
  * @brief Draw contours on image object
@@ -70,7 +69,8 @@ void searchContours(Image *image) {
         // Polygon represents a cone
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
 
-        if (!REAL_TIME_ENV) {
+        // UPDATE
+        if (!true) {
             // Draw all contours on matrices
             drawContours(image, i, distance);
         }

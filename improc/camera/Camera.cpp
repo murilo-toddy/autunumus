@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "matrices.h"
 
 
 Camera::Camera(const int camera_index, const int width, const int height) {
@@ -50,3 +49,4 @@ void Camera::show_frame() {
 void Camera::save_frame(const std::string path, const std::string file_name) {
     file::save_opencv_matrix_to_file(path, file_name, corrected_matrix);
 }
+

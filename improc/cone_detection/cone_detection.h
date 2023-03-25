@@ -4,9 +4,9 @@
 #include <iostream>
 #include <chrono>
 
-#include "../frame/Image.h"
-#include "../processing/imageProcessing.h"
-#include "../processing/contourHandler.h"
+#include "frame/Image.h"
+#include "processing/image_processing.h"
+#include "processing/contour_handler.h"
 #include "../camera/Camera.h"
 
 #define SAMPLES 14
@@ -20,7 +20,7 @@
 #define CONTINUOUS_DESTINATION_FOLDER "../cone_detection/video/output/"
 #define FRAMES_TO_SAVE                20
 
-void coneDetectionSampledImages();
+void cone_detection_from_sample_images();
 [[noreturn]] void coneDetectionVideo();
 
 #endif //PATHDETECTIONALGORITHM_CONEDETECTION_H

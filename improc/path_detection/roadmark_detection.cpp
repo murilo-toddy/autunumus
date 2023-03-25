@@ -1,4 +1,4 @@
-#include "borderLineDetection.h"
+#include "roadmark_detection.h"
 
 std::map<std::string, std::vector<cv::Scalar>> loadColorMapRoadMarkings() {
     // Scalars are in (H, S, V) format
@@ -56,7 +56,7 @@ void findRoadMarkings() {
         }
 
         cv::Mat maskedImage = rangedImages[0].clone();
-        for (int t = 1; t < (int)colorMap.size(); t++) {
+        for (int t = 1; t < colorMap.size(); t++) {
             cv::add(maskedImage, rangedImages[t], maskedImage);
         }
 

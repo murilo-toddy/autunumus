@@ -1,11 +1,26 @@
-#include "coneDetection.h"
+#include "cone_detection.h"
+
+
+void detect_cone(cv::Mat image) {
+    
+}
+
+
+// ISSO AQUI NAO É PRA TER O TRABALHO DE ABRIR AS IMAGENS
+// AS IMAGENS DEVEM SER FORNECIDAS PELA MAIN, AQUI TEMOS APENAS A DETECÇÃO
+// AS INFORMAÇÕES DE TEMPO DEVEM SER RETORNADAS EM UMA STRUCT PARA ANÁLISE
+// AS FUNÇÕES DE DETECÇÃO TEM QUE SER EXPLICITAS AQUI! USAR GET BORDER E SEARCH CONTOUR NAO É CLARO
+// ANÁLISE DE TEMPO E ESCRITA EM DISCO NÃO DEVEM SER FEITAS AQUI?!!
+// O NOME IMAGE É UMA MERDA
+
+
 
 /**
  * @brief Search for cones in sampled images
  * @param void
  * @return None
  */
-void coneDetectionSampledImages() {
+void cone_detection_from_sample_images() {
     for (int s = 1; s <= SAMPLES; s++) {
         std::cout << "** Processing sample " << std::to_string(s) << " **\n";
         cv::Mat image = cv::imread(SOURCE_FOLDER + std::to_string(s) + ".jpg");
@@ -52,8 +67,8 @@ void coneDetectionVideo() {
     while(true) {
         auto processBegin = std::chrono::high_resolution_clock::now();
 
-        camera.readFrame(); // Read camera input
-        auto *cameraFrame = new Image(camera.getMat(), CONTINUOUS_DESTINATION_FOLDER + std::to_string(frame));
+        camera.update_frame(); // Read camera input
+        auto *cameraFrame = new Image(camera.get_corrected_frame(), CONTINUOUS_DESTINATION_FOLDER + std::to_string(frame));
         getBorderedImage(cameraFrame); // Process frame
         searchContours(cameraFrame);   // Find cone contours in frame
         cv::imshow("ConeDetection", cameraFrame->finalImage);
@@ -66,7 +81,7 @@ void coneDetectionVideo() {
 
         delete cameraFrame;
         auto processEnd = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double, std::milli> process = processEnd - processBegin;
+        auto process = processEnd - processBegin;
         std::cout << "fps " << 1000 / (process.count()) << "\n";
         frame++;
     }

@@ -6,8 +6,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/calib3d.hpp>
 
-#include "../file_ops/file_handler.h"
-#include "../constants.h"
+#include "../io/file_handler.h"
+#include "../config.h"
 
 
 #define WIDTH  1280
