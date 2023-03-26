@@ -50,3 +50,7 @@ void Camera::save_frame(const std::string path, const std::string file_name) {
     file::save_opencv_matrix_to_file(path, file_name, corrected_matrix);
 }
 
+bool Camera::is_open() {
+    return cap.isOpened();
+}
+

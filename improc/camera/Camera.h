@@ -36,6 +36,7 @@ public:
     cv::Mat update_frame();
     void show_frame();
     void save_frame(const std::string path, const std::string file_name);
+    bool is_open();
 };
 
 
