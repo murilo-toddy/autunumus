@@ -20,29 +20,8 @@ const std::vector<std::pair<std::string, std::vector<
         {"BLUE", {
             {{ 88, 134, 125}, {132, 236, 200}},
         }},
-        {"WHITE", {
-            {{ 97,   0, 181}, {179,  37, 181}},
-        }},
     };
 }
-
-
-//void getBorderedImage(cv::Mat image) {
-//
-//
-//    // Morphing matrix
-//    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-//
-//    // Blur image and performs canny edges detection
-//    cv::GaussianBlur(image->mat.mask, image->mat.blurredImage, cv::Size(3, 3), 3, 0);
-//    cv::Canny(image->mat.blurredImage, image->mat.cannyImage, CANNY_LOW, CANNY_HIGH);
-//
-//    // Increase then decrease image thickness for better edge recognition
-//    cv::dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
-//    cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
-//
-//    image->processedImage = image->mat.erodedImage;
-//}
 
 
 cv::Mat mask_image(cv::Mat image, std::vector<std::pair<cv::Scalar, cv::Scalar>> masks) {
@@ -100,8 +79,6 @@ cone_info find_cones(cv::Mat image) {
     return cones;
 }
 
-
-// AS FUNÇÕES DE DETECÇÃO TEM QUE SER EXPLICITAS AQUI! USAR GET BORDER E SEARCH CONTOUR NAO É CLARO
 
 
 
