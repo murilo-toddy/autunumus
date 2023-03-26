@@ -10,12 +10,12 @@
 #define SOURCE_IMAGE_PATH "./images/cone_sample/1.jpg"
 #define CAMERA_INDEX 0
 
-enum mode {
+enum IMAGE_INPUT_MODE {
+    SAMPLE_IMAGES,
     CAMERA_INPUT,
-    SOURCE_IMAGE
 };
 
-const mode operation_mode = CAMERA_INPUT;
+const IMAGE_INPUT_MODE operation_mode = CAMERA_INPUT;
 
 
 void apply_hsv_mask_to_matrix();

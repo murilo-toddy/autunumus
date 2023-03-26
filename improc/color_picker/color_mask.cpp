@@ -29,8 +29,7 @@ void apply_hsv_mask_to_matrix() {
     create_trackbar();
     cv::Mat image, hsv, mask;
     Camera camera;
-    if(operation_mode == CAMERA_INPUT) {
-    } else {
+    if(operation_mode == SAMPLE_IMAGES) {
         image = cv::imread(SOURCE_IMAGE_PATH);
     }
 
