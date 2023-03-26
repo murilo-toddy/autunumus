@@ -1,8 +1,73 @@
 #include "cone_detection.h"
 
 
-void detect_cone(cv::Mat image) {
-    
+/**
+ * @brief Return a list of masks  for colors of interest
+ * Each color contains a list of scalars in 
+ * {(Hmin Smin Vmin) (Hmax, Smax, Vmax)} format
+ */
+const std::vector<std::pair<
+        std::string, std::vector<std::vector<cv::Scalar>>>> get_color_masks() {
+    return {
+        {"RED", {
+            {{  0, 120,  80}, { 15, 255, 255}},
+            {{159, 135,  90}, {179, 255, 160}},
+        }},
+        {"YELLOW", {
+            {{ 16, 188, 116}, { 63, 255, 238}},
+        }},
+        {"BLUE", {
+            {{ 88, 134, 125}, {132, 236, 200}},
+        }},
+        {"WHITE", {
+            {{ 97,   0, 181}, {179,  37, 181}},
+        }},
+    };
+}
+
+
+void getBorderedImage(cv::Mat image) {
+    cv::cvtColor(image->originalImage, image->mat.originalImageHsv, cv::COLOR_BGR2HSV);
+    auto color_masks = get_color_masks();
+
+    int index = 0;
+    std::vector<cv::Mat> rangedImages(color_masks.size());
+    // Filter for specific image colors
+    for (auto const &[key, value] : color_masks) {
+        cv::inRange(
+            image->mat.originalImageHsv,
+            value[0], value[1],
+            rangedImages[index]
+        );
+        index++;
+    }
+
+    cv::Mat maskedImage = rangedImages[0].clone();
+    for (int i = 1; i < color_masks.size(); i++) {
+        cv::add(maskedImage, rangedImages[i], maskedImage);
+    }
+    image->mat.mask = maskedImage;
+
+    // Morphing matrix
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+
+    // Blur image and performs canny edges detection
+    cv::GaussianBlur(image->mat.mask, image->mat.blurredImage, cv::Size(3, 3), 3, 0);
+    cv::Canny(image->mat.blurredImage, image->mat.cannyImage, CANNY_LOW, CANNY_HIGH);
+
+    // Increase then decrease image thickness for better edge recognition
+    cv::dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
+    cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
+
+    image->processedImage = image->mat.erodedImage;
+}
+
+
+void find_cones(cv::Mat image) {
+    cone_info cones;
+    cones.cones.push_back("ORIGINAL", image);
+
+    auto color_masks = get_color_masks();
 }
 
 
@@ -86,3 +151,4 @@ void coneDetectionVideo() {
         frame++;
     }
 }
+
