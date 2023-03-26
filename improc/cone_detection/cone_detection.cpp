@@ -1,4 +1,5 @@
 #include "cone_detection.h"
+#include <opencv2/imgproc.hpp>
 
 
 /**
@@ -6,8 +7,8 @@
  * Each color contains a list of scalars in 
  * {(Hmin Smin Vmin) (Hmax, Smax, Vmax)} format
  */
-const std::vector<std::pair<
-        std::string, std::vector<std::vector<cv::Scalar>>>> get_color_masks() {
+const std::vector<std::pair<std::string, std::vector<
+        std::pair<cv::Scalar, cv::Scalar>>>> get_color_masks() {
     return {
         {"RED", {
             {{  0, 120,  80}, { 15, 255, 255}},
@@ -26,57 +27,81 @@ const std::vector<std::pair<
 }
 
 
-void getBorderedImage(cv::Mat image) {
-    cv::cvtColor(image->originalImage, image->mat.originalImageHsv, cv::COLOR_BGR2HSV);
-    auto color_masks = get_color_masks();
+//void getBorderedImage(cv::Mat image) {
+//
+//
+//    // Morphing matrix
+//    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+//
+//    // Blur image and performs canny edges detection
+//    cv::GaussianBlur(image->mat.mask, image->mat.blurredImage, cv::Size(3, 3), 3, 0);
+//    cv::Canny(image->mat.blurredImage, image->mat.cannyImage, CANNY_LOW, CANNY_HIGH);
+//
+//    // Increase then decrease image thickness for better edge recognition
+//    cv::dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
+//    cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
+//
+//    image->processedImage = image->mat.erodedImage;
+//}
 
-    int index = 0;
-    std::vector<cv::Mat> rangedImages(color_masks.size());
-    // Filter for specific image colors
-    for (auto const &[key, value] : color_masks) {
-        cv::inRange(
-            image->mat.originalImageHsv,
-            value[0], value[1],
-            rangedImages[index]
-        );
-        index++;
+
+cv::Mat mask_image(cv::Mat image, std::vector<std::pair<cv::Scalar, cv::Scalar>> masks) {
+    std::vector<cv::Mat> masked_images(masks.size());
+    for(int i = 0; i < masks.size(); i++) {
+        cv::inRange(image, masks[i].first, masks[i].second, masked_images[i]);
     }
-
-    cv::Mat maskedImage = rangedImages[0].clone();
-    for (int i = 1; i < color_masks.size(); i++) {
-        cv::add(maskedImage, rangedImages[i], maskedImage);
+    cv::Mat masked_image = masked_images[0].clone();
+    for(int i = 1; i < masks.size(); i++) {
+        cv::add(masked_image, masked_images[i], masked_image);
     }
-    image->mat.mask = maskedImage;
-
-    // Morphing matrix
-    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
-
-    // Blur image and performs canny edges detection
-    cv::GaussianBlur(image->mat.mask, image->mat.blurredImage, cv::Size(3, 3), 3, 0);
-    cv::Canny(image->mat.blurredImage, image->mat.cannyImage, CANNY_LOW, CANNY_HIGH);
-
-    // Increase then decrease image thickness for better edge recognition
-    cv::dilate(image->mat.cannyImage, image->mat.dilatedImage, kernel);
-    cv::erode(image->mat.dilatedImage, image->mat.erodedImage, kernel);
-
-    image->processedImage = image->mat.erodedImage;
+    return masked_image;
 }
 
 
-void find_cones(cv::Mat image) {
+cone_info find_cones(cv::Mat image) {
     cone_info cones;
-    cones.cones.push_back("ORIGINAL", image);
+    cones.images.push_back({"1_ORIGINAL", image});
+
+    cv::Mat hsv;
+    cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
+    cones.images.push_back({"2_HSV", hsv});
 
     auto color_masks = get_color_masks();
+    std::vector<cv::Mat> masked_images(color_masks.size());
+    for(int i = 0; i < color_masks.size(); i++) {
+        masked_images[i] = mask_image(hsv, color_masks[i].second);
+        cones.images.push_back({"3_" + color_masks[i].first, masked_images[i]}); 
+    }
+    
+    auto kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(2, 2));
+    for(int i = 0; i < masked_images.size(); i++) {
+        auto masked_image = masked_images[i];
+        auto color = color_masks[i].first;
+
+        auto gaussian_blur_kernel = cv::Size(3, 3);
+        cv::Mat gaussian_blur, canny, dilated, eroded, current = masked_image;
+
+        cv::GaussianBlur(masked_image, gaussian_blur, gaussian_blur_kernel, 3, 0);
+        cones.images.push_back({"4_" + color + "_GAUSSIAN", gaussian_blur});
+        current = gaussian_blur;
+
+        cv::Canny(current, canny, CANNY_THRESH_LOW, CANNY_THRESH_HIGH);
+        cones.images.push_back({"5_" + color + "_CANNY", canny});
+        current = canny;
+
+        cv::dilate(current, dilated, kernel);
+        cones.images.push_back({"6_" + color + "_DILATED", dilated});
+        current = dilated;
+
+        cv::erode(current, eroded, kernel);
+        cones.images.push_back({"7_" + color + "_ERODED", eroded});
+        current = eroded;
+    }
+    return cones;
 }
 
 
-// ISSO AQUI NAO É PRA TER O TRABALHO DE ABRIR AS IMAGENS
-// AS IMAGENS DEVEM SER FORNECIDAS PELA MAIN, AQUI TEMOS APENAS A DETECÇÃO
-// AS INFORMAÇÕES DE TEMPO DEVEM SER RETORNADAS EM UMA STRUCT PARA ANÁLISE
 // AS FUNÇÕES DE DETECÇÃO TEM QUE SER EXPLICITAS AQUI! USAR GET BORDER E SEARCH CONTOUR NAO É CLARO
-// ANÁLISE DE TEMPO E ESCRITA EM DISCO NÃO DEVEM SER FEITAS AQUI?!!
-// O NOME IMAGE É UMA MERDA
 
 
 
