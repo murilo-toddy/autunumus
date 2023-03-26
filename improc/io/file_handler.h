@@ -3,6 +3,7 @@
 
 #include <string>
 #include <filesystem>
+#include <fstream>
 #include <ostream>
 
 #include <opencv2/imgcodecs.hpp>

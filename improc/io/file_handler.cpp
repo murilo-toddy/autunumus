@@ -1,5 +1,4 @@
 #include "file_handler.h"
-#include <fstream>
 
 
 void file::create_folder(const std::string &path) {
@@ -8,7 +7,9 @@ void file::create_folder(const std::string &path) {
 
 
 void file::delete_folder(const std::string &path) {
-    std::filesystem::remove_all(path);
+    if(std::filesystem::exists(std::filesystem::path(path))) {
+        std::filesystem::remove_all(path);
+    }
 }
 
 
