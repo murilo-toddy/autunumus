@@ -1,5 +1,6 @@
 #include "contour_processing.h"
-
+#include <iostream>
+#include <ostream>
 
 /**
  * @brief Draw contours on image object
@@ -10,6 +11,12 @@
 cv::Mat drawContours(cv::Mat image, std::vector<std::vector<cv::Point>> contours,
         const float& distance) {
     // Draw bounding rectangle and distance estimation
+//    cv::circle(final_image, leftmost_pt_below_center, 2, {255, 0, 0}, 2);
+//    cv::circle(final_image, rightmost_pt_below_center, 2, {255, 0, 0}, 2);
+//    cv::circle(final_image, higher_point, 2, {255, 0, 0}, 2);
+//    cv::line(final_image, leftmost_pt_below_center, higher_point, DRAWING_COLOR, 2);
+//    cv::line(final_image, leftmost_pt_below_center, rightmost_pt_below_center, DRAWING_COLOR, 2);
+//    cv::line(final_image, rightmost_pt_below_center, higher_point, DRAWING_COLOR, 2);
     cv::Rect boundingRectangle = cv::boundingRect(contours.back());
     cv::rectangle(image, boundingRectangle, DRAWING_COLOR);
     cv::putText(image, "Cone " + std::to_string(distance) + "cm",
@@ -20,127 +27,86 @@ cv::Mat drawContours(cv::Mat image, std::vector<std::vector<cv::Point>> contours
 }
 
 
-/**
- * @brief Finds contours for cones in an image and saves them into Image object
- * @param image *Image object with processed matrices loaded
- * @return None
- */
-cv::Mat find_cones_in_contours(cv::Mat original_image, std::vector<std::vector<cv::Point>> contours) {
+std::pair<cv::Point, cv::Point> get_left_and_rightmost_points(std::vector<cv::Point> points) {
+    cv::Point leftmost_pt_below_center = points.front();
+    cv::Point rightmost_pt_below_center = points.front();
+    for(auto& p : points) {
+        if(p.x < leftmost_pt_below_center.x) { leftmost_pt_below_center = p; }
+        if(p.x > rightmost_pt_below_center.x) { rightmost_pt_below_center = p; }
+    }
+    return {leftmost_pt_below_center, rightmost_pt_below_center};
+}
 
-    auto final_image = original_image.clone();
 
-    // Configure filtering contour vectors to have fixed size
-    cv::Scalar drawingColor(0, 255, 255);
+cv::Mat find_cones_in_contours(cv::Mat original_image, 
+        std::vector<std::vector<cv::Point>> contours) {
+    
+    cv::Mat final_image = original_image.clone();
     std::vector<std::vector<cv::Point>> filtered_contours(contours.size()),
-        convex_contours(contours.size()), contours_pointing_up;
+        convex_contours(contours.size()), contours_pointing_up, cone_contours;
 
     for(int i = 0; i < contours.size(); i++) {
-        // Check if contour's area is greater than threshold
-        double area = cv::contourArea(contours[i]);
-        if(area < AREA_THRESHOLD) { continue; }
+        if(cv::contourArea(contours[i]) < AREA_THRESHOLD) { continue; }
 
-        // Approximate contour by a simpler polygon and verifies number of vertices
         double perimeter = cv::arcLength(contours[i], true);
-
         cv::approxPolyDP(contours[i], filtered_contours[i], 0.02 * perimeter, true);
-        
-        // Check for amount of edges
         if (filtered_contours[i].size() > POINTS_THRESHOLD || 
                 filtered_contours[i].size() < 3) { 
             continue; 
         }
 
-        // Force contours to be convex
         convexHull(filtered_contours[i], convex_contours[i]);
+        if(convex_contours[i].size() == 0) { continue; }
 
-        // Check if polygon is pointing upwards
-        float distance = convexContourPointingUp(convex_contours[i]);
-        if(distance == -1) { continue; }
-
-        // Polygon represents a cone
-        contours_pointing_up.push_back(convex_contours[i]);
-
-        // TODO optimize
-        std::vector<cv::Point> contour = contours_pointing_up.back();
+        std::vector<cv::Point> contour = convex_contours[i];
         cv::Rect bounding_rect = cv::boundingRect(contour);
-        int yCenter = bounding_rect.tl().y + bounding_rect.height / 2;
 
+
+        int height_center = bounding_rect.tl().y + (bounding_rect.height / 2);
         std::vector<cv::Point> pts_above_center;
         std::vector<cv::Point> pts_below_center;
-        for(auto& point : contour) {
-            if(point.y < yCenter) {
-                pts_above_center.push_back(point);
-            } else {
-                pts_below_center.push_back(point);
-            }
+        
+        for(auto& p : contour) {
+            if(p.y < height_center) { pts_above_center.push_back(p); } 
+            else { pts_below_center.push_back(p); }
         }
 
-        // Get minimum and maximum x values below center in contour
-        cv::Point leftmostPointBelowCenter = pts_below_center.front();
-        cv::Point rightmostPointBelowCenter = pts_below_center.front();
-        for(auto& point : pts_below_center) {
-            if(point.x < leftmostPointBelowCenter.x) { leftmostPointBelowCenter = point; }
-            if(point.x > rightmostPointBelowCenter.x) { rightmostPointBelowCenter = point; }
-        }
-
-        cv::Point higherPoint = pts_above_center.front();
-        for(auto& point : pts_above_center) {
-            if(point.y < higherPoint.y) { higherPoint = point; }
-        }
+        auto boundaries = get_left_and_rightmost_points(pts_below_center);
+        cv::Point left_boundary = boundaries.first;
+        cv::Point right_boundary = boundaries.second;
 
         
-        cv::circle(final_image, leftmostPointBelowCenter, 2, {255, 0, 0}, 2);
-        cv::circle(final_image, rightmostPointBelowCenter, 2, {255, 0, 0}, 2);
-        cv::circle(final_image, higherPoint, 2, {255, 0, 0}, 2);
-        cv::line(final_image, leftmostPointBelowCenter, higherPoint, DRAWING_COLOR, 2);
-        cv::line(final_image, leftmostPointBelowCenter, rightmostPointBelowCenter, DRAWING_COLOR, 2);
-        cv::line(final_image, rightmostPointBelowCenter, higherPoint, DRAWING_COLOR, 2);
-        final_image = drawContours(final_image, contours, distance);
+        // Check if aspect ratio qualifies as cone
+        auto aspect_ratio = (float)bounding_rect.width / (float)bounding_rect.height;
+        if(!assert_contour_is_cone(aspect_ratio, left_boundary.x, right_boundary.x, 
+                pts_above_center)) {
+            continue;
+        }
+
+        cv::Point higher_point = pts_above_center.front();
+        for(auto& p : pts_above_center) {
+            if(p.y < higher_point.y) { higher_point = p; }
+        }
+
+        cone_contours.push_back({higher_point, left_boundary, right_boundary});
+
+        float distance = CONE_HEIGHT_CONSTANT / bounding_rect.height;
+        final_image = drawContours(original_image, cone_contours, distance);
     }
     return final_image;
 }
 
 
-/**
- * @brief Determines if a contour is pointing upwards
- * @param contour Vector of points representing a contour
- * @return Distance to cone. Returns -1 if no cone is found
- */
-float convexContourPointingUp(const std::vector<cv::Point>& contour) {
-    cv::Rect boundingRectangle = cv::boundingRect(contour);
-    double aspectRatio = (float)boundingRectangle.width / (float)boundingRectangle.height;
+bool assert_contour_is_cone(float aspect_ratio, int left_boundary,
+        int right_boundary, std::vector<cv::Point> pts_above_center) {
+    if(aspect_ratio > ASPECT_RATIO_THRESHOLD) { return false; }
 
-    // If element's width is bigger than height, return false
-    if(aspectRatio > ASPECT_RATIO_THRESHOLD) { return -1; }
-
-    // Gets y center of contour and separates top points from bottom ones
-    int yCenter = boundingRectangle.tl().y + (boundingRectangle.height / 2);
-    std::vector<cv::Point> pointsAboveCenter;
-    std::vector<cv::Point> pointsBelowCenter;
-    for(auto& point : contour) {
-        if(point.y < yCenter) {
-            pointsAboveCenter.push_back(point);
-        } else {
-            pointsBelowCenter.push_back(point);
-        }
+    if(!all_of(pts_above_center.begin(), pts_above_center.end(),
+        [&left_boundary, &right_boundary](const cv::Point& p) -> bool {
+                return !(p.x < left_boundary || p.x > right_boundary);
+        })) {
+        return false;
     }
-
-    // Get minimum and maximum x values below center in contour
-    int leftmostPointBelowCenterX = pointsBelowCenter.front().x;
-    int rightmostPointBelowCenterX = pointsBelowCenter.front().x;
-    for(auto& point : pointsBelowCenter) {
-        if(point.x < leftmostPointBelowCenterX) { leftmostPointBelowCenterX = point.x; }
-        if(point.x > rightmostPointBelowCenterX) { rightmostPointBelowCenterX = point.x; }
-    }
-
-    // Determine if all top points are within lower bounds
-    if(all_of(pointsAboveCenter.begin(), pointsAboveCenter.end(),
-       [&leftmostPointBelowCenterX, &rightmostPointBelowCenterX](const cv::Point& p) -> bool {
-            return !(p.x < leftmostPointBelowCenterX || p.x > rightmostPointBelowCenterX);
-    })) {
-        // Return distance to cone
-        return CONE_HEIGHT_CONSTANT / boundingRectangle.height;
-    }
-    return -1;
+    return true;
 }
 

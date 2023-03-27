@@ -27,7 +27,8 @@
 
 
 cv::Mat find_cones_in_contours(cv::Mat original_image, std::vector<std::vector<cv::Point>> contours);
-float convexContourPointingUp(const std::vector<cv::Point>& contour);
+bool assert_contour_is_cone(float aspect_ratio, int left_boundary,
+        int right_boundary, std::vector<cv::Point> pts_above_center);
 
 #endif //CONEDETECTION_CONTOURHANDLER_H
 
