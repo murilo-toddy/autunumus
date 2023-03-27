@@ -4,9 +4,7 @@
 #include <iostream>
 #include <chrono>
 
-#include "frame/Image.h"
-#include "processing/image_processing.h"
-#include "processing/contour_handler.h"
+#include "contour_processing.h"
 #include "../camera/Camera.h"
 
 #define CANNY_THRESH_LOW  80.0
