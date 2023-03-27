@@ -4,6 +4,7 @@
 #include "camera/Camera.h"
 #include "io/file_handler.h"
 #include <opencv2/highgui.hpp>
+#include <chrono>
 
 #define SAMPLE_IMAGES_PATH "images/samples/*"
 
@@ -35,8 +36,10 @@ int main(int, char**) {
             
             cv::imshow("camera", cones.images.back().second);
             cv::waitKey(1);
+
             auto cycle_end = std::chrono::high_resolution_clock::now();
-            std::cout << "fps " << 1000 / (cycle_end - cycle_begin).count() << "\n";
+            std::cout << "fps " << 1000 / std::chrono::duration_cast<
+                std::chrono::milliseconds>(cycle_end - cycle_begin).count() << "\n";
         }
     }
 }
