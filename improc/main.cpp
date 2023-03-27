@@ -1,33 +1,43 @@
+#include "config.h"
 #include "cone_detection/cone_detection.h"
 #include "path_detection/roadmark_detection.h"
-#define PATH "../path_detection/test_images/1.jpg"
+#include "camera/Camera.h"
+#include "io/file_handler.h"
+#include <opencv2/highgui.hpp>
 
-enum OPERATION_MODE {
-    CONE_DETECTION,
-    PATH_DETECTION
+#define SAMPLE_IMAGES_PATH "images/samples/*"
+
+enum IMAGE_INPUT_MODE {
+    SAMPLE_IMAGES,
+    CAMERA_INPUT,
 };
 
-enum INPUT_MODE {
-    SAMPLED_IMAGE,
-    CAMERA_INPUT
-};
 
-OPERATION_MODE operation = CONE_DETECTION;
-INPUT_MODE inputMode = CAMERA_INPUT;
+const IMAGE_INPUT_MODE operation_mode = CAMERA_INPUT;
+
 
 int main(int, char**) {
-    switch (operation) {
-        case CONE_DETECTION:
-            if (inputMode == SAMPLED_IMAGE) {
-                cone_detection_from_sample_images();
-            } else {
-                coneDetectionVideo();
-            }
-            break;
+    cv::Mat image;
 
-        case PATH_DETECTION:
-            findRoadMarkings();
-            break;
+    if(operation_mode == SAMPLE_IMAGES) {
+        auto files = file::load_images_from_query(SAMPLE_IMAGES_PATH);
+        for(int i = 0; i < files.size(); i++) {
+
+        }
+    }
+
+    else {
+        Camera camera;
+        while(camera.is_open()) {
+            auto cycle_begin = std::chrono::high_resolution_clock::now();
+            image = camera.update_frame();
+            auto cones = find_cones(image);
+            
+            cv::imshow("camera", cones.images.back().second);
+            cv::waitKey(1);
+            auto cycle_end = std::chrono::high_resolution_clock::now();
+            std::cout << "fps " << 1000 / (cycle_end - cycle_begin).count() << "\n";
+        }
     }
 }
 
