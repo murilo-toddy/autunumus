@@ -70,7 +70,7 @@ void searchContours(Image *image) {
         image->cont.pointingUpContours.push_back(image->cont.convexContours[i]);
 
         // UPDATE
-        if (!true) {
+        if(true) {
             // Draw all contours on matrices
             drawContours(image, i, distance);
         }
