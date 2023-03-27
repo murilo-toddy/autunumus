@@ -1,6 +1,4 @@
 #include "cone_detection.h"
-#include "contour_processing.h"
-#include <iostream>
 
 
 /**
