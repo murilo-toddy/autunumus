@@ -27,7 +27,8 @@ cv::Mat drawContours(cv::Mat image, std::vector<std::vector<cv::Point>> contours
 }
 
 
-std::pair<cv::Point, cv::Point> get_left_and_rightmost_points(std::vector<cv::Point> points) {
+std::pair<cv::Point, cv::Point> get_left_and_rightmost_points(
+        std::vector<cv::Point> points) {
     cv::Point leftmost_pt_below_center = points.front();
     cv::Point rightmost_pt_below_center = points.front();
     for(auto& p : points) {
@@ -56,9 +57,6 @@ cv::Mat find_cones_in_contours(cv::Mat original_image,
         }
 
         convexHull(filtered_contours[i], convex_contours[i]);
-        // TODO export to define
-        if(convex_contours[i].size() == 0 ||
-                convex_contours[i].size() > 6) { continue; }
 
         std::vector<cv::Point> contour = convex_contours[i];
         cv::Rect bounding_rect = cv::boundingRect(contour);

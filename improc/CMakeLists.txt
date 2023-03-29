@@ -32,8 +32,6 @@ set(CONE_DETECTION_SOURCES
 
 set(CONE_DETECTION_DEPENDENCIES 
     ${CONE_DETECTION_SOURCES} ${CAMERA_DEPENDENCIES}
-    "cone_detection/frame/Image.cpp"
-    "cone_detection/frame/Image.h"
     "cone_detection/contour_processing.cpp"
     "cone_detection/contour_processing.h"
 )
