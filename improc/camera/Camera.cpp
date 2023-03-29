@@ -5,20 +5,17 @@ Camera::Camera(const int camera_index, const int width, const int height) {
     cap.open(camera_index);
     frame_size = cv::Size(width, height);
 
-    float* intrinsic_matrix_array = file::load_array_from_file(MATRICES_PATH, 
-            INTRINSIC_MATRIX_FILE_NAME, 9);
-    intrinsic_matrix = cv::Matx33f(intrinsic_matrix_array);
+    std::unique_ptr<float[]> intrinsic_matrix_array = file::load_array_from_file(
+            MATRICES_PATH, INTRINSIC_MATRIX_FILE_NAME, 9);
+    intrinsic_matrix = cv::Matx33f(intrinsic_matrix_array.get());
 
-    float* distortion_matrix_array = file::load_array_from_file(MATRICES_PATH,
-            DISTORTION_MATRIX_FILE_NAME, 5);
-    distortion_matrix = cv::Vec<float, 5>(distortion_matrix);
+    std::unique_ptr<float[]> distortion_matrix_array = file::load_array_from_file(
+            MATRICES_PATH, DISTORTION_MATRIX_FILE_NAME, 5);
+    distortion_matrix = cv::Vec<float, 5>(distortion_matrix_array.get());
 
     cv::initUndistortRectifyMap(intrinsic_matrix, distortion_matrix, 
             cv::Matx33f::eye(), intrinsic_matrix, frame_size, CV_32FC1,
             map_x, map_y);
-
-    free(intrinsic_matrix_array);
-    free(distortion_matrix_array);
 }
 
 
