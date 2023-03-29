@@ -78,21 +78,17 @@ cone_info find_cones(cv::Mat image) {
     std::vector<cv::Mat> masked_images(color_masks.size());
 
     for(int i = 0; i < color_masks.size(); i++) {
+        std::string color = color_masks[i].first;
         masked_images[i] = mask_image(hsv, color_masks[i].second);
-        cones.images.push_back({"3_" + color_masks[i].first + "_MASK", 
+        cones.images.push_back({"3_" + color + "_MASK", 
                 masked_images[i]}); 
 
         auto contours = get_contours_from_image(
-                masked_images[i], cones, color_masks[i].first);
+                masked_images[i], cones, color);
 
-        cv::Mat final_image = find_cones_in_contours(cones, image, contours);
-        cones.images.push_back({"FINAL", final_image});
+        find_cones_in_contours(cones, color, contours);
+        // TODO draw final image
     }
-    for(auto c : cones.cones) {
-        std::cout << "dist " << c.distance << std::endl;
-        std::cout << "cont " << c.contour << std::endl;
-        std::cout << "left " << c.left_boundary << " right " << c.right_boundary << std::endl;
-        std::cout << std::endl;
-    }
+
     return cones;
 }

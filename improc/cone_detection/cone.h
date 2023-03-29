@@ -4,6 +4,7 @@
 
 
 typedef struct {
+    std::string color;
     float distance;
     std::vector<cv::Point> contour;
     int left_boundary, right_boundary;

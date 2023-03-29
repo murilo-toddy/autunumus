@@ -39,12 +39,14 @@ int main(int, char**) {
                 std::chrono::milliseconds>(processed_cones - collected_frame
                 ).count() << "\n";
             
+            std::cout << "Found " << cones.cones.size() << " cone(s)" << std::endl;
+            auto cycle_end = std::chrono::high_resolution_clock::now();
+
+            std::cout << "took " << std::chrono::duration_cast<
+                std::chrono::milliseconds>(cycle_end - cycle_begin).count() << "ms\n";
+
             cv::imshow("camera", cones.images.back().second);
             cv::waitKey(0);
-
-            auto cycle_end = std::chrono::high_resolution_clock::now();
-            std::cout << "fps " << 1000 / std::chrono::duration_cast<
-                std::chrono::milliseconds>(cycle_end - cycle_begin).count() << "\n";
         }
     }
 
