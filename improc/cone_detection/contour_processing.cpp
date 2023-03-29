@@ -56,7 +56,9 @@ cv::Mat find_cones_in_contours(cv::Mat original_image,
         }
 
         convexHull(filtered_contours[i], convex_contours[i]);
-        if(convex_contours[i].size() == 0) { continue; }
+        // TODO export to define
+        if(convex_contours[i].size() == 0 ||
+                convex_contours[i].size() > 6) { continue; }
 
         std::vector<cv::Point> contour = convex_contours[i];
         cv::Rect bounding_rect = cv::boundingRect(contour);

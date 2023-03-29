@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <chrono>
+#include <thread>
+#include <mutex>
 
 #include "contour_processing.h"
 #include "../camera/Camera.h"
