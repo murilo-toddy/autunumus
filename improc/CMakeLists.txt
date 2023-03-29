@@ -28,6 +28,7 @@ set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES}
 set(CONE_DETECTION_SOURCES
     "cone_detection/cone_detection.cpp"
     "cone_detection/cone_detection.h"
+    "cone_detection/cone.h"
 )
 
 set(CONE_DETECTION_DEPENDENCIES 
