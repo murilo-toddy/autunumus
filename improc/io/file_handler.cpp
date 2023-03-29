@@ -33,14 +33,12 @@ void file::save_array_to_file(const std::string directory,
 }
 
 
-float* file::load_array_from_file(const std::string directory, 
+std::unique_ptr<float[]> file::load_array_from_file(const std::string directory, 
         const std::string file_name, const int size) {
-    float *data = (float*)malloc(size * sizeof(float));
+    auto data = std::make_unique<float[]>(size);
     std::ifstream file;
     file.open(directory + "/" + file_name);
-    for(int i = 0; i < size; i++) {
-        file >> data[i];
-    }
+    for(int i = 0; i < size; i++) { file >> data[i]; }
     file.close();
     return data;
 }

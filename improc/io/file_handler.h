@@ -16,7 +16,7 @@ namespace file {
             const std::string &file_name, const cv::Mat& matrix);
     void save_array_to_file(const std::string directory, const std::string file_name, 
             const int size, const float array[]);
-    float* load_array_from_file(const std::string directory, 
+    std::unique_ptr<float[]> load_array_from_file(const std::string directory, 
             const std::string file_name, const int size);
     std::vector<cv::String> load_images_from_query(const std::string path);
 }
