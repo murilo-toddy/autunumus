@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.10)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 project(PathDetectionAlgorithm)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(OpenCV REQUIRED)
+# find_package(Threads REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") 
 
@@ -78,7 +79,7 @@ add_executable(${COLOR_PICKER}
 )
 
 
-target_link_libraries(${TARGET} ${OpenCV_LIBS})
+target_link_libraries(${TARGET} PRIVATE ${OpenCV_LIBS})
 target_link_libraries(${CALIBRATE} ${OpenCV_LIBS})
 target_link_libraries(${COLOR_PICKER} ${OpenCV_LIBS})
 
