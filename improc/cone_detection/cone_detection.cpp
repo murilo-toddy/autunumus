@@ -1,5 +1,4 @@
 #include "cone_detection.h"
-#include <thread>
 
 
 /**
