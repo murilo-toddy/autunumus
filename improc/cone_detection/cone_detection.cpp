@@ -9,15 +9,15 @@
 const std::vector<std::pair<std::string, std::vector<std::pair<
         cv::Scalar, cv::Scalar>>>> get_color_masks() {
     return {
-        {"RED", {
-            {{  0, 120,  80}, { 15, 255, 255}},
-            {{159, 135,  90}, {179, 255, 160}},
-        }},
         {"YELLOW", {
             {{ 16, 188, 116}, { 63, 255, 238}},
         }},
         {"BLUE", {
             {{ 88, 134, 125}, {132, 236, 200}},
+        }},
+        {"RED", {
+            {{  0, 120,  80}, { 15, 255, 255}},
+            {{159, 135,  90}, {179, 255, 160}},
         }},
     };
 }
@@ -68,10 +68,8 @@ std::vector<std::vector<cv::Point>> get_contours_from_image(cv::Mat current,
 
 
 cone_info find_cones(cv::Mat image) {
-
     cone_info cones;
     cones.images.push_back({"1_ORIGINAL", image});
-
     cv::Mat hsv;
     cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);
     cones.images.push_back({"2_HSV", hsv});
@@ -87,9 +85,14 @@ cone_info find_cones(cv::Mat image) {
         auto contours = get_contours_from_image(
                 masked_images[i], cones, color_masks[i].first);
 
-        cv::Mat final_image = find_cones_in_contours(image, contours);
+        cv::Mat final_image = find_cones_in_contours(cones, image, contours);
         cones.images.push_back({"FINAL", final_image});
+    }
+    for(auto c : cones.cones) {
+        std::cout << "dist " << c.distance << std::endl;
+        std::cout << "cont " << c.contour << std::endl;
+        std::cout << "left " << c.left_boundary << " right " << c.right_boundary << std::endl;
+        std::cout << std::endl;
     }
     return cones;
 }
-
