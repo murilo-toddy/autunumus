@@ -39,8 +39,8 @@ std::pair<cv::Point, cv::Point> get_left_and_rightmost_points(
 }
 
 
-cv::Mat find_cones_in_contours(cone_info& cones, cv::Mat original_image, std::vector<std::vector<cv::Point>> contours) {
-    cv::Mat final_image = original_image.clone();
+void find_cones_in_contours(cone_info& cones, std::string color, 
+        std::vector<std::vector<cv::Point>> contours) {
     std::vector<std::vector<cv::Point>> filtered_contours(contours.size()),
         convex_contours(contours.size()), contours_pointing_up, cone_contours;
 
@@ -89,10 +89,9 @@ cv::Mat find_cones_in_contours(cone_info& cones, cv::Mat original_image, std::ve
         cone_contours.push_back({higher_point, left_boundary, right_boundary});
 
         float distance = CONE_HEIGHT_CONSTANT / bounding_rect.height;
-        final_image = drawContours(original_image, cone_contours, distance);
-        cones.cones.push_back({distance, cone_contours.back(), left_boundary.x, right_boundary.x});
+        cones.cones.push_back({color, distance, cone_contours.back(),
+                left_boundary.x, right_boundary.x});
     }
-    return final_image;
 }
 
 
