@@ -65,7 +65,7 @@ class Particle:
         alpha = (atan2(dy, dx) - state[2] + pi) % (2*pi) - pi
         return np.array([r, alpha])
 
-    def expected_pose_measurement_for_landmark(self, landmark: int) -> np.array:
+    def expected_pose_measurement_for_landmark(self, landmark: int) -> np.ndarray:
         """ Calculate expected distance and angle for specific landmark """
         return self.measurement_function(self.pose,
                                          self.landmarks[landmark].position,

@@ -15,7 +15,7 @@ class Landmark:
 
 # Calculate derivative of a list, considering values greater than min_dist
 def compute_derivative(scan: list[float], min_dist: float) -> list[float]:
-    derivative_list = [0]
+    derivative_list = [0.0]
     for i in range(1, len(scan) - 1):
         left = scan[i-1]
         right = scan[i+1]
@@ -67,3 +67,4 @@ def get_landmarks_from_scan(scan: list[float], jump: float, min_dist: float, lan
         x, y = distance*cos(bearing), distance*sin(bearing)
         result.append((np.array([distance, bearing]), np.array([x, y])))
     return result
+

@@ -19,3 +19,4 @@ class Robot:
                         M left_encoder right_encoder """
                     ticks = (float(line_data[1]), float(line_data[2]))
                     self.motor_ticks.append(ticks)
+

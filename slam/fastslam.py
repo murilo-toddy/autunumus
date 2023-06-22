@@ -139,3 +139,4 @@ class FastSLAM:
         return (ellipse_angle, sqrt(abs(eigenvals[0])),
                 sqrt(abs(eigenvals[1])),
                 sqrt(var_heading))
+

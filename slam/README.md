@@ -44,3 +44,4 @@ python3 ui/data_view.py
 ```
 
 By default, SLAM's output data is saved into `robot_data/fastslamX.txt`
+

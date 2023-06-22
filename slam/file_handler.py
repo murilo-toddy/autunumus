@@ -48,3 +48,4 @@ def write_particles(file_desc, line_header: str, particles: list[Particle]) -> N
     for p in particles:
         file_desc.write("%f %f %f " % tuple(p.pose))
     file_desc.write("\n")
+

@@ -21,3 +21,4 @@ class Lidar:
     def min_max_bearing() -> tuple[float, float]:
         """ Minimum and maximum angle detected by lidar """
         return -1.5707999467849731, 1.5707999467849731
+
