@@ -15,10 +15,11 @@ class FastSLAM2(FastSLAM):
                  measurement_distance_stddev, measurement_angle_stddev,
                  minimum_correspondence_likelihood):
         FastSLAM.__init__(self, start_state, number_of_particles,
-                         robot_width, scanner_displacement,
-                         control_motion_factor, control_turn_factor,
-                         measurement_distance_stddev, measurement_angle_stddev,
-                         minimum_correspondence_likelihood)
+                             robot_width, scanner_displacement,
+                             control_motion_factor, control_turn_factor,
+                             measurement_distance_stddev, measurement_angle_stddev,
+                             minimum_correspondence_likelihood
+                          )
 
     def _get_initial_particles(self, start_state, number_of_particles):
         """ Load initial array of particles """
