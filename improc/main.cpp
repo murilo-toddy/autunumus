@@ -1,26 +1,24 @@
 #include <opencv2/highgui.hpp>
 #include <chrono>
+#include <iostream>
+#include <string>
+#include <vector>
 
+#include "color_picker/color_mask.h"
 #include "config.h"
 #include "file/file_handler.h"
 #include "camera/Camera.h"
 #include "cone_detection/cone_detection.h"
 #include "path_detection/roadmark_detection.h"
 
-#define SAMPLE_IMAGES_PATH "images/cone_sample/*"
+#define SAMPLE_IMAGES_PATH "sample_images/cone/*"
 #define SAVE_OUTPUT_IMAGES_TO_FILE true
 
-enum IMAGE_INPUT_MODE {
-    SAMPLE_IMAGES,
-    CAMERA_INPUT,
-};
 
-
-const IMAGE_INPUT_MODE operation_mode = SAMPLE_IMAGES;
-
-
-void log_fps(std::chrono::time_point<std::chrono::system_clock> begin,
-        std::chrono::time_point<std::chrono::system_clock> end) {
+void log_fps(
+        std::chrono::time_point<std::chrono::system_clock> begin,
+        std::chrono::time_point<std::chrono::system_clock> end
+    ) {
     std::cout << "fps " << 1000 /
         std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() 
         << "ms\n";
@@ -53,10 +51,11 @@ cone_info process_cycle(cv::Mat image) {
 }
 
 
-int main(int, char**) {
+int main(int argc, char** argv) {
     cv::Mat image;
+    IMAGE_INPUT_MODE operation_mode = file::get_input_mode_from_stdin(argc, argv);
 
-    if(operation_mode == SAMPLE_IMAGES) {
+    if(operation_mode == SAMPLE_IMAGES_INPUT) {
         auto files = file::load_images_from_query(SAMPLE_IMAGES_PATH);
         for(int i = 0; i < files.size(); i++) {
             auto cycle_begin = std::chrono::high_resolution_clock::now();

@@ -11,11 +11,8 @@
 #include <opencv2/imgproc.hpp>
 
 
-#define BORDER_IMAGES_PATH "../path_detection/test_images/"
-#define BORDER_SAMPLE_IMAGES_PATH "../path_detection/test_images/*.jpg"
-
-#define HEIGHT 1280
-#define WIDTH  720
+#define BORDER_IMAGES_PATH "../sample_images/line"
+#define BORDER_SAMPLE_IMAGES_PATH "../sample_images/line/*.jpg"
 
 void findRoadMarkings();
 

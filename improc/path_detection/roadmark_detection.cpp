@@ -11,6 +11,7 @@ std::map<std::string, std::vector<cv::Scalar>> loadColorMapRoadMarkings() {
 
 
 void findRoadMarkings() {
+    int HEIGHT = 100, WIDTH = 100;
     // Collect all sample files
     std::vector<cv::String> files;
     cv::glob(BORDER_IMAGES_PATH, files, false);

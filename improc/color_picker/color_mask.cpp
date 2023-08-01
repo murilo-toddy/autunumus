@@ -25,11 +25,11 @@ void create_trackbar() {
 /**
  * @brief Apply HSV masking to image or live video
  */
-void apply_hsv_mask_to_matrix() {
+void apply_hsv_mask_to_matrix(IMAGE_INPUT_MODE operation_mode) {
     create_trackbar();
     cv::Mat image, hsv, mask;
     Camera camera;
-    if(operation_mode == SAMPLE_IMAGES) {
+    if(operation_mode == SAMPLE_IMAGES_INPUT) {
         image = cv::imread(SOURCE_IMAGE_PATH);
     }
 
@@ -49,8 +49,9 @@ void apply_hsv_mask_to_matrix() {
 }
 
 
-int main(int, char**) {
-    apply_hsv_mask_to_matrix();  
+int main(int argc, char** argv) {
+    auto operation_mode = file::get_input_mode_from_stdin(argc, argv);
+    apply_hsv_mask_to_matrix(operation_mode);
     return 0;
 }
 

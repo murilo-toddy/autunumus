@@ -8,6 +8,11 @@
 
 #include <opencv2/imgcodecs.hpp>
 
+enum IMAGE_INPUT_MODE { SAMPLE_IMAGES_INPUT, CAMERA_INPUT };
+
+#define SAMPLE_IMAGE_STRING "sample"
+
+
 namespace file {
     void create_folder(const std::string &path);
     void delete_folder(const std::string &path);
@@ -19,6 +24,8 @@ namespace file {
     std::unique_ptr<float[]> load_array_from_file(const std::string directory, 
             const std::string file_name, const int size);
     std::vector<cv::String> load_images_from_query(const std::string path);
+    IMAGE_INPUT_MODE get_input_mode_from_stdin(int argc, char** argv);
 }
 
 #endif //CONEDETECTION_FILEHANDLER_H
+

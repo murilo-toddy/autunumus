@@ -9,9 +9,6 @@
 #define CANNY_THRESH_LOW  80.0
 #define CANNY_THRESH_HIGH 160.0
 
-#define SOURCE_FOLDER      "../cone_detection/test_images/source/"
-#define DESTINATION_FOLDER "../cone_detection/test_images/output/"
-
 
 cone_info find_cones(cv::Mat image);
 

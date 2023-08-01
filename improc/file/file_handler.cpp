@@ -1,3 +1,4 @@
+#include <iostream>
 #include "file_handler.h"
 
 
@@ -49,3 +50,18 @@ std::vector<cv::String> file::load_images_from_query(const std::string path) {
     cv::glob(path, files, false);
     return files;
 }
+
+
+IMAGE_INPUT_MODE file::get_input_mode_from_stdin(int argc, char **argv) {
+     if(argc == 1) {
+         return CAMERA_INPUT;
+     }
+     std::vector<std::string> args;
+     std::cout << argc << std::endl;
+     args.assign(argv + 1, argv + argc);
+     if(args[0] == SAMPLE_IMAGE_STRING) {
+         return SAMPLE_IMAGES_INPUT;
+     }
+    return CAMERA_INPUT;
+}
+
