@@ -1,4 +1,4 @@
-<h1 align="center">Image Processing</h1>
+# Image Processing
 
 The image processing module is focused mainly on creating a deterministic algorithm to identify
 multicolor cones in a custom scenario.
@@ -16,16 +16,16 @@ multicolor cones in a custom scenario.
 
 ## Configuration
 
-Some functionalities can be changed by modifying constants defined in header files. `main.cpp`
-defines witch algorithm will run when program is executed.
+All constants are defined in the `constants.h` file and should be modified to properly
+represent the usage case.
 
 ### Camera Calibration
 
 This camera calibration algorithm works based on chessboard detection. Add chessboard input
 images to `setup/calibration_images` in `jpg` format.
 
-Calibration matrices will be printed to standard output once execution is finished. Matrices
-declared in `camera/matrices.h` are the ones used to generate correction maps to live video.
+After execution, the new correction matrices will be saved in a file and are ready to be used
+on the next main execution.
 
 ### Color Picking
 
@@ -37,7 +37,7 @@ step of cone detection
 
 ### Cone Detection Algorithm
 
-Sample images must be saved in `cone_detection/test_images/source` in `jpg`format. After execution,
+Sample images must be saved in `sample_images/cone` in `jpg`format. After execution,
 all output matrices will be saved to `cone_detection/test_images/output`, in a folder
 with the same name as the sampled image.
 
@@ -57,5 +57,12 @@ This project is built using
 
 ## Execution
 
-CMake's configuration files can be created using `cmake -B build`. In the `build` folder,
-use `cd build` to go into build folder, `make` to compile and `./main` to run the code.
+A `Makefile` is present to easily allow for compiling and running the different binaries.
+
+- `make all` sets up the build folder with the `cmake` definitions
+- `make compile` compiles all binaries
+- `make run` executes the cone detection program using camera as input
+- `make run_sample` executes the cone detection program passing in sample images
+- `make run_calibration` executes the calibration steps for a camera
+- `make run_mask` executes a live mask program to determine the best HSV filter to be applied
+
