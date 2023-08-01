@@ -6,11 +6,11 @@ Camera::Camera(const int camera_index, const int width, const int height) {
     frame_size = cv::Size(width, height);
 
     std::unique_ptr<float[]> intrinsic_matrix_array = file::load_array_from_file(
-            MATRICES_PATH, INTRINSIC_MATRIX_FILE_NAME, 9);
+            CORRECTION_MATRICES_PATH, INTRINSIC_MATRIX_FILE_NAME, 9);
     intrinsic_matrix = cv::Matx33f(intrinsic_matrix_array.get());
 
     std::unique_ptr<float[]> distortion_matrix_array = file::load_array_from_file(
-            MATRICES_PATH, DISTORTION_MATRIX_FILE_NAME, 5);
+            CORRECTION_MATRICES_PATH, DISTORTION_MATRIX_FILE_NAME, 5);
     distortion_matrix = cv::Vec<float, 5>(distortion_matrix_array.get());
 
     cv::initUndistortRectifyMap(intrinsic_matrix, distortion_matrix, 

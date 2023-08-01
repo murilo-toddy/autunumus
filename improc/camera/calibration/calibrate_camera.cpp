@@ -33,7 +33,7 @@ cv::Mat analyze_image(int index, cv::String file, cv::Size pattern_size,
 
 void calibrate_camera() {
     // Collect all sample files
-    std::vector<cv::String> files = file::load_images_from_query(SAMPLE_IMAGES_PATH);
+    std::vector<cv::String> files = file::load_images_from_query(SAMPLE_CALIBRATION_IMAGES_PATH);
     std::vector<cv::Mat> processed_images(files.size());
 
     // Define world and image frames
@@ -56,8 +56,8 @@ void calibrate_camera() {
         cv::Mat image = analyze_image(i, files[i], pattern_size,
                 object_position, camera_frame, world_frame);
 
-        if(SAVE_IMAGES) {
-            file::save_opencv_matrix_to_file(OUTPUT_PATH, 
+        if(SAVE_CALIBRATION_IMAGES) {
+            file::save_opencv_matrix_to_file(CALIBRATION_IMAGES_OUTPUT_PATH, 
                     std::string(files[i]), image);
         }
     }
@@ -70,7 +70,7 @@ void calibrate_camera() {
     std::vector<double> std_intrinsics, std_extrinsics, per_view_errors;
     int flags = cv::CALIB_FIX_ASPECT_RATIO + cv::CALIB_FIX_K3 +
                 cv::CALIB_ZERO_TANGENT_DIST + cv::CALIB_FIX_PRINCIPAL_POINT;
-    cv::Size frame_size(IMAGE_WIDTH, IMAGE_HEIGHT);
+    cv::Size frame_size(CALIBRATION_IMAGE_WIDTH, CALIBRATION_IMAGE_HEIGHT);
 
     double error = cv::calibrateCamera(world_frame, camera_frame, frame_size, 
             intrinsic_matrix, distortion_matrix, rotation_vectors, 
@@ -83,10 +83,10 @@ void calibrate_camera() {
             << std::endl;
     }
 
-    if(SAVE_MATRIX) {
-        file::save_array_to_file(CORRECTION_MATRIX_PATH, "distortion.mat", 5,
+    if(SAVE_CALIBRATION_MATRIX_TO_FILE) {
+        file::save_array_to_file(CORRECTION_MATRICES_PATH, "distortion.mat", 5,
                 distortion_matrix.val);
-        file::save_array_to_file(CORRECTION_MATRIX_PATH, "intrinsic.mat", 9,
+        file::save_array_to_file(CORRECTION_MATRICES_PATH, "intrinsic.mat", 9,
                 intrinsic_matrix.val);
         if(DEBUG) std::cout << "Matrices updated\n";
     }
@@ -104,9 +104,9 @@ void calibrate_camera() {
         cv::Mat image_undistorted;
         cv::remap(image, image_undistorted, map_x, map_y, cv::INTER_LINEAR);
 
-        if(SAVE_IMAGES) {
-            std::string image_name = std::to_string(i) + " corrected.jpg";
-            file::save_opencv_matrix_to_file(OUTPUT_PATH, image_name, 
+        if(SAVE_CALIBRATION_IMAGES) {
+            std::string image_name = std::to_string(i) + "_corrected.jpg";
+            file::save_opencv_matrix_to_file(CALIBRATION_IMAGES_OUTPUT_PATH, image_name, 
                     image_undistorted);
             if(DEBUG) std::cout << image_name << " saved\n";
         }
@@ -115,7 +115,7 @@ void calibrate_camera() {
 
 
 int main (int, char**) {
-    if(SAVE_IMAGES) { file::create_folder(OUTPUT_PATH); }
+    if(SAVE_CALIBRATION_IMAGES) { file::create_folder(CALIBRATION_IMAGES_OUTPUT_PATH); }
     calibrate_camera();
     return 0;
 }

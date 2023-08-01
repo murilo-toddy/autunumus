@@ -1,4 +1,3 @@
-#include <iostream>
 #include "file_handler.h"
 
 
@@ -57,7 +56,6 @@ IMAGE_INPUT_MODE file::get_input_mode_from_stdin(int argc, char **argv) {
          return CAMERA_INPUT;
      }
      std::vector<std::string> args;
-     std::cout << argc << std::endl;
      args.assign(argv + 1, argv + argc);
      if(args[0] == SAMPLE_IMAGE_STRING) {
          return SAMPLE_IMAGES_INPUT;

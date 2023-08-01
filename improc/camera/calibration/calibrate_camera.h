@@ -11,20 +11,7 @@
 #include <opencv2/imgproc.hpp>
 
 #include "../../file/file_handler.h"
-
-#define DEBUG       true
-#define SAVE_IMAGES true
-#define SAVE_MATRIX true
-
-#define IMAGE_WIDTH  1280
-#define IMAGE_HEIGHT 960
-
-#define SAMPLE_IMAGES_PATH "./sample_images/calibration"
-#define OUTPUT_PATH        "./camera/calibration/output_images"
-#define CHESSBOARD_HEIGHT  8
-#define CHESSBOARD_WIDTH   8
-
-#define CORRECTION_MATRIX_PATH "./camera"
+#include "../../config.h"
 
 
 void calibrate_camera();

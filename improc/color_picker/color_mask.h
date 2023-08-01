@@ -8,9 +8,7 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include "../camera/Camera.h"
-
-#define SOURCE_IMAGE_PATH "./sample_images/cone/1.jpg"
-#define CAMERA_INDEX 0
+#include "../config.h"
 
 
 void apply_hsv_mask_to_matrix();

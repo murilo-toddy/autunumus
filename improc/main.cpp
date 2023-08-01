@@ -11,9 +11,6 @@
 #include "cone_detection/cone_detection.h"
 #include "path_detection/roadmark_detection.h"
 
-#define SAMPLE_IMAGES_PATH "sample_images/cone/*"
-#define SAVE_OUTPUT_IMAGES_TO_FILE true
-
 
 void log_fps(
         std::chrono::time_point<std::chrono::system_clock> begin,
@@ -56,7 +53,7 @@ int main(int argc, char** argv) {
     IMAGE_INPUT_MODE operation_mode = file::get_input_mode_from_stdin(argc, argv);
 
     if(operation_mode == SAMPLE_IMAGES_INPUT) {
-        auto files = file::load_images_from_query(SAMPLE_IMAGES_PATH);
+        auto files = file::load_images_from_query(SAMPLE_CONE_IMAGES_PATH);
         for(int i = 0; i < files.size(); i++) {
             auto cycle_begin = std::chrono::high_resolution_clock::now();
 

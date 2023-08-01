@@ -10,13 +10,6 @@
 #include "../config.h"
 
 
-#define WIDTH  1280
-#define HEIGHT 960
-#define MATRICES_PATH "./camera"
-#define DISTORTION_MATRIX_FILE_NAME "distortion.mat"
-#define INTRINSIC_MATRIX_FILE_NAME  "intrinsic.mat"
-
-
 class Camera {
 private:
     cv::VideoCapture cap;
@@ -28,8 +21,8 @@ private:
     void load_correction_matrices();
 
 public:
-    explicit Camera(const int camera_index = 0, const int width = WIDTH, 
-            const int heigt = HEIGHT);
+    explicit Camera(const int camera_index = 0, const int width = CAMERA_WITDH,
+            const int heigt = CAMERA_HEIGHT);
 
     cv::Mat get_corrected_frame();
     cv::Mat get_original_frame();

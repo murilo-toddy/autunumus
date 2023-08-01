@@ -15,3 +15,4 @@ typedef struct {
     std::vector<cone_data> cones;
     std::vector<std::pair<std::string, cv::Mat>> images;
 } cone_info;
+

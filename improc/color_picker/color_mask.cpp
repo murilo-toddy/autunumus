@@ -30,7 +30,7 @@ void apply_hsv_mask_to_matrix(IMAGE_INPUT_MODE operation_mode) {
     cv::Mat image, hsv, mask;
     Camera camera;
     if(operation_mode == SAMPLE_IMAGES_INPUT) {
-        image = cv::imread(SOURCE_IMAGE_PATH);
+        image = cv::imread(SAMPLE_CONE_IMAGES_PATH);
     }
 
     while(true) {
