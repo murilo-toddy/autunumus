@@ -1,5 +1,7 @@
 BUILD_DIRECTORY=build
 MAIN=main
+CALIBRATION=calibration 
+MASK=mask
 
 all:
 	cmake -B $(BUILD_DIRECTORY)
@@ -12,6 +14,12 @@ run:
 
 run_sample:
 	./$(BUILD_DIRECTORY)/$(MAIN) sample
+
+run_calibration:
+	./$(BUILD_DIRECTORY)/$(CALIBRATION)
+
+run_mask:
+	./$(BUILD_DIRECTORY)/$(MASK)
 
 exec: compile run
 
