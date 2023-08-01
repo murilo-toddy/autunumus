@@ -23,8 +23,8 @@ const std::vector<std::pair<std::string, std::vector<std::pair<
 }
 
 
-cv::Mat mask_image(cv::Mat image, std::vector<std::pair<
-        cv::Scalar, cv::Scalar>> masks) {
+cv::Mat mask_image(cv::Mat image, 
+        std::vector<std::pair<cv::Scalar, cv::Scalar>> masks) {
     std::vector<cv::Mat> masked_images(masks.size());
     for(int i = 0; i < masks.size(); i++) {
         cv::inRange(image, masks[i].first, masks[i].second, masked_images[i]);

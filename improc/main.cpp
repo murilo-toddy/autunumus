@@ -33,7 +33,7 @@ void log_time(std::string message, std::chrono::time_point<std::chrono::system_c
 }
 
 
-cone_info process_cycle(cv::Mat image) {
+cone_info get_cones_from_image(cv::Mat image) {
     auto cones = find_cones(image);
     
     // TODO improve logging
@@ -65,7 +65,7 @@ int main(int argc, char** argv) {
             auto collected_frame = std::chrono::high_resolution_clock::now();
             log_time("frame acq", cycle_begin, collected_frame);
 
-            auto cones = process_cycle(image);
+            auto cones = get_cones_from_image(image);
 
             auto processed_cones = std::chrono::high_resolution_clock::now();
             log_time("cone proc", collected_frame, processed_cones);
@@ -85,7 +85,7 @@ int main(int argc, char** argv) {
             auto collected_frame = std::chrono::high_resolution_clock::now();
             log_time("frame acq", cycle_begin, collected_frame);
 
-            auto cones = process_cycle(image);
+            auto cones = get_cones_from_image(image);
 
             auto processed_cones = std::chrono::high_resolution_clock::now();
             log_time("cone proc", collected_frame, processed_cones);
@@ -98,3 +98,4 @@ int main(int argc, char** argv) {
         }
     }
 }
+
