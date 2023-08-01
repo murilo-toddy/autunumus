@@ -11,7 +11,7 @@ slider_index = 0
 
 
 class DrawableObject(object):
-    def draw(self, at_step):
+    def draw(self, _):
         pass
 
     def background_draw(self):

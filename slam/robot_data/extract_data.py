@@ -70,3 +70,4 @@ if __name__ == "__main__":
 
     # Lidar formatting
     format_lidar_data()
+

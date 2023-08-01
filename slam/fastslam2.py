@@ -76,7 +76,7 @@ class FastSLAM2(FastSLAM):
         max_weight = max(weights)
         index = random.randint(0, len(self.particles) - 1)
         offset = 0.0
-        for i in range(len(self.particles)):
+        for _ in range(len(self.particles)):
             offset += random.uniform(0, 2.0 * max_weight)
             while offset > weights[index]:
                 offset -= weights[index]
@@ -135,3 +135,4 @@ class FastSLAM2(FastSLAM):
         return (ellipse_angle, sqrt(abs(eigenvals[0])),
                 sqrt(abs(eigenvals[1])),
                 sqrt(var_heading))
+
