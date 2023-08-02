@@ -1,4 +1,4 @@
-<h1 align="center">Image Processing and SLAM</h1>
+# FastSLAM
 
 A scientific research project focused on characteristic extraction and mapping for
 an autonomous vehicle.
@@ -50,3 +50,4 @@ It's able to simultaneously locate and map the robot.
 - Data extraction form `rosbag`
 - FastSLAM 1.0 and 2.0 implementation
 - User Interface for data visualization
+

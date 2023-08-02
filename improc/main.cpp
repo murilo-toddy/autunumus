@@ -12,21 +12,15 @@
 #include "path_detection/roadmark_detection.h"
 
 
-void log_fps(
-        std::chrono::time_point<std::chrono::system_clock> begin,
-        std::chrono::time_point<std::chrono::system_clock> end
-    ) {
-    std::cout << "fps " << 1000 /
-        std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count() 
-        << "ms\n";
+int get_time_between_events_in_ms(std::chrono::time_point<std::chrono::system_clock> t1,
+        std::chrono::time_point<std::chrono::system_clock> t2) {
+    return std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count();
 }
 
 
-void log_time(std::string message, std::chrono::time_point<std::chrono::system_clock> ts, 
-        std::chrono::time_point<std::chrono::system_clock> tf) {
-    std::cout << message << " " 
-        << std::chrono::duration_cast<std::chrono::milliseconds>(tf - ts).count() 
-        << "ms\n";
+int get_fps(std::chrono::time_point<std::chrono::system_clock> t1,
+        std::chrono::time_point<std::chrono::system_clock> t2) {
+    return 1000 / get_time_between_events_in_ms(t1, t2);
 }
 
 
@@ -60,12 +54,14 @@ int main(int argc, char** argv) {
             image = cv::imread(files[i]);
 
             auto collected_frame = std::chrono::high_resolution_clock::now();
-            log_time("frame acq", cycle_begin, collected_frame);
+            std::cout << "[INFO] Frame Acquisition took " << 
+                get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
 
             auto cones = get_cones_from_image(image);
 
             auto processed_cones = std::chrono::high_resolution_clock::now();
-            log_time("cone proc", collected_frame, processed_cones);
+            std::cout << "[INFO] Cone Processing took "
+                << get_time_between_events_in_ms(collected_frame, processed_cones) << "ms" << std::endl;
             
             cv::imshow("camera", cones.images.back().second);
             cv::waitKey(0);
@@ -80,18 +76,20 @@ int main(int argc, char** argv) {
             image = camera.update_frame();
 
             auto collected_frame = std::chrono::high_resolution_clock::now();
-            log_time("frame acq", cycle_begin, collected_frame);
+            std::cout << "[INFO] Frame Acquisition took " << 
+                get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
 
             auto cones = get_cones_from_image(image);
 
             auto processed_cones = std::chrono::high_resolution_clock::now();
-            log_time("cone proc", collected_frame, processed_cones);
+            std::cout << "[INFO] Cone Processing took " << 
+                get_time_between_events_in_ms(collected_frame, processed_cones) << "ms" << std::endl;
             
             cv::imshow("camera", cones.images.back().second);
             cv::waitKey(1);
 
             auto cycle_end = std::chrono::high_resolution_clock::now();
-            log_fps(cycle_begin, cycle_end);
+            std::cout << "[INFO] Running at " << get_fps(cycle_begin, cycle_end) << " fps" << std::endl;
         }
     }
 }
