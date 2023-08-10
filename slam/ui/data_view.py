@@ -134,7 +134,7 @@ class Landmarks(DrawableObject):
                 ur = to_world_canvas((x + l[3], y + l[3]), self.canvas_extents, self.world_extents)
                 self.canvas.create_oval(ll[0], ll[1], ur[0], ur[1], fill=self.color)
 
-    def draw(self, at_step):
+    def draw(self, _):
         # Landmarks are background only.
         pass
 

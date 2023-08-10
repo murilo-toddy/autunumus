@@ -35,28 +35,28 @@ def format_lidar_data():
 
 
 def format_odometry_data_and_calculate_motor_tick():
-    with open("odom.txt", "w") as odom_file:
-        with open("motor.txt", "w") as motor_file:
-            w = 0.4
-            old_pose = None
-            for topic, msg, t in bag.read_messages(topics="/atom/odom"):
-                o = msg.pose.pose.orientation
-                orientation_list = [o.x, o.y, o.z, o.w]
-                roll, pitch, yaw = euler_from_quaternion(orientation_list)
-                p = msg.pose.pose.position
-                x, y = p.x, p.y
-                if old_pose:
-                    ox, oy, oyaw = old_pose
-                    if abs(oyaw - yaw) < 0.001:
-                        l = (x - ox) / cos(yaw)
-                        r = l
-                    else:
-                        l = (yaw - oyaw) * ((x - ox) / (sin(yaw) - sin(oyaw)) - w/2)
-                        r = l + w*(yaw-oyaw)
-                    motor_file.write(f"M {l} {r}\n")
-                    odom_file.write(f"F {x+25} {y+10} {yaw}\n")
+    with open("odom.txt", "w") as odom_file, \
+        open("motor.txt", "w") as motor_file:
+        w = 0.4
+        old_pose = None
+        for topic, msg, t in bag.read_messages(topics="/atom/odom"):
+            o = msg.pose.pose.orientation
+            orientation_list = [o.x, o.y, o.z, o.w]
+            roll, pitch, yaw = euler_from_quaternion(orientation_list)
+            p = msg.pose.pose.position
+            x, y = p.x, p.y
+            if old_pose:
+                ox, oy, oyaw = old_pose
+                if abs(oyaw - yaw) < 0.001:
+                    l = (x - ox) / cos(yaw)
+                    r = l
+                else:
+                    l = (yaw - oyaw) * ((x - ox) / (sin(yaw) - sin(oyaw)) - w/2)
+                    r = l + w*(yaw-oyaw)
+                motor_file.write(f"M {l} {r}\n")
+                odom_file.write(f"F {x+25} {y+10} {yaw}\n")
 
-                old_pose = [x, y, yaw]
+            old_pose = [x, y, yaw]
 
     with open("odom.txt", "r") as odom_file:
         return len(odom_file.readlines())
