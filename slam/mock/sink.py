@@ -13,7 +13,7 @@ logger = logging.getLogger()
 if __name__ == "__main__":
     context = zmq.Context()
 
-    base_address = "tcp://127.0.0.1"
+    base_address = "tcp://zmq_source_container"
     vehicle_port = f"{base_address}:5555"
     scanner_port = f"{base_address}:5556"
 
