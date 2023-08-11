@@ -3,8 +3,7 @@ from math import pi
 from fastslam import FastSLAM
 from fastslam2 import FastSLAM2
 from file_handler import *
-from landmark import get_landmarks_from_scan
-from robot import *
+from zmqprovider import ZMQProvider
 
 # Robot constants
 scanner_displacement = 0.3
@@ -29,7 +28,7 @@ minimum_correspondence_likelihood = 1e-7
 number_of_particles = 50
 
 
-def fastslam(robot_data: Robot, slam, filename: str) -> None:
+def fastslam(slam, filename: str) -> None:
     # Slam algorithm setup
     fs = slam(start_state, number_of_particles,
                   robot_width, scanner_displacement,
@@ -38,16 +37,16 @@ def fastslam(robot_data: Robot, slam, filename: str) -> None:
                   measurement_angle_stddev,
                   minimum_correspondence_likelihood)
 
+    zmq_provider = ZMQProvider()
+
     # Loop over all motor tick records.
-    with open(f"./robot_data/{filename}", "w") as f:
-        for i in range(len(robot_data.motor_ticks)):
+    with open(f"./{filename}", "w") as f:
+        while True:
             # Prediction step
-            control = robot_data.motor_ticks[i]
+            control, landmarks = zmq_provider.read_data()
             fs.predict(control)
 
             # Correction step
-            landmarks = get_landmarks_from_scan(robot_data.scan_data[i], depth_jump,
-                                                minimum_valid_distance, landmark_offset)
             fs.correct(landmarks)
 
             # Get mean and variance for particles
@@ -65,15 +64,13 @@ def fastslam(robot_data: Robot, slam, filename: str) -> None:
             write_robot_variance(f, "E", errors)
             write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
             write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
+            print(control)
+
 
 if __name__ == '__main__':
+
     initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
     start_state = np.array(initial_pose)
 
-    # Read data.
-    robot_data = Robot()
-    robot_data.read("./robot_data/motor.txt")
-    robot_data.read("./robot_data/lidar.txt")
-
-    fastslam(robot_data, FastSLAM, "fastslam.txt")
-    fastslam(robot_data, FastSLAM2, "fastslam2.txt")
+    fastslam(FastSLAM, "fastslam.txt")
+#    fastslam(FastSLAM2, "fastslam2.txt")
