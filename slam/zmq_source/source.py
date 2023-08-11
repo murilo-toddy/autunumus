@@ -92,7 +92,7 @@ def process_robot_data(robot_data: list[tuple[list[float], list[float]]]):
                 landmark_offset,
             )
         )
-    return control_data, landmarks
+    return list(zip(control_data, landmarks))
 
 
 def read_robot_data_from_files(
@@ -124,6 +124,11 @@ if __name__ == "__main__":
     scanner_socket.bind(scanner_port)
 
     robot_data = process_robot_data(read_robot_data_from_files())
+    print(robot_data)
     for vehicle_data, scanner_data in robot_data:
+        vehicle_socket.send_pyobj(vehicle_data)
+        scanner_socket.send_pyobj(scanner_data)
 
+    vehicle_socket.close()
+    scanner_socket.close()
 
