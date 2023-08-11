@@ -1,7 +1,6 @@
 from math import pi
 
 from fastslam import FastSLAM
-from fastslam2 import FastSLAM2
 from file_handler import *
 from zmqprovider import ZMQProvider
 
@@ -68,9 +67,8 @@ def fastslam(slam, filename: str) -> None:
 
 
 if __name__ == '__main__':
-
     initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
     start_state = np.array(initial_pose)
 
     fastslam(FastSLAM, "fastslam.txt")
-#    fastslam(FastSLAM2, "fastslam2.txt")
+
