@@ -1,4 +1,13 @@
 import zmq
+import logging
+
+logging.basicConfig(
+        level=logging.INFO, 
+        datefmt="%d-%m-%y %H:%M:%S",
+        format="[%(asctime)s - %(levelname)s] %(module)s: %(message)s", 
+)
+
+logger = logging.getLogger()
 
 
 if __name__ == "__main__":
@@ -17,6 +26,6 @@ if __name__ == "__main__":
     while True:
         vehicle_data = vehicle_socket.recv_pyobj()
         scanner_data = scanner_socket.recv_pyobj()
-        print("Vehicle data received:", vehicle_data)
-        print("Scanner data received:", scanner_data)
+        logger.info(f"Vehicle data received: {vehicle_data}")
+        logger.info(f"Scanner data received: {scanner_data}")
 

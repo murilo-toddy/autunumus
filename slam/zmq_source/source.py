@@ -1,6 +1,14 @@
 import numpy as np
 import zmq
+import logging
 
+logging.basicConfig(
+        level=logging.INFO, 
+        datefmt="%d-%m-%y %H:%M:%S",
+        format="[%(asctime)s - %(levelname)s] %(module)s: %(message)s", 
+)
+
+logger = logging.getLogger()
 
 minimum_valid_distance = 1
 depth_jump = 4
@@ -124,8 +132,8 @@ if __name__ == "__main__":
     scanner_socket.bind(scanner_port)
 
     robot_data = process_robot_data(read_robot_data_from_files())
-    print(robot_data)
-    for vehicle_data, scanner_data in robot_data:
+    for i, (vehicle_data, scanner_data) in enumerate(robot_data):
+        logger.info(f"Sending vehicle and landmarks ({i + 1}/{len(robot_data)})")
         vehicle_socket.send_pyobj(vehicle_data)
         scanner_socket.send_pyobj(scanner_data)
 
