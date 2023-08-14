@@ -6,5 +6,5 @@ build:
 run:
 	docker run --rm -d --name zmq_source_container --network zmq zmq_source
 	# docker run --rm -d --name zmq_sink_container --network zmq zmq_sink
-	docker run --rm -d --name slam_container --network zmq slam 
+	docker run --rm --name slam_container --network zmq slam 
 
