@@ -1,47 +1,55 @@
-<h1 align="center">Simultaneous Location and Mapping</h1>
+# FASTSLAM 2.0
 
-This module contains a `FastSLAM 1.0` and `2.0` implementation in `Python` and `Numpy`.
-It takes as input robot's left and right wheel encoders and LiDAR data. Further configuration
-about the setup can be updated in each `python` file.
+This module contains a `FastSLAM 2.0` implementation in `Python` and `Numpy`.
+It receives vehicle's landmark and control data via `ZMQ` and processes them
+in order to create a map of the space around it.
 
-## Contents
+## Usage
 
-- Data extraction form `rosbag`
-- FastSLAM 1.0 and 2.0 implementation
-- User Interface for data visualization
+To utilize this module, you may provide landmarks and vehicle control
+data using the ports `5555` and `5556` of your source, respectively.
+Also, the source must be connected to the same docker network as the slam module
+
+Example with mocked encoder and LiDAR data is available at the `mock` folder.
+
+## Setup 
+
+You will need:
+
+- `Python 3.10.7`
+- `Docker`
+
+To setup your machine and install all necessary dependencies, use:
+
+```bash
+python3 -m venv venv
+. venv/bin/activate
+pip install -r requirements.txt
+```
+
 
 ## Configuration
 
-To extract data from `rosbag`, use `robot_data/extract_data.py` updating the path to the file
-
-SLAM script takes as input data stored in `robot_data/lidar.txt` and `robot_data/motor.txt` to
-run properly. Robot's real path is stored in `robot_data/odom.txt`.
-
-## Dependencies
-
-- `Python 3.10.7`
-- `Numpy`
-- `TKinter`
-
-Python dependencies can be installed via pip using
+First, you must create a local `Docker` network that will be used for the
+SLAM algorithm to fetch data. You can do this using
 
 ```bash
-python3 -m pip install -r requirements.txt
+make setup
 ```
 
-## Execution
-
-To run the SLAM calculations, use
+To build all the relevant containers, use
 
 ```bash
-python3 main.py
+make build
 ```
 
-To open the User Interface, use
+Then, to run the containers, use
 
 ```bash
-python3 ui/data_view.py
+make run
 ```
 
-By default, SLAM's output data is saved into `robot_data/fastslamX.txt`
+Output data will automatically be stored at a `logs.txt` file. It will also
+be sent to an external API (refer to `visualization-api` module) to allow
+for telemetry visualization.
 
