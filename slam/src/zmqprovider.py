@@ -5,7 +5,7 @@ import numpy as np
 class ZMQProvider:
     def __init__(self):
         self.context = zmq.Context()
-        base_address = "tcp://zmq_source_container"
+        base_address = "tcp://slam_mock_container"
 
         vehicle_address = f"{base_address}:5555"
         scanner_address = f"{base_address}:5556"
