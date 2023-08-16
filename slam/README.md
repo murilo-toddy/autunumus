@@ -50,6 +50,6 @@ make run
 ```
 
 Output data will automatically be stored at a `logs.txt` file. It will also
-be sent to an external API (refer to `visualization-api` module) to allow
+be sent to an external API (refer to `telemetry-api` module) to allow
 for telemetry visualization.
 
