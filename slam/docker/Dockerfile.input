@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN pip install pyzmq numpy
 
-COPY ./mock /app
+COPY ./input /app
 
 CMD ["python3", "source.py"]
 
