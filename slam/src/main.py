@@ -48,7 +48,7 @@ if __name__ == '__main__':
 
     config = configparser.ConfigParser()
     config.read("config.ini")
-    print(config.get("general", "config"))
+
     start_state = np.array(initial_pose)
 
     # Slam algorithm setup
@@ -59,15 +59,15 @@ if __name__ == '__main__':
                   measurement_angle_stddev,
                   minimum_correspondence_likelihood)
 
-    zmq_provider = ZMQProvider(config.get("zmq", "host_container_name"))
+    zmq_provider = ZMQProvider(
+            config.get("zmq", "host_container_name"),
+            config.getint("zmq", "timeout_milliseconds"),
+        )
 
-    while True:
+    while (input := zmq_provider.read_data()) != (None, None):
         # Prediction step
-        control, landmarks = zmq_provider.read_data()
+        control, landmarks = input
         print(control, landmarks)
-        if control is None or landmarks is None:
-            logger.info("Timeout reached. Stopping")
-            break 
         
         # TODO: main file structure should be:
         # out = fs.cycle(control, landmarks) 
@@ -94,3 +94,4 @@ if __name__ == '__main__':
         # write_landmarks(f, "W C", slam.particles[output_particle].landmarks)
         # write_error_ellipses(f, "W E", slam.particles[output_particle].landmarks)
 
+    logger.info("Timeout reached. Stopping")
