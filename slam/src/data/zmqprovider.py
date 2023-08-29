@@ -3,12 +3,16 @@ import numpy as np
 
 
 class ZMQProvider:
-    def __init__(self, timeout_milliseconds: int = 1000):
+    def __init__(
+            self, 
+            host_container_name: str,
+            timeout_milliseconds: int = 1000
+        ):
         self.timeout_milliseconds = timeout_milliseconds
         self.context = zmq.Context()
         # TODO: this address should ideally be updated without needing
         # to re-build the container
-        base_address = "tcp://slam_input_container"
+        base_address = f"tcp://{host_container_name}"
 
         vehicle_address = f"{base_address}:5555"
         scanner_address = f"{base_address}:5556"
@@ -27,9 +31,7 @@ class ZMQProvider:
     def __socket_pop(self, handler: tuple[zmq.Socket, zmq.Poller]):
         socket, poller = handler
         event = poller.poll(self.timeout_milliseconds)
-        if socket in event:
-            return socket.recv_pyobj()
-        return None
+        return socket.recv_pyobj() if event else None
 
     def read_vehicle_data(self) -> list[float] | None:
         return self.__socket_pop(self.vehicle_handler)

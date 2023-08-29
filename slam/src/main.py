@@ -59,11 +59,12 @@ if __name__ == '__main__':
                   measurement_angle_stddev,
                   minimum_correspondence_likelihood)
 
-    zmq_provider = ZMQProvider()
+    zmq_provider = ZMQProvider(config.get("zmq", "host_container_name"))
 
     while True:
         # Prediction step
         control, landmarks = zmq_provider.read_data()
+        print(control, landmarks)
         if control is None or landmarks is None:
             logger.info("Timeout reached. Stopping")
             break 
