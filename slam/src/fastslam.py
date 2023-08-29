@@ -7,6 +7,9 @@ import numpy as np
 from particle import Particle
 
 
+# TODO: enhance code readability
+# not all constants have to be passed here, maybe some dependency injection
+# could work? does it make sense to have a particlemanager?
 class FastSLAM:
     def __init__(self, start_state, number_of_particles,
                  robot_width, scanner_displacement,

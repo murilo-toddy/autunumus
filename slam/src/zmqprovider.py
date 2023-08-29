@@ -5,7 +5,9 @@ import numpy as np
 class ZMQProvider:
     def __init__(self):
         self.context = zmq.Context()
-        base_address = "tcp://slam_mock_container"
+        # TODO: this address should ideally be updated without needing
+        # to re-build the container
+        base_address = "tcp://slam_input_container"
 
         vehicle_address = f"{base_address}:5555"
         scanner_address = f"{base_address}:5556"
@@ -18,6 +20,7 @@ class ZMQProvider:
         socket.connect(address)
         return socket
 
+    # TODO: is this compatible with other languages?
     def __socket_pop(self, socket: zmq.Socket):
         return socket.recv_pyobj()
 

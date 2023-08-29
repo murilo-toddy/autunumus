@@ -2,6 +2,7 @@ from math import sin, cos
 
 import numpy as np
 
+# TODO: remove this file, it can be condensed somewhere else
 
 # Convert robot pose (x, y, theta) into (x, y) in world coordinates
 def scanner_to_world(pose, point: list[np.ndarray]) -> tuple[float, float]:

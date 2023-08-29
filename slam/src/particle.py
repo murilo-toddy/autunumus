@@ -5,6 +5,7 @@ from landmark import Landmark
 from transformations import *
 
 
+# TODO: all particles should have an intrinsic vehicle sharing all common data
 class Particle:
     def __init__(self, pose: np.ndarray, robot_width: float, scanner_displacement: float):
         self.pose = pose

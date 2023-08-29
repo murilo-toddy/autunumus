@@ -4,6 +4,8 @@ import numpy as np
 
 from particle import Particle
 
+# TODO: find a way to send this data to an api or smth
+# ideally this would happen in a separate thread
 
 # Write a list of landmarks to file
 def write_landmarks(file_desc, line_header: str, landmarks: list) -> None:
