@@ -1,9 +1,21 @@
-import requests
 from math import pi
+import configparser
+
+import logging
 
 from fastslam import FastSLAM
-from file_handler import *
-from zmqprovider import ZMQProvider
+from data.file_handler import *
+from data.zmqprovider import ZMQProvider
+
+
+logging.basicConfig(
+    level=logging.INFO, 
+    datefmt="%d-%m-%y %H:%M:%S",
+    format="[%(asctime)s - %(levelname)s] %(module)s: %(message)s", 
+    filename="logs/slam.log",
+)
+
+logger = logging.getLogger(__name__)
 
 # Robot constants
 scanner_displacement = 0.3
@@ -34,6 +46,9 @@ initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]
 if __name__ == '__main__':
     # requests.post(url, json={"number": 1})
 
+    config = configparser.ConfigParser()
+    config.read("config.ini")
+    print(config.get("general", "config"))
     start_state = np.array(initial_pose)
 
     # Slam algorithm setup
@@ -50,7 +65,7 @@ if __name__ == '__main__':
         # Prediction step
         control, landmarks = zmq_provider.read_data()
         if control is None or landmarks is None:
-            print("timeout")
+            logger.info("Timeout reached. Stopping")
             break 
         
         # TODO: main file structure should be:
