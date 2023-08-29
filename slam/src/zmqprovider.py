@@ -3,8 +3,8 @@ import numpy as np
 
 
 class ZMQProvider:
-    def __init__(self, timeout_seconds: int = 1000):
-        self.timeout_seconds = timeout_seconds
+    def __init__(self, timeout_milliseconds: int = 1000):
+        self.timeout_milliseconds = timeout_milliseconds
         self.context = zmq.Context()
         # TODO: this address should ideally be updated without needing
         # to re-build the container
@@ -26,7 +26,7 @@ class ZMQProvider:
     # TODO: is this compatible with other languages?
     def __socket_pop(self, handler: tuple[zmq.Socket, zmq.Poller]):
         socket, poller = handler
-        event = poller.poll(self.timeout_seconds)
+        event = poller.poll(self.timeout_milliseconds)
         if socket in event:
             return socket.recv_pyobj()
         return None
