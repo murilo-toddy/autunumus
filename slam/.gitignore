@@ -4,4 +4,5 @@ slam.txt
 fastslam.txt
 fastslam2.txt
 *.out
+*.log
 *.bag
