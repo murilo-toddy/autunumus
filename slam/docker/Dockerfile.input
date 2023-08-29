@@ -7,4 +7,3 @@ RUN pip install pyzmq numpy
 COPY ./input /app
 
 CMD ["python3", "source.py"]
-
