@@ -1,11 +1,10 @@
-# FastSLAM
+# AuTUnumus
 
-A scientific research project focused on characteristic extraction and mapping for
-an autonomous vehicle.
+Repository used to condense all code related to Tupã's autonomous vehicle adventure.
 
 # Contents
 
-This repository is divided into three main modules: `Image Processing`, `ROS` and `SLAM`.
+This repository is divided into three main modules: `Image Processing`, `SLAM` and `Telemetry-Api`.
 Specific information about how to execute each module is specified in each module's `README`.
 
 ## [Image Processing](https://github.com/murilo-toddy/path-detection/tree/main/improc)
@@ -20,34 +19,23 @@ the library `OpenCV`.
 - Deterministic cone detection algorithm
     - Using sampled images
     - Using live video
-- Road edge detection algorithm
-    - Using sampled images
-    - Using live video
-
-## [ROS](https://github.com/murilo-toddy/path-detection/tree/main/ros_ws)
-
-
-### Contents
-
-The `ros_ws` module contains a `ROS` simulation environment using `Gazebo` to extract
-data to be further processed by the `SLAM` module.
-
-- Differential Robot
-    - LiDAR
-    - Camera
-    - Encoders
-- Pre-built Gazebo world
-- RViz robot status
-
 
 ## [SLAM](https://github.com/murilo-toddy/path-detection/tree/main/slam)
 
-The `slam` module contains a `Python` and `Numpy` implementation of `FastSLAM 1.0` and `FastSLAM 2.0`.
+The `slam` module contains a `Python` and `Numpy` implementation of `FastSLAM 2.0`.
 It's able to simultaneously locate and map the robot.
 
 ### Contents
 
-- Data extraction form `rosbag`
-- FastSLAM 1.0 and 2.0 implementation
-- User Interface for data visualization
+- FastSLAM 2.0 implementation
+- ZMQ connection to fetch input data
+- API handler to pass information to our telemetry-api
 
+## [Telemetry-API](https://github.com/murilo-toddy/path-detection/tree/main/telemetry-api)
+
+The `telemetry-api` contains a simple REST API to receive data from our vehicle. It's used
+for real-time data visualization.
+
+### Contents
+
+- None for now :(
