@@ -1,3 +1,4 @@
+import requests
 from math import pi
 
 from fastslam import FastSLAM
@@ -26,10 +27,18 @@ minimum_correspondence_likelihood = 1e-7
 # Linear complexity
 number_of_particles = 50
 
+# Pose defined for better visualization
+initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  
 
-def fastslam(slam, filename: str) -> None:
+url = "http://my-ip:5000/receive-number"
+
+if __name__ == '__main__':
+    requests.post(url, json={"number": 1})
+
+    start_state = np.array(initial_pose)
+
     # Slam algorithm setup
-    fs = slam(start_state, number_of_particles,
+    fs = FastSLAM(start_state, number_of_particles,
                   robot_width, scanner_displacement,
                   control_motion_factor, control_turn_factor,
                   measurement_distance_stddev,
@@ -38,37 +47,30 @@ def fastslam(slam, filename: str) -> None:
 
     zmq_provider = ZMQProvider()
 
-    # Loop over all motor tick records.
-    with open(f"./{filename}", "w") as f:
-        while True:
-            # Prediction step
-            control, landmarks = zmq_provider.read_data()
-            fs.predict(control)
+    # TODO: implement sigterm when all data is provided
+    while True:
+        # Prediction step
+        control, landmarks = zmq_provider.read_data()
+        fs.predict(control)
 
-            # Correction step
-            fs.correct(landmarks)
+        # Correction step
+        fs.correct(landmarks)
 
-            # Get mean and variance for particles
-            mean = fs.get_mean()
-            errors = fs.get_error_ellipse_and_heading_variance()
+        # Get mean and variance for particles
+        mean = fs.get_mean()
+        errors = fs.get_error_ellipse_and_heading_variance()
 
-            # Output landmarks of particle which is closest to the mean position.
-            output_particle = min([
-                (np.linalg.norm(mean[0:2] - fs.particles[i].pose[0:2]), i)
-                for i in range(len(fs.particles))])[1]
+        # Output landmarks of particle which is closest to the mean position.
+        output_particle = min([
+            (np.linalg.norm(mean[0:2] - fs.particles[i].pose[0:2]), i)
+            for i in range(len(fs.particles))])[1]
+        
 
-            # Write information to file
-            write_particles(f, "PA", fs.particles)
-            write_particle_pose(f, "F", mean, scanner_displacement)
-            write_robot_variance(f, "E", errors)
-            write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
-            write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
-            print(control)
-
-
-if __name__ == '__main__':
-    initial_pose = [4.953761677051627, 16.12791136345065, -0.4518609926531719]  # Pose defined for better visualization
-    start_state = np.array(initial_pose)
-
-    fastslam(FastSLAM, "fastslam.txt")
+#         # Write information to file
+#         write_particles(f, "PA", fs.particles)
+#         write_particle_pose(f, "F", mean, scanner_displacement)
+#         write_robot_variance(f, "E", errors)
+#         write_landmarks(f, "W C", fs.particles[output_particle].landmarks)
+#         write_error_ellipses(f, "W E", fs.particles[output_particle].landmarks)
+        print(control)
 
