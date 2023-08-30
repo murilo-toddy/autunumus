@@ -6,16 +6,16 @@ class ZMQProvider:
     def __init__(
             self, 
             host_container_name: str,
-            timeout_milliseconds: int = 1000
+            vehicle_port: int = 5555,
+            scanner_port: int = 5556,
+            timeout_milliseconds: int = 1000,
         ):
         self.timeout_milliseconds = timeout_milliseconds
         self.context = zmq.Context()
-        # TODO: this address should ideally be updated without needing
-        # to re-build the container
         base_address = f"tcp://{host_container_name}"
 
-        vehicle_address = f"{base_address}:5555"
-        scanner_address = f"{base_address}:5556"
+        vehicle_address = f"{base_address}:{vehicle_port}"
+        scanner_address = f"{base_address}:{scanner_port}"
 
         self.vehicle_handler = self.__setup_pull_socket(vehicle_address)
         self.scanner_handler = self.__setup_pull_socket(scanner_address)
