@@ -1,4 +1,4 @@
-#include "color_mask.h"
+#include "../include/color_mask.hpp"
 
 
 typedef struct {

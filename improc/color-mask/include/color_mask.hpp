@@ -7,8 +7,8 @@
 #include <opencv2/imgproc.hpp>
 #include <opencv2/imgcodecs.hpp>
 
-#include "../camera/Camera.h"
-#include "../config.h"
+#include "../../shared/include/camera/Camera.hpp"
+#include "../../config.h"
 
 
 void apply_hsv_mask_to_matrix();

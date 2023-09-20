@@ -38,8 +38,8 @@ cmake-build-debug
 compile_commands.json
 
 # Image outputs
-cone_detection/test_images/output
-cone_detection/video/output
+cone-detection/test_images/output
+cone-detection/video/output
 
 # Other
 .vscode

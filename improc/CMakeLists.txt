@@ -10,13 +10,13 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 set(CONFIG_SOURCE "config.h")
 
 set(FILE_HANDLER_SOURCES
-    "file/file_handler.cpp"
-    "file/file_handler.h"
+    "shared/src/file-handler/file_handler.cpp"
+    "shared/include/file-handler/file_handler.hpp"
 )
 
 set(CAMERA_SOURCES
-    "camera/Camera.cpp"
-    "camera/Camera.h"
+    "shared/src/camera/Camera.cpp"
+    "shared/include/camera/Camera.hpp"
 )
 
 set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES} 
@@ -25,21 +25,15 @@ set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES}
 
 
 set(CONE_DETECTION_SOURCES
-    "cone_detection/cone_detection.cpp"
-    "cone_detection/cone_detection.h"
-    "cone_detection/cone.h"
+    "cone-detection/cone_detection.cpp"
+    "cone-detection/cone_detection.h"
+    "cone-detection/cone.hpp"
 )
 
 set(CONE_DETECTION_DEPENDENCIES 
     ${CONE_DETECTION_SOURCES} ${CAMERA_DEPENDENCIES}
-    "cone_detection/contour_processing.cpp"
-    "cone_detection/contour_processing.h"
-)
-
-
-set(PATH_DETECTION_SOURCES
-    "path_detection/roadmark_detection.cpp"
-    "path_detection/roadmark_detection.h"
+    "cone-detection/contour_processing.cpp"
+    "cone-detection/contour_processing.h"
 )
 
 
@@ -48,14 +42,13 @@ set(TARGET "main")
 set(MAIN "main.cpp" "config.h")
 add_executable(${TARGET} ${MAIN}
     ${CONE_DETECTION_DEPENDENCIES}
-    ${PATH_DETECTION_SOURCES}
 )
 
 # Camera calibration using Zhang's method
 set(CALIBRATE "calibrate")
 set(CALIBRATE_SOURCES 
-    "camera/calibration/calibrate_camera.cpp"
-    "camera/calibration/calibrate_camera.h"
+    "camera-calibration/src/camera_calibration.cpp"
+    "camera-calibration/include/camera_calibration.hpp"
 )
 
 add_executable(${CALIBRATE}
@@ -67,8 +60,8 @@ add_executable(${CALIBRATE}
 # Color picking using HSV mask
 set(COLOR_PICKER "mask")
 set(COLOR_PICKER_SOURCES 
-    "color_picker/color_mask.cpp"
-    "color_picker/color_mask.h"
+    "color-mask/src/color_mask.cpp"
+    "color-mask/include/color_mask.hpp"
 )
 
 add_executable(${COLOR_PICKER}

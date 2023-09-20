@@ -1,7 +1,7 @@
-#include "calibrate_camera.h"
+#include "../include/camera_calibration.hpp"
 
 
-cv::Mat analyze_image(int index, cv::String file, cv::Size pattern_size, 
+cv::Mat analyze_image(int index, const cv::String& file, const cv::Size& pattern_size,
             const std::vector<cv::Point3f> &object_position,
             std::vector<std::vector<cv::Point2f>> &camera_frame,
             std::vector<std::vector<cv::Point3f>> &world_frame
@@ -62,7 +62,7 @@ void calibrate_camera() {
         }
     }
 
-    // Calculate intrinsic camera matrix
+    // Calculate intrinsic camera-calibration matrix
     cv::Matx33f intrinsic_matrix(cv::Matx33f::eye());
     cv::Vec<float, 5> distortion_matrix(0, 0, 0, 0, 0);
 
@@ -119,4 +119,3 @@ int main (int, char**) {
     calibrate_camera();
     return 0;
 }
-
