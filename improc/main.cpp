@@ -7,7 +7,7 @@
 #include <opencv2/imgproc.hpp>
 
 #include "config.h"
-#include "cone-detection/include/zmq.hpp"
+#include "cone-detection/include/ZmqProvider.hpp"
 #include "shared/include/file-handler/file_handler.hpp"
 #include "shared/include/camera/Camera.hpp"
 #include "cone-detection/include/cone_detection.hpp"
@@ -111,7 +111,9 @@ int main(int argc, char** argv) {
                           get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
             }
 
-            zmq.send_cones(cones.cones);
+            if (!cones.cones.empty()) {
+                zmq.send_cones(cones.cones);
+            }
         }
     }
 }

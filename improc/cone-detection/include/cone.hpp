@@ -6,6 +6,8 @@
 typedef struct {
     std::string color;
     float distance;
+    float angle;
+    float width;
     std::vector<cv::Point> contour;
     int left_boundary, right_boundary;
 } cone_data;

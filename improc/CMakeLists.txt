@@ -50,8 +50,8 @@ set(CALIBRATE "calibrate")
 set(CALIBRATE_SOURCES 
     "camera-calibration/src/camera_calibration.cpp"
     "camera-calibration/include/camera_calibration.hpp"
-        cone-detection/src/zmq.cpp
-        cone-detection/include/zmq.hpp
+        cone-detection/src/ZmqProvider.cpp
+        cone-detection/include/ZmqProvider.hpp
 )
 
 add_executable(${CALIBRATE}
