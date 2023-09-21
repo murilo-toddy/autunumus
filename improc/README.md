@@ -10,9 +10,6 @@ multicolor cones in a custom scenario.
 - Deterministic cone detection algorithm
     - Using sampled images
     - Using live video
-- Road edge detection algorithm
-    - Using sampled images
-    - Using live video
 
 ## Configuration
 
@@ -22,7 +19,7 @@ represent the usage case.
 ### Camera Calibration
 
 This camera calibration algorithm works based on chessboard detection. Add chessboard input
-images to `setup/calibration_images` in `jpg` format.
+images to `sample_images/calibration` in `jpg` format.
 
 After execution, the new correction matrices will be saved in a file and are ready to be used
 on the next main execution.

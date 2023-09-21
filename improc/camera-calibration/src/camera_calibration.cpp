@@ -115,6 +115,7 @@ void calibrate_camera() {
 
 
 int main (int, char**) {
+    // TODO this could use some refactoring
     if(SAVE_CALIBRATION_IMAGES) { file::create_folder(CALIBRATION_IMAGES_OUTPUT_PATH); }
     calibrate_camera();
     return 0;

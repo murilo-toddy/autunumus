@@ -4,6 +4,7 @@ project(PathDetectionAlgorithm)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(OpenCV REQUIRED)
+find_package(cppzmq)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") 
 
@@ -19,21 +20,21 @@ set(CAMERA_SOURCES
     "shared/include/camera/Camera.hpp"
 )
 
-set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES} 
+set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES}
     ${FILE_HANDLER_SOURCES} ${CONFIG_SOURCE}
 )
 
 
 set(CONE_DETECTION_SOURCES
-    "cone-detection/cone_detection.cpp"
-    "cone-detection/cone_detection.h"
-    "cone-detection/cone.hpp"
+    "cone-detection/src/cone_detection.cpp"
+    "cone-detection/include/cone_detection.hpp"
+    "cone-detection/include/cone.hpp"
 )
 
 set(CONE_DETECTION_DEPENDENCIES 
     ${CONE_DETECTION_SOURCES} ${CAMERA_DEPENDENCIES}
-    "cone-detection/contour_processing.cpp"
-    "cone-detection/contour_processing.h"
+    "cone-detection/src/contour_processing.cpp"
+    "cone-detection/include/contour_processing.hpp"
 )
 
 
@@ -49,6 +50,8 @@ set(CALIBRATE "calibrate")
 set(CALIBRATE_SOURCES 
     "camera-calibration/src/camera_calibration.cpp"
     "camera-calibration/include/camera_calibration.hpp"
+        cone-detection/src/zmq.cpp
+        cone-detection/include/zmq.hpp
 )
 
 add_executable(${CALIBRATE}
@@ -70,7 +73,7 @@ add_executable(${COLOR_PICKER}
 )
 
 
-target_link_libraries(${TARGET} PRIVATE ${OpenCV_LIBS})
+target_link_libraries(${TARGET} PRIVATE ${OpenCV_LIBS} cppzmq)
 target_link_libraries(${CALIBRATE} ${OpenCV_LIBS})
 target_link_libraries(${COLOR_PICKER} ${OpenCV_LIBS})
 

@@ -3,11 +3,13 @@ MAIN=main
 CALIBRATION=calibration 
 MASK=mask
 
-all:
+cmake:
 	cmake -B $(BUILD_DIRECTORY)
 
 compile:
 	make -C $(BUILD_DIRECTORY)
+
+all: cmake compile
 
 run:
 	./$(BUILD_DIRECTORY)/$(MAIN)
@@ -28,4 +30,3 @@ exec_sample: compile run_sample
 setup_run: all exec 
 
 setup_run_sample: all exec_sample
-

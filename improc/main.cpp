@@ -7,9 +7,10 @@
 #include <opencv2/imgproc.hpp>
 
 #include "config.h"
+#include "cone-detection/include/zmq.hpp"
 #include "shared/include/file-handler/file_handler.hpp"
 #include "shared/include/camera/Camera.hpp"
-#include "cone-detection/cone_detection.h"
+#include "cone-detection/include/cone_detection.hpp"
 
 
 // TODO these functions need to get out of here
@@ -57,6 +58,7 @@ void draw_cones_in_image(cv::Mat image, const std::vector<cone_data>& cones) {
 
 
 int main(int argc, char** argv) {
+    // TODO a Image.get_next() would work well for both cases
     cv::Mat image;
     IMAGE_INPUT_MODE operation_mode = file::get_input_mode_from_stdin(argc, argv);
 
@@ -76,14 +78,16 @@ int main(int argc, char** argv) {
             auto processed_cones = std::chrono::high_resolution_clock::now();
             std::cout << "[INFO] Cone Processing took "
                 << get_time_between_events_in_ms(collected_frame, processed_cones) << "ms" << std::endl;
-            
-            cv::imshow("camera-calibration", cones.images.back().second);
+
+            draw_cones_in_image(image, cones.cones);
+            cv::imshow("sampled-image", image);
             cv::waitKey(0);
         }
     }
 
     else {
         Camera camera;
+        ZmqProvider zmq;
         while(camera.is_open()) {
             auto cycle_begin = std::chrono::high_resolution_clock::now();
 
@@ -94,7 +98,7 @@ int main(int argc, char** argv) {
             auto processed_cones = std::chrono::high_resolution_clock::now();
 
             draw_cones_in_image(image, cones.cones);
-            cv::imshow("camera-calibration", image);
+            cv::imshow("live video", image);
             cv::waitKey(1);
 
             auto cycle_end = std::chrono::high_resolution_clock::now();
@@ -106,6 +110,8 @@ int main(int argc, char** argv) {
                 std::cout << "[INFO] Frame Acquisition took " <<
                           get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
             }
+
+            zmq.send_cones(cones.cones);
         }
     }
 }
