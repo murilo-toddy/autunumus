@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Cone {
+    float distance = 1;
+    float angle = 2;
+    float width = 3;
+}
+
+message ConeList {
+    repeated Cone cones = 1;
+}
