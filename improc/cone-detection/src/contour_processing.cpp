@@ -1,4 +1,4 @@
-#include "contour_processing.h"
+#include "../include/contour_processing.hpp"
 #include <ostream>
 
 

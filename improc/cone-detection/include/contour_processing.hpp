@@ -7,7 +7,7 @@
 #include <opencv2/imgproc.hpp>
 
 #include "cone.hpp"
-#include "../config.h"
+#include "../../config.h"
 
 #define DRAWING_COLOR {0, 255, 255}
 

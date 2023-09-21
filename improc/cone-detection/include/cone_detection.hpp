@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "contour_processing.h"
-#include "../shared/include/camera/Camera.hpp"
+#include "contour_processing.hpp"
+#include "../../shared/include/camera/Camera.hpp"
 
 #define CANNY_THRESH_LOW  80.0
 #define CANNY_THRESH_HIGH 160.0
