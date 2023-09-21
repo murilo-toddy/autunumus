@@ -1,13 +1,15 @@
 import zmq
 import numpy as np
 
+from .protos.cones_pb2 import ConeList
+
 
 class ZMQProvider:
     def __init__(
             self, 
             host_container_name: str,
             vehicle_port: int = 5555,
-            scanner_port: int = 5556,
+            landmark_port: int = 5556,
             timeout_milliseconds: int = 1000,
         ):
         self.timeout_milliseconds = timeout_milliseconds
@@ -15,10 +17,10 @@ class ZMQProvider:
         base_address = f"tcp://{host_container_name}"
 
         vehicle_address = f"{base_address}:{vehicle_port}"
-        scanner_address = f"{base_address}:{scanner_port}"
+        landmark_address = f"{base_address}:{landmark_port}"
 
         self.vehicle_handler = self.__setup_pull_socket(vehicle_address)
-        self.scanner_handler = self.__setup_pull_socket(scanner_address)
+        self.landmark_handler = self.__setup_pull_socket(landmark_address)
 
     def __setup_pull_socket(self, address: str) -> tuple[zmq.Socket, zmq.Poller]:
         socket = self.context.socket(zmq.PULL)
@@ -36,9 +38,17 @@ class ZMQProvider:
     def read_vehicle_data(self) -> list[float] | None:
         return self.__socket_pop(self.vehicle_handler)
 
-    def read_scanner_data(self) -> np.ndarray | None:
-        return self.__socket_pop(self.scanner_handler)
+    def read_landmark_data(self) -> np.ndarray | None:
+        socket, _ = self.landmark_handler
+        message = socket.recv()
+        cone_list = ConeList()
+        cone_list.ParseFromString(message)
+
+        for cone in cone_list:
+            print(cone)
+        
+        return self.__socket_pop(self.landmark_handler)
 
     def read_data(self) -> tuple[list[float] | None, np.ndarray | None]:
-        return self.read_vehicle_data(), self.read_scanner_data()
+        return self.read_vehicle_data(), self.read_landmark_data()
 

@@ -6,11 +6,15 @@ import numpy as np
 from transformations import Lidar
 
 
+@dataclass
 class Landmark:
-    def __init__(self, counter: int, position: np.ndarray, covariance: np.ndarray):
-        self.counter = counter
-        self.position = position
-        self.covariance = covariance
+    counter: int
+    position: np.ndarray
+    covariance: np.ndarray
+#     def __init__(self, counter: int, position: np.ndarray, covariance: np.ndarray):
+#         self.counter = counter
+#         self.position = position
+#         self.covariance = covariance
 
 # Calculate derivative of a list, considering values greater than min_dist
 def compute_derivative(scan: list[float], min_dist: float) -> list[float]:
