@@ -4,8 +4,8 @@ import configparser
 import logging
 
 from fastslam import FastSLAM
-from data.file_handler import *
-from data.zmqprovider import ZMQProvider
+from file_handler import *
+from zmqprovider import ZMQProvider
 
 
 logging.basicConfig(
