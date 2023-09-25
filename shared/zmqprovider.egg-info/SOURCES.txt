@@ -1,6 +1,0 @@
-setup.py
-zmqprovider.py
-zmqprovider.egg-info/PKG-INFO
-zmqprovider.egg-info/SOURCES.txt
-zmqprovider.egg-info/dependency_links.txt
-zmqprovider.egg-info/top_level.txt
