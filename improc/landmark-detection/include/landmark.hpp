@@ -14,7 +14,6 @@ typedef struct {
 
 
 typedef struct {
-    std::vector<landmark> cones;
+    std::vector<landmark> landmarks;
     std::vector<std::pair<std::string, cv::Mat>> images;
-} cone_info;
-
+} frame_data;

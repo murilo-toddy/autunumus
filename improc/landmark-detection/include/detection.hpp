@@ -10,7 +10,7 @@
 #define CANNY_THRESH_HIGH 160.0
 
 
-cone_info find_cones(const cv::Mat& image);
+frame_data find_landmarks_in_frame(const cv::Mat& image);
 
 
 #endif //PATHDETECTIONALGORITHM_CONEDETECTION_H

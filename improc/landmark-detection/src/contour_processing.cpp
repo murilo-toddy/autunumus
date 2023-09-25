@@ -20,9 +20,9 @@ std::pair<cv::Point, cv::Point> get_left_and_rightmost_points(
 
 
 void find_cones_in_contours(
-    cone_info& cones,
-    const std::string& color,
-    std::vector<std::vector<cv::Point>> contours
+        frame_data& cones,
+        const std::string& color,
+        std::vector<std::vector<cv::Point>> contours
 ) {
     // TODO move some of this stuff to other functions
     std::vector<std::vector<cv::Point>> filtered_contours(contours.size()),
@@ -77,8 +77,8 @@ void find_cones_in_contours(
         cone_contours.push_back({higher_point, left_boundary, right_boundary});
 
         float distance = CONE_HEIGHT_CONSTANT / bounding_rect.height;
-        cones.cones.push_back({color, distance, 0, 0, cone_contours.back(),
-                left_boundary.x, right_boundary.x});
+        cones.landmarks.push_back({color, distance, 0, 0, cone_contours.back(),
+                                   left_boundary.x, right_boundary.x});
     }
 }
 

@@ -26,15 +26,15 @@ set(CAMERA_DEPENDENCIES ${CAMERA_SOURCES}
 
 
 set(CONE_DETECTION_SOURCES
-    "cone-detection/src/cone_detection.cpp"
-    "cone-detection/include/cone_detection.hpp"
-    "cone-detection/include/cone.hpp"
+    "landmark-detection/src/detection.cpp"
+    "landmark-detection/include/detection.hpp"
+    "landmark-detection/include/landmark.hpp"
 )
 
 set(CONE_DETECTION_DEPENDENCIES 
     ${CONE_DETECTION_SOURCES} ${CAMERA_DEPENDENCIES}
-    "cone-detection/src/contour_processing.cpp"
-    "cone-detection/include/contour_processing.hpp"
+    "landmark-detection/src/contour_processing.cpp"
+    "landmark-detection/include/contour_processing.hpp"
 )
 
 
@@ -50,8 +50,10 @@ set(CALIBRATE "calibrate")
 set(CALIBRATE_SOURCES 
     "camera-calibration/src/camera_calibration.cpp"
     "camera-calibration/include/camera_calibration.hpp"
-        cone-detection/src/ZmqProvider.cpp
-        cone-detection/include/ZmqProvider.hpp
+        landmark-detection/src/ZmqProvider.cpp
+        landmark-detection/include/ZmqProvider.hpp
+        shared/src/image/FrameIterator.cpp
+        shared/include/image/FrameIterator.hpp
 )
 
 add_executable(${CALIBRATE}

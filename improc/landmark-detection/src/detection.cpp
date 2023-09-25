@@ -1,4 +1,4 @@
-#include "../include/cone_detection.hpp"
+#include "../include/detection.hpp"
 
 
 /**
@@ -40,9 +40,9 @@ cv::Mat mask_image(
 
 
 std::vector<std::vector<cv::Point>> get_contours_from_image(
-    cv::Mat current,
-    cone_info &cones,
-    std::string color
+        cv::Mat current,
+        frame_data &cones,
+        std::string color
 ) {
     auto gaussian_blur_kernel = cv::Size(3, 3);
     cv::Mat gaussian_blur, canny, dilated, eroded;
@@ -73,8 +73,8 @@ std::vector<std::vector<cv::Point>> get_contours_from_image(
 }
 
 
-cone_info find_cones(const cv::Mat& image) {
-    cone_info cones;
+frame_data find_landmarks_in_frame(const cv::Mat& image) {
+    frame_data cones;
     cones.images.emplace_back("1_ORIGINAL", image);
     cv::Mat hsv;
     cv::cvtColor(image, hsv, cv::COLOR_BGR2HSV);

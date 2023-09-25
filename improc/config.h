@@ -1,6 +1,6 @@
 // Main configuration
 #define DEBUG    true
-#define LOG_TIME false
+#define LOG_TIME true
 
 #define SAMPLE_CONE_IMAGES_PATH "sample_images/cone/*"
 #define SAVE_OUTPUT_IMAGES_TO_FILE     true

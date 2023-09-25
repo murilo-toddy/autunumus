@@ -1,7 +1,7 @@
 # Image Processing
 
 The image processing module is focused mainly on creating a deterministic algorithm to identify
-multicolor cones in a custom scenario.
+multicolor landmarks in a custom scenario.
 
 ## Contents
 

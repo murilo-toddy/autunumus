@@ -7,10 +7,10 @@
 #include <opencv2/imgproc.hpp>
 
 #include "config.h"
-#include "cone-detection/include/ZmqProvider.hpp"
+#include "landmark-detection/include/ZmqProvider.hpp"
 #include "shared/include/file-handler/file_handler.hpp"
 #include "shared/include/camera/Camera.hpp"
-#include "cone-detection/include/cone_detection.hpp"
+#include "landmark-detection/include/detection.hpp"
 
 
 // TODO these functions need to get out of here
@@ -26,32 +26,35 @@ int get_fps(std::chrono::time_point<std::chrono::system_clock> t1,
 }
 
 
-cone_info get_cones_from_image(const cv::Mat& image) {
-    auto cones = find_cones(image);
+frame_data process_frame(const cv::Mat& image) {
+    auto images_and_landmarks = find_landmarks_in_frame(image);
+    auto landmarks = images_and_landmarks.landmarks;
 
     if (DEBUG) {
-        for (const auto &cone: cones.cones) {
-            std::cout << "Cone[dist:" << cone.distance <<
-                ", left:" << cone.left_boundary <<
-                ", right:" << cone.right_boundary << "]" << std::endl;
+        for (const auto &landmark: landmarks) {
+            std::cout << "Landmark[" << landmark.color << " dist:" << landmark.distance <<
+                       ", width:" << landmark.width <<
+                       ", angle:" << landmark.angle <<
+                       ", left:" << landmark.left_boundary <<
+                       ", right:" << landmark.right_boundary << "]" << std::endl;
         }
     }
 
     if(SAVE_OUTPUT_IMAGES_TO_FILE) {
         // save images
     }
-    return cones;
+    return images_and_landmarks;
 }
 
 
-void draw_cones_in_image(cv::Mat image, const std::vector<cone_data>& cones) {
-    for (auto& cone : cones) {
-        cv::Rect rect = cv::boundingRect(cone.contour);
+void draw_landmarks_in_image(cv::Mat image, const std::vector<landmark>& landmarks) {
+    for (auto& landmark : landmarks) {
+        cv::Rect rect = cv::boundingRect(landmark.contour);
         cv::rectangle(image, rect, DRAWING_COLOR);
         cv::putText(
-            image, cone.color + " CONE @ " + std::to_string(cone.distance) + "cm",
-            {rect.x, rect.y - 10},
-            cv::FONT_HERSHEY_DUPLEX, 0.7, DRAWING_COLOR, 1
+                image, landmark.color + " LANDMARK @ " + std::to_string(landmark.distance) + "cm",
+                {rect.x, rect.y - 10},
+                cv::FONT_HERSHEY_DUPLEX, 0.7, DRAWING_COLOR, 1
         );
     }
 }
@@ -73,13 +76,13 @@ int main(int argc, char** argv) {
             std::cout << "[INFO] Frame Acquisition took " << 
                 get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
 
-            auto cones = get_cones_from_image(image);
+            auto cones = process_frame(image);
 
             auto processed_cones = std::chrono::high_resolution_clock::now();
             std::cout << "[INFO] Cone Processing took "
                 << get_time_between_events_in_ms(collected_frame, processed_cones) << "ms" << std::endl;
 
-            draw_cones_in_image(image, cones.cones);
+            draw_landmarks_in_image(image, cones.landmarks);
             cv::imshow("sampled-image", image);
             cv::waitKey(0);
         }
@@ -94,10 +97,10 @@ int main(int argc, char** argv) {
             image = camera.update_frame();
             auto collected_frame = std::chrono::high_resolution_clock::now();
 
-            auto cones = get_cones_from_image(image);
+            auto cones = process_frame(image);
             auto processed_cones = std::chrono::high_resolution_clock::now();
 
-            draw_cones_in_image(image, cones.cones);
+            draw_landmarks_in_image(image, cones.landmarks);
             cv::imshow("live video", image);
             cv::waitKey(1);
 
@@ -111,9 +114,9 @@ int main(int argc, char** argv) {
                           get_time_between_events_in_ms(cycle_begin, collected_frame) << "ms" << std::endl;
             }
 
-            if (!cones.cones.empty()) {
-                zmq.send_cones(cones.cones);
-            }
+//            if (!cones.landmarks.empty()) {
+//                zmq.send_cones(cones.landmarks);
+//            }
         }
     }
 }

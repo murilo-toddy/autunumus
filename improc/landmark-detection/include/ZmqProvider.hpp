@@ -19,7 +19,7 @@ private:
         this->socket.bind(this->port);
     }
 
-    static std::string create_cone_list_from_cone_data(const std::vector<cone_data>& cones) {
+    static std::string create_cone_list_from_cone_data(const std::vector<landmark>& cones) {
         ConeList cone_list;
         for (auto& cone : cones) {
             Cone* conePB = cone_list.add_cones();
@@ -41,7 +41,7 @@ public:
         this->setup();
     }
 
-    void send_cones(const std::vector<cone_data>& cones) {
+    void send_cones(const std::vector<landmark>& cones) {
         std::string serialized_cones = create_cone_list_from_cone_data(cones);
         zmq::message_t message(serialized_cones.data(), serialized_cones.size());
         this->socket.send(message);
