@@ -1,5 +1,8 @@
-import zmq
 import logging
+import time
+import zmq
+import cv2
+
 
 logging.basicConfig(
         level=logging.INFO, 
@@ -13,19 +16,23 @@ logger = logging.getLogger()
 if __name__ == "__main__":
     context = zmq.Context()
 
-    base_address = "tcp://zmq_source_container"
-    vehicle_port = f"{base_address}:5555"
-    scanner_port = f"{base_address}:5556"
+    base_address = "tcp://localhost"
+    frame_port = f"{base_address}:5555"
 
-    vehicle_socket = context.socket(zmq.PULL)
-    vehicle_socket.connect(vehicle_port)
-
-    scanner_socket = context.socket(zmq.PULL)
-    scanner_socket.connect(scanner_port)
+    frame_socket = context.socket(zmq.PULL)
+    frame_socket.connect(frame_port)
 
     while True:
-        vehicle_data = vehicle_socket.recv_pyobj()
-        scanner_data = scanner_socket.recv_pyobj()
-        logger.info(f"Vehicle data received: {vehicle_data}")
-        logger.info(f"Scanner data received: {scanner_data}")
+        start_time = time.time()
+        frame = frame_socket.recv_pyobj()
+        cv2.imshow("Input", frame)
+        
+        c = cv2.waitKey(1)
+        if c == 27:
+            logger.info("Escape key pressed, stopping")
+            frame_socket.close()
+            quit()
+        
+        end_time = time.time()
+        logger.info(f"Frame acquisition took {round(end_time - start_time, 4):<6}")
 
