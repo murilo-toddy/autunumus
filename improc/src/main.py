@@ -36,7 +36,10 @@ if __name__ == "__main__":
             quit()
         
         end_time = time.time()
-        logger.info(f"Frame acquisition took {round(end_time - start_time, 4):<6}")
+        # logger.info(f"Frame acquisition took {round(end_time - start_time, 4):<6}")
 
+        proc_start = time.time()
         proc.process_frame(frame)
+        proc_end = time.time()
+        # logger.info(f"Cycle took {round(proc_end - start_time, 4):<6} seconds")
 

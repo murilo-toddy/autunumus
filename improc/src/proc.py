@@ -1,3 +1,5 @@
+from collections.abc import MutableSet
+import multiprocessing
 import cv2
 
 color_mask_dict = {
@@ -26,7 +28,9 @@ color_mask_dict = {
 }
 
 def process_frame(frame):
+    count = 0
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    with multiprocessing.Pool() as pool:
     for color, masks in color_mask_dict.items():
         masked_images = []
         for mask in masks:
@@ -93,5 +97,7 @@ def process_frame(frame):
 
             result = (higher_point, left_bound, right_bound)
             cv2.rectangle(frame, rect, (0, 255, 0))
+            count += 1
     
     cv2.imshow("result", frame)
+    print(f"found {count} cones")
