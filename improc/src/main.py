@@ -3,6 +3,8 @@ import time
 import zmq
 import cv2
 
+import proc
+
 
 logging.basicConfig(
         level=logging.INFO, 
@@ -36,4 +38,5 @@ if __name__ == "__main__":
         end_time = time.time()
         logger.info(f"Frame acquisition took {round(end_time - start_time, 4):<6}")
 
+        proc.process_frame(frame)
 
