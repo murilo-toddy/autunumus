@@ -1,9 +1,8 @@
 import logging
 import time
-import zmq
 import cv2
-
 import proc
+import shared.zmqprovider as zmq
 
 
 logging.basicConfig(
@@ -16,23 +15,25 @@ logger = logging.getLogger()
 
 
 if __name__ == "__main__":
-    context = zmq.Context()
-
-    base_address = "tcp://localhost"
-    frame_port = f"{base_address}:5555"
-
-    frame_socket = context.socket(zmq.PULL)
-    frame_socket.connect(frame_port)
+    zmq_provider = zmq.ZMQProvider(
+            path="localhost", 
+            operation_mode=zmq.ZMQSocketOperation.PULL,
+            port=5555
+        )
 
     while True:
         start_time = time.time()
-        frame = frame_socket.recv_pyobj()
+
+        if (frame := zmq_provider.receive_data()) is None:
+            logger.info("Frame not received, waiting")
+            continue
+
         cv2.imshow("Input", frame)
         
         c = cv2.waitKey(1)
         if c == 27:
             logger.info("Escape key pressed, stopping")
-            frame_socket.close()
+            # zmq_provider.close()
             quit()
         
         end_time = time.time()

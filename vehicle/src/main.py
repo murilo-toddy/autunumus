@@ -3,7 +3,7 @@ import configparser
 import logging
 
 from webcamprovider import WebcamProvider
-from zmqprovider import ZMQProvider
+import shared.zmqprovider as zmq
 
 
 logging.basicConfig(
@@ -24,13 +24,16 @@ if __name__ == "__main__":
     width, height = config.getint("resolution", "width"), config.getint("resolution", "height")
     webcam_provider = WebcamProvider(width, height)
 
-    host_container_name = "*"
-    zmq_provider = ZMQProvider(host_container_name)
+    zmq_provider = zmq.ZMQProvider(
+            path="*",
+            operation_mode=zmq.ZMQSocketOperation.PUSH,
+            port=5555,
+        )
 
     while True:
         start_time = time.time()
         frame = webcam_provider.get_frame()
         end_time = time.time()
         logger.info(f"Frame read took {round(end_time - start_time, 4):<6} seconds")
-        zmq_provider.send_frame(frame)
+        zmq_provider.send_data(frame)
     

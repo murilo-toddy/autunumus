@@ -1,6 +1,7 @@
-from collections.abc import MutableSet
-import multiprocessing
 import cv2
+import logging
+
+logger = logging.getLogger(__name__)
 
 color_mask_dict = {
     "YELLOW": [
@@ -30,7 +31,6 @@ color_mask_dict = {
 def process_frame(frame):
     count = 0
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    with multiprocessing.Pool() as pool:
     for color, masks in color_mask_dict.items():
         masked_images = []
         for mask in masks:
@@ -100,4 +100,4 @@ def process_frame(frame):
             count += 1
     
     cv2.imshow("result", frame)
-    print(f"found {count} cones")
+    logger.info(f"found {count} cones")

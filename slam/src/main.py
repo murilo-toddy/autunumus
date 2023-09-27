@@ -59,15 +59,20 @@ if __name__ == '__main__':
                   measurement_angle_stddev,
                   minimum_correspondence_likelihood)
 
+#     zmq_provider = ZMQProvider(
+#             config.get("zmq", "host_container_name"),
+#             config.getint("zmq", "timeout_milliseconds"),
+#         )
+
     zmq_provider = ZMQProvider(
-            config.get("zmq", "host_container_name"),
-            config.getint("zmq", "timeout_milliseconds"),
+            path=config.get("zmq", "host_container_name"),
+            timeout_milliseconds=config.getint("zmq", "timeout_milliseconds"),
         )
 
     while (input := zmq_provider.read_data()) != (None, None):
         # Prediction step
         control, landmarks = input
-        print(control, landmarks)
+        logger.info(control, landmarks)
         
         # TODO: main file structure should be:
         # out = fs.cycle(control, landmarks) 
