@@ -72,7 +72,8 @@ if __name__ == '__main__':
     while (input := zmq_provider.read_data()) != (None, None):
         # Prediction step
         control, landmarks = input
-        logger.info(control, landmarks)
+        logger.info(f"Control data received: {control}")
+        logger.info(f"Landmark data received: {landmarks}")
         
         # TODO: main file structure should be:
         # out = fs.cycle(control, landmarks) 
