@@ -87,22 +87,6 @@ def get_landmarks_from_scan(
     return result
 
 
-def process_robot_data(robot_data: list[tuple[list[float], list[float]]]):
-    control_data = []
-    landmarks = []
-    for vehicle_sample, scanner_sample in robot_data:
-        control_data.append(vehicle_sample)
-        landmarks.append(
-            get_landmarks_from_scan(
-                scanner_sample,
-                depth_jump,
-                minimum_valid_distance,
-                landmark_offset,
-            )
-        )
-    return list(zip(control_data, landmarks))
-
-
 def read_robot_data_from_files(
             vehicle_status_filename: str = "./data/motor.txt",
             scanner_filename: str = "./data/lidar.txt",
@@ -117,6 +101,22 @@ def read_robot_data_from_files(
                 scanner_data
             ))
         return robot_data
+
+
+def process_robot_data(robot_data: list[tuple[list[float], list[float]]]):
+    control_data = []
+    landmarks = []
+    for vehicle_sample, scanner_sample in robot_data:
+        control_data.append(vehicle_sample)
+        landmarks.append(
+            get_landmarks_from_scan(
+                scanner_sample,
+                depth_jump,
+                minimum_valid_distance,
+                landmark_offset,
+            )
+        )
+    return list(zip(control_data, landmarks))
 
 
 if __name__ == "__main__":
@@ -134,6 +134,8 @@ if __name__ == "__main__":
     robot_data = process_robot_data(read_robot_data_from_files())
     for i, (vehicle_data, scanner_data) in enumerate(robot_data):
         logger.info(f"Sending vehicle and landmarks ({i + 1}/{len(robot_data)})")
+        logger.info(f"Vehicle data: {vehicle_data}")
+        logger.info(f"Landmark data: {scanner_data}")
         vehicle_socket.send_pyobj(vehicle_data)
         scanner_socket.send_pyobj(scanner_data)
 
