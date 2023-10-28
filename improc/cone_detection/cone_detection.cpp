@@ -78,7 +78,7 @@ cone_info find_cones(cv::Mat image) {
     std::vector<cv::Mat> masked_images(color_masks.size());
 
     for(int i = 0; i < color_masks.size(); i++) {
-        std::string color = color_masks[i].first;
+        auto color = color_masks[i].first;
         masked_images[i] = mask_image(hsv, color_masks[i].second);
         cones.images.push_back({"3_" + color + "_MASK", 
                 masked_images[i]}); 
@@ -92,3 +92,4 @@ cone_info find_cones(cv::Mat image) {
 
     return cones;
 }
+

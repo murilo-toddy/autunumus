@@ -4,15 +4,14 @@ project(PathDetectionAlgorithm)
 
 set(CMAKE_CXX_STANDARD 17)
 find_package(OpenCV REQUIRED)
-# find_package(Threads REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "") 
 
 set(CONFIG_SOURCE "config.h")
 
 set(FILE_HANDLER_SOURCES
-    "io/file_handler.cpp"
-    "io/file_handler.h"
+    "file/file_handler.cpp"
+    "file/file_handler.h"
 )
 
 set(CAMERA_SOURCES

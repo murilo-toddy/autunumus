@@ -88,7 +88,8 @@ void find_cones_in_contours(cone_info& cones, std::string color,
         cone_contours.push_back({higher_point, left_boundary, right_boundary});
 
         float distance = CONE_HEIGHT_CONSTANT / bounding_rect.height;
-        cones.cones.push_back({color, distance, cone_contours.back(), left_boundary.x, right_boundary.x});
+        cones.cones.push_back({color, distance, cone_contours.back(),
+                left_boundary.x, right_boundary.x});
     }
 }
 
