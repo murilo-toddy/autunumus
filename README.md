@@ -4,23 +4,24 @@ Repository used to condense all code related to Tupã's autonomous vehicle adven
 
 # Contents
 
-This repository is divided into three main modules: `Image Processing`, `SLAM` and `Telemetry-Api`.
+This repository is divided into four main modules: `Image Processing`, `SLAM`, `ROS` and `Telemetry-Api`.
 Specific information about how to execute each module is specified in each module's `README`.
 
-## [Image Processing](https://github.com/murilo-toddy/path-detection/tree/main/improc)
+## [Image Processing](https://github.com/murilo-toddy/autunumus/tree/main/improc)
 
-The `improc` module contains a `C++`algorithm for cone identification. It's built using
+The `improc` module contains a `Python` algorithm for cone identification. It's built using
 the library `OpenCV`.
 
 ### Contents
 
 - Camera calibration
 - Color picking in HSV spectrum based on sampled images or input video
-- Deterministic cone detection algorithm
-    - Using sampled images
+- Cone detection algorithm
+    - Using input images
     - Using live video
+- ZMQ connection with SLAM
 
-## [SLAM](https://github.com/murilo-toddy/path-detection/tree/main/slam)
+## [SLAM](https://github.com/murilo-toddy/autunumus/tree/main/slam)
 
 The `slam` module contains a `Python` and `Numpy` implementation of `FastSLAM 2.0`.
 It's able to simultaneously locate and map the robot.
@@ -31,11 +32,14 @@ It's able to simultaneously locate and map the robot.
 - ZMQ connection to fetch input data
 - API handler to pass information to our telemetry-api
 
-## [Telemetry-API](https://github.com/murilo-toddy/path-detection/tree/main/telemetry-api)
+## [ROS](https://github.com/murilo-toddy/autunumus/tree/main/ros_ws)
 
-The `telemetry-api` contains a simple REST API to receive data from our vehicle. It's used
-for real-time data visualization.
+The `ros` module contains a simulation environment built using ROS Noetic. It contains
+a differential robot implementation and allows testing of the previously mentioned systems
+It's able to simultaneously locate and map the robot.
 
-### Contents
+## [Telemetry-API](https://github.com/murilo-toddy/autunumus/tree/main/telemetry-api)
 
-- None for now :(
+The `telemetry-api` contains a simple REST API built using Flask to receive data 
+from our vehicle. It's used for real-time data visualization.
+
